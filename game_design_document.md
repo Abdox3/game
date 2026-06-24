@@ -35,25 +35,33 @@ The core loop: **collect cards → build a deck → fight PvP/PvE → earn rewar
 
 ---
 
-## 3. Theme & Visual Style
+## 3. Theme & Visual Style (Modern Neo-Islamic Futurism)
 
-### 3.1 World Setting
-The world of **FORGE** is an ancient realm where great Forgemasters craft living warriors from iron, stone, nature, and spirit energy. There are no "people" — only **Constructs**. This gives you unlimited creative freedom and makes the game culturally neutral.
+### 3.1 World Setting & Aesthetic Style
+The world of **FORGE** is a high-concept **Neo-Islamic Futurist / Tech-Magic** universe. Rather than a gritty, dark medieval fantasy, it features a clean, bright, and highly advanced realm where sacred geometry, cosmic energy, and physical elements are harnessed by legendary Forgemasters. 
 
-### 3.2 Card Factions (4 factions, no faces)
-| Faction | Identity | Visual Style | Example Cards |
+Characters are strictly **Constructs, Golems, and Automata** (which avoids human faces naturally). The architectural backdrops combine floating white-marble structures, glowing geometric ribbons of energy, and elegant modern arches, giving the game a sleek, contemporary feel.
+
+### 3.2 Factions (Modernized Visuals)
+| Faction | Modern Identity | Visual Style | Example Cards |
 |---|---|---|---|
-| **Ironclad** | Heavy armored war machines | Full plate armor, closed helmets, shields | Iron Sentinel, Tower Knight, Siege Golem |
-| **Verdant** | Nature-powered plant/vine creatures | Thorned vines, mushroom caps, bark armor | Thornwall, Root Colossus, Spore Mystic |
-| **Ember** | Fire & molten lava constructs | Lava-cracked stone, ember glow, no faces | Cinder Drake, Magma Brute, Flame Warden |
-| **Phantom** | Shadow/spirit/ghost entities | Mist forms, robes with no face, orbs | Wraith Guard, Soul Anchor, Void Shade |
+| **Ironclad** | Sleek Cyber-Clockwork Constructs | Minimalist steel contours, brass gears, geometric shield plates, teal energy cores | Chrono-Sentinel, Alloy Tower, Kinetic Golem |
+| **Verdant** | Bio-Luminescent Botanical Entities | Glowing neon-green vines, crystalline bark armor, floating spore nodes | Synth-Thornwall, Neo-Colossus, Bio-Mystic |
+| **Ember** | Plasma-Molten Glass Reactors | Matte-black obsidian chassis containing white-hot plasma, floating magma rings | Plasma Drake, Obsidian Brute, Ignis Warden |
+| **Phantom** | Holographic Neon Specters | Floating void-glass fragments, dark violet mist forms, geometric hollow eyes | Void Sentinel, Phantasm Anchor, Eclipse Shade |
+| **Al-Noor** | Sacred Geometric Celestial Light | White marble with inlaid gold traces, floating turquoise ribbons, geometric light beams | Solar Vanguard, Dome Sentinel, Prism Archon |
 
-### 3.3 Animation Style
-- **Smooth and simple** like Ludus and Black Deck
-- 2D sprites with 3–4 animation states: idle, attack, merge glow, death
-- Particle effects for abilities (ember sparks, vine whips, shadow pulses)
-- NO complex 3D — all visual quality comes from polish on 2D art + particles
-- Card art is illustrated (not photorealistic), similar to Clash Royale / Black Deck style
+### 3.3 UI Design: Modern Glassmorphism
+To stand out in the current mobile market, FORGE abandons the heavy, muddy wood-and-stone UI common in older fantasy card games and adopts a high-end, clean look:
+- **UI Styling:** Dark glassmorphic panels (semi-transparent blur) with thin, crisp gold, turquoise, and white-neon outlines.
+- **Typography:** Sleek, modern sans-serif fonts (e.g., *Outfit*, *Inter*) for a clean, legible mobile display.
+- **Visual Feedback:** Tactile micro-animations, glowing hover states, and smooth card scale-up transitions.
+- **VFX & Particles:** Smooth particle emitters, floating light ribbons, and clean dust paths instead of chaotic flashes. Card merges trigger a geometric ring wave (girih pattern) expanding from the center.
+
+### 3.4 Animation Style
+- **Fluid & Tactile:** Sprites use modern skeletal bone animations (via Spine or Rive) for smooth, subtle breathing, attack swings, and drift animations.
+- **Card Merging:** The cards dissolve into pure geometric energy particles that feed into the higher-tier card.
+- **Minimalist 3D Effects:** Use parallax background scrolling and 2.5D rotating card fronts in the menu to create depth while maintaining a lightweight 2D engine.
 
 ---
 
@@ -1137,6 +1145,6 @@ Why would players choose FORGE over Ludus, Black Deck, BFTT, or Deck Heroes?
 
 ---
 
-*Document version 2.2 — Enhanced with Mon-Exploit Protection (No Purchased Draws)*  
-*Changes from v2.1: Enforced Islamic compliance for monetization where random card draws/chests are strictly earned in-game and never bought. Players spend Crystals on direct, fully transparent shop offers and dedicated hero/card-specific events.*  
+*Document version 2.3 — Shifted to Modern Neo-Islamic Futurism Aesthetic*  
+*Changes from v2.2: Redesigned the visual theme in Section 3 from rustic ancient fantasy to a clean, bright "Neo-Islamic Futurist / Tech-Magic" art direction. Shifted factions to cybernetic, bio-luminescent, plasma, and celestial light constructs. Standardized a modern glassmorphism UI style with skeletal bone animations.*  
 *Next step recommended: Build a paper prototype of 2-player battle to validate lane + merge + spell timing feel before writing any code.*
