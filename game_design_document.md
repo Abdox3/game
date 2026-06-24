@@ -464,10 +464,13 @@ The biggest failure of Ludus, Black Deck, and Deck Heroes is **punishing free pl
 | Shards | **Shards** | Duplicate cards, weekly chest | Card leveling |
 | Hard (paid/earnable) | **Crystals** | Purchase, seasonal rewards, achievements | Speed-ups, cosmetics, chest refreshes |
 
-### 8.2 What Crystals Can Buy (CRITICAL for F2P trust)
+### 8.2 What Crystals Can Buy (CRITICAL for F2P trust & Islamic Compliance)
 ✅ Cosmetic card skins (visual only)  
 ✅ Extra chest slots / speed-ups (convenience, not power)  
 ✅ Season Pass (bonus Iron income, cosmetics — NOT exclusive cards)  
+✅ Direct Purchase Shop: Buying specific, pre-revealed cards, Commanders/Heroes, or materials (always fully visible prior to purchase)  
+✅ Event-Specific Shop: Directly buying a specific card or Hero during designated events  
+❌ **NEVER sell random draws/loot boxes/mystery chests** — all premium currency purchases must have 100% transparent and deterministic outcomes (no buying what you don't know)  
 ❌ **NEVER sell power directly** — no card level boosts, no Legendary card bundles  
 ❌ **NEVER gate tournament winner's reward behind payment** (Ludus's biggest mistake)
 
@@ -640,17 +643,21 @@ Roguelike runs are the #1 proven format for PvE retention in card games (Slay th
 
 ---
 
-## 13. Card Acquisition (No Gacha Frustration)
+## 13. Card Acquisition (No Gacha Frustration & Transparent Purchase)
 
-The most important F2P fix — **no pure random gacha**:
+The most important F2P fix — **no buying random draws**:
 
-1. **Battle Chests** — earned by winning PvP, always contain cards from your current arena pool
-2. **Shard Shop** — buy specific cards with shards (earn shards from duplicates), guaranteed card you want
-3. **Daily Free Chest** — 1 free Common/Rare chest per day, no timer tricks
-4. **Season Milestone Chest** — complete 30/60/90 battles in a season → guaranteed Rare/Epic/Legendary
-5. **Clan Donation** — request cards from clanmates once per day, donate to earn Iron
+1. **Draws & Chests are ONLY Earned through Gameplay:** You cannot buy random card packs, chest draws, or mystery boxes with Crystals or real money (preventing *gharar*/gambling). They are strictly earned by active play:
+   - **Battle Chests** — earned by winning PvP matches, containing cards from your current arena pool.
+   - **Daily Free Chest** — 1 free Common/Rare chest per day.
+   - **Season Milestone Chest** — complete 30/60/90 battles in a season → guaranteed Rare/Epic/Legendary chests.
+2. **Direct Shop & Event-Based Sales (No Mystery):** Players spend currency only on fully transparent, specific cards/heroes:
+   - **Rotating Daily Shop** — Buy specific, pre-revealed cards using Crystals or Iron.
+   - **Shard Shop** — Exchange duplicate-card shards for specific cards/materials of your choice.
+   - **Event-Specific Purchases** — Limited-time game events where users can directly buy specific new Heroes/Commanders or cards (every purchase is fully shown beforehand; absolutely no blind draws).
+3. **Clan Donation** — request cards from clanmates once per day, donate to earn Iron.
 
-This means: a patient F2P player **always knows how many more battles** until they unlock the card they want. No RNG hell.
+This means: a patient player **always knows how many more battles or exactly how much currency** is needed to unlock the specific card/hero they want. No RNG monetization hell.
 
 ---
 
@@ -907,9 +914,10 @@ FORGE is designed to be a game Muslim players can enjoy without concern. This se
 ### 17.2 Monetization Ethics
 | Rule | Application |
 |---|---|
-| **No loot boxes with real money** | All paid purchases have guaranteed, visible outcomes |
+| **No purchasing of draws/loot boxes** | You cannot purchase chest/draws containing random cards using Crystals or real money. This prevents *gharar* (gambling/buying what is unknown). All premium purchases must have fully transparent, pre-revealed outcomes |
+| **Direct purchase model** | Premium currency is used for specific, fully visible cards/heroes in daily shops or during events |
 | **No predatory spending patterns** | No "just one more spin" mechanics, no limited-time pressure sales on children |
-| **Transparent drop rates** | If chests have random cards, show exact probabilities clearly |
+| **Transparent drop rates** | If earned chests have random cards, show exact probabilities and drop rates clearly in the info panels |
 | **No interest-based systems** | No "credit" or "loan" mechanics in-game economy |
 
 ### 17.3 Prayer Mode (Optional Feature)
@@ -1129,6 +1137,6 @@ Why would players choose FORGE over Ludus, Black Deck, BFTT, or Deck Heroes?
 
 ---
 
-*Document version 2.1 — Hardened with Security & Anti-Hacking Measures*  
-*Changes from v2.0: Added Security & Anti-Hacking Measures (§18.5) detailing server-authoritative state validation, strict mime/upload validation to prevent RCE, Sanctum/Reverb connection auth, and IL2CPP/memory obfuscation.*  
+*Document version 2.2 — Enhanced with Mon-Exploit Protection (No Purchased Draws)*  
+*Changes from v2.1: Enforced Islamic compliance for monetization where random card draws/chests are strictly earned in-game and never bought. Players spend Crystals on direct, fully transparent shop offers and dedicated hero/card-specific events.*  
 *Next step recommended: Build a paper prototype of 2-player battle to validate lane + merge + spell timing feel before writing any code.*
