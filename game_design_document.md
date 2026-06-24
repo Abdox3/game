@@ -985,6 +985,33 @@ Flutter + Flame is a valid choice **if you already have Flutter developers** (wh
 - **Chest timers:** Laravel Horizon job scheduled on dispatch; no polling needed from client
 - **Fallback for PvP lag:** If Reverb latency becomes an issue at scale, swap only the in-match relay to **Photon Fusion free tier** (100 CCU) while keeping Laravel for everything else (auth, cards, economy, matchmaking queue)
 
+### 18.5 Security & Anti-Hacking Measures (Anti-Cheat & Hardening)
+
+To prevent cheating, game exploits, database tampering, and Remote Code Execution (RCE) vulnerabilities, the system enforces a strict defense-in-depth security model across the Laravel backend and Unity client.
+
+#### 1. Server-Authoritative Gameplay (No Client Trust)
+- **State Validation:** The game client is strictly a visual renderer. All gameplay actions (card deployments, merges, spell casts, mana consumption, card attacks) must be sent as events to the Laravel/Redis backend. The backend validates every event against game rules (e.g., verifying the player actually owns the card, has sufficient mana, and that cooldowns have expired) before updating the master game state and broadcasting to players.
+- **Victory Resolution:** Match outcomes (win/loss/draw) are determined exclusively by the server. The client cannot send a "match_won" event to claim victory.
+
+#### 2. Economy & Currency Integrity
+- **Server-Side Ledgers:** All progression variables (Iron, Shards, Crystals, XP, Chest status) are computed and stored on the PostgreSQL database. The client cannot modify these values locally.
+- **Time Tampering Protection:** Chest unlock schedules and daily quest resets are tracked using server UTC timestamps. The game is fully immune to local device time modification (time-travel cheats).
+
+#### 3. Secure File Uploads & RCE Prevention (Account Security)
+- **Strict MIME Validation:** If profile pictures, custom guild/clan banners, or other attachments are uploaded, they must pass strict backend validation. Only safe image formats are allowed (e.g., `image/jpeg`, `image/png`, `image/webp`).
+- **Malicious Payload Mitigation:** 
+  - To prevent Remote Code Execution (RCE) or hackers uploading executable files (like `.php`, `.phtml`, `.php5`, `.sh`, `.exe`, or other scripts), files are validated using Laravel's strict mime-type check rather than relying on the client-provided file extension.
+  - Uploaded images must be processed (e.g., resized/re-encoded using GD or Intervention Image) on the server to strip any embedded executable payloads (like EXIF data PHP injections).
+  - All uploads are stored in an isolated, non-executable storage container (e.g., AWS S3 or private storage with web execution disabled).
+
+#### 4. API & WebSocket Security
+- **Authentication & Authorization:** All API endpoints require Laravel Sanctum Bearer tokens. WebSocket connections via Reverb require private channel authentication to ensure users can only send and receive events for battles they are actively authorized to participate in.
+- **Rate Limiting:** Enforce strict throttle limits on Laravel routes and Reverb event listeners to prevent API spamming, brute-force attacks, and DDoS attempts.
+
+#### 5. Client Obfuscation & Memory Protection
+- **Compilation:** Compile the Unity project using IL2CPP instead of Mono, making decompilation and reverse-engineering of game logic significantly harder.
+- **Memory Obfuscation:** Implement memory obfuscation (e.g., Anti-Cheat Toolkit) for sensitive local variables (like client-side UI mana displays or animation states) to prevent memory scanners (e.g., Cheat Engine, GameGuardian) from freeze-editing local UI values.
+
 ---
 
 ## 19. MVP Scope (What to Build First)
@@ -1102,6 +1129,6 @@ Why would players choose FORGE over Ludus, Black Deck, BFTT, or Deck Heroes?
 
 ---
 
-*Document version 2.0 — Enhanced with gameplay depth systems*  
-*Changes from v1.0: Added Forge Spells, Battlefield Environments, Card Keywords, Card Skill Unlock System, Comeback Mechanics, Mid-Match Events, Forge Depths (Roguelike PvE), Perk System (post-MVP), Interactive Onboarding, Enhanced Social Systems, Islamic Compliance Guidelines. Removed gambling-adjacent Gambit mechanic.*  
+*Document version 2.1 — Hardened with Security & Anti-Hacking Measures*  
+*Changes from v2.0: Added Security & Anti-Hacking Measures (§18.5) detailing server-authoritative state validation, strict mime/upload validation to prevent RCE, Sanctum/Reverb connection auth, and IL2CPP/memory obfuscation.*  
 *Next step recommended: Build a paper prototype of 2-player battle to validate lane + merge + spell timing feel before writing any code.*
