@@ -67,62 +67,67 @@ To stand out in the current mobile market, FORGE abandons the heavy, muddy wood-
 
 ## 4. Core Gameplay Loop
 
-### 4.1 Battlefield Layout
+### 4.1 Playground Layout
+The playground consists of 5 slot columns per player, aligned vertically, and a central Hero card anchor for each side (similar to Black Deck):
 ```
-[ Enemy Lane 1 ] [ Enemy Lane 2 ] [ Enemy Lane 3 ]
-         ↕ Auto-battle happens here ↕
-[ Your  Lane 1 ] [ Your  Lane 2 ] [ Your  Lane 3 ]
+[ Opponent Hero (HP Bar) ]
+[ Opponent Slot 1 ] [ Opponent Slot 2 ] [ Opponent Slot 3 ] [ Opponent Slot 4 ] [ Opponent Slot 5 ]
+=================================== THE BATTLEFIELD ===================================
+[ Player Slot 1   ] [ Player Slot 2   ] [ Player Slot 3   ] [ Player Slot 4   ] [ Player Slot 5   ]
+[ Player Hero (HP Bar)   ]
 ```
-- 3 lanes, each lane holds up to 3 stacked cards
-- Cards auto-attack the card directly across from them
-- If a lane has no card across, the attacker damages the enemy **Forge Core** (base HP)
-- Destroy the enemy's Forge Core to win
+- Each slot on the playground can contain exactly one creature card.
+- There are no merges during battle.
 
-### 4.2 The Merge Mechanic (from Ludus)
-- Deploy two identical cards in the same lane → they **merge** into a stronger version (next star level)
-- 1★ + 1★ → 2★ (stronger stats, new visual)
-- 2★ + 2★ → 3★ (max power, unique ability unlocks)
-- Merging mid-battle is the real-time skill expression — timing matters
+### 4.2 Playing from Hand: Round-Based Deployment Delay (Deck Heroes Style)
+- Each card in a player's hand has a **spawn cost** representing a deployment delay in rounds.
+- Stronger cards have higher initial round delays (e.g., 2–6 rounds), while weak cards have 0–1 round delay.
+- At the start of each round, all cards in a player's hand have their remaining round delay count decreased by 1.
+- Once a card's delay count reaches 0, it can be deployed to any of the 5 slots on the player's side of the playground.
 
-### 4.3 Turn Structure (simplified from Deck Heroes)
-- Each player starts with a **hand of 4 cards** drawn from their 12-card deck
-- You get **1 mana per second** (shown as a filling bar)
-- Cards cost 2–6 mana to deploy
-- After deploying, draw the next card from your deck
-- No turn waiting — it's real-time, like Ludus + Clash Royale
+### 4.3 Round & Turn Structure
+- **Draw Phase:** Players start with a hand of cards from their deck. If their hand is not full, they draw up to their maximum hand size (e.g., 5 cards).
+- **Spawn Delay Tick:** All cards in hand have their spawn delay decreased by 1.
+- **Placement Phase:** Players take turns deploying any cards in their hand whose delay count is 0 to their empty playground slots.
+- **Combat Phase:** Deployed creatures attack automatically in slot order.
 
-### 4.4 Win Condition
-- Destroy the enemy Forge Core (starts at 100 HP) → Win
-- Time runs out (3 minutes) → whoever dealt more damage wins
-- Tie → Sudden Death: both Cores lose 10 HP every 5 seconds until one falls
+### 4.4 Combat & Targeting Rules
+- Deployed creatures attack in a direct line-of-sight manner.
+- A creature in Slot X always attacks the opposing creature in Slot X.
+- If the opposing Slot X is empty, the attacking creature directly attacks the enemy **Hero**.
+- Attacks resolve automatically each round during the Combat Phase.
 
-### 4.5 Forge Spells (Action Cards) ✨ NEW
+### 4.5 Win Conditions
+To secure victory, a player must satisfy one of the following conditions:
+1. **Reduce the Enemy Hero's HP to 0** (Hero starts with 100 HP).
+2. **Destroy all opponent cards** (all deployed creatures on the battlefield, cards in hand, and remaining cards in their deck).
 
-Not every card is a creature. **Forge Spells** are instant-effect cards that cost mana but don't occupy a lane slot. They add **reactive gameplay** — the ability to respond to what your opponent does mid-fight — and create dramatic swings.
+### 4.6 Forge Spells (Action Cards) ✨ NEW
+
+Not every card is a creature. **Forge Spells** are instant-effect cards that cost no slot but have a round delay cost. They add **reactive gameplay** — the ability to respond to what your opponent does — and create dramatic swings.
 
 #### Spell Card List (Core Set)
-| Spell | Faction | Mana Cost | Effect |
+| Spell | Faction | Round Delay | Effect |
 |---|---|---|---|
-| **Iron Tempering** | Ironclad | 3 | Give one friendly card +30% HP for 15 seconds |
-| **Vine Snare** | Verdant | 2 | Freeze an enemy card for 4 seconds (can't attack or be moved) |
-| **Flame Wave** | Ember | 4 | Deal 15 damage to all cards in one enemy lane |
-| **Shadow Swap** | Phantom | 3 | Swap the positions of two of your cards across lanes |
-| **Radiant Burst** | Al-Noor | 3 | Heal all your cards for 10 HP and reveal enemy hand for 5s |
-| **Forge Strike** | Neutral | 5 | Deal 20 damage directly to enemy Forge Core |
-| **Ironhide** | Ironclad | 2 | One friendly card becomes immune to spells for 10 seconds |
-| **Overgrowth** | Verdant | 4 | Summon a 1★ Thornwall in an empty lane slot |
-| **Ember Trail** | Ember | 3 | All your Ember cards deal Burn 3 for 8 seconds |
-| **Veil of Shadows** | Phantom | 3 | All your cards gain Stealth for 4 seconds |
+| **Iron Tempering** | Ironclad | 3 | Give one friendly card +30% HP |
+| **Vine Snare** | Verdant | 2 | Freeze an enemy card for 1 round (cannot attack) |
+| **Flame Wave** | Ember | 4 | Deal 15 damage to all cards on the enemy field |
+| **Shadow Swap** | Phantom | 3 | Swap the positions of two of your deployed cards |
+| **Radiant Burst** | Al-Noor | 3 | Heal all your cards for 10 HP and reveal enemy hand |
+| **Forge Strike** | Neutral | 5 | Deal 20 damage directly to enemy Hero |
+| **Ironhide** | Ironclad | 2 | One friendly card becomes immune to spells for 2 rounds |
+| **Overgrowth** | Verdant | 4 | Summon a Thornwall in an empty slot |
+| **Ember Trail** | Ember | 3 | All your Ember cards deal Burn 3 for 2 rounds |
+| **Veil of Shadows** | Phantom | 3 | All your cards gain Stealth for 1 round |
 
 #### Spell Rules
-- Spells are drawn into hand like any card, but play instantly (no lane placement needed)
-- Spells **cannot be merged** — they're single-use
-- A deck can contain **2–4 spells** out of the 12 total cards
-- Max 2 copies of any single spell
-- When played, spells show a brief visual effect on the battlefield (vine tendrils wrapping, flames erupting, etc.)
+- Spells are drawn into hand like any card. Once their round delay reaches 0, they can be cast.
+- A deck can contain **2–4 spells** out of the 12 total cards.
+- Max 2 copies of any single spell.
+- When played, spells show a brief visual effect on the battlefield (vine tendrils wrapping, flames erupting, etc.).
 
 #### Why Spells Matter
-Spells create **interactive gameplay**. When your opponent plays Flame Wave, you need to think about lane spacing. When they hold 4 mana and haven't played anything, you wonder "are they holding a spell?" This creates **psychological tension** that pure creature deployment can't achieve.
+Spells create **interactive gameplay**. When your opponent plays Flame Wave, you need to think about card placement. When they hold cards with 0 delay and haven't played them, you wonder "are they holding a spell?" This creates **psychological tension** that pure creature deployment can't achieve.
 
 ### 4.6 Battlefield Environments (Forge Arenas) ✨ NEW
 
@@ -270,23 +275,29 @@ All card abilities use a **standardized keyword system** for instant readability
 Cards don't start with all their abilities. **Skills unlock progressively as a card levels up**, giving players a sense of growth and mastery with every card they invest in.
 
 #### How It Works
-Each card has up to **3 skill slots** that unlock at specific card levels:
+Each card has up to **3 skill slots** that unlock at specific milestone levels:
 
 | Card Level | What Unlocks | Example (Tower Knight) |
 |---|---|---|
-| **Level 1** | Base stats only (ATK, HP, Speed) + 1 keyword | Shield 10% |
-| **Level 2** | **Skill 1 unlocks** — a passive ability | Shield Wall: Ironclad allies gain +10% HP |
-| **Level 3** | **Skill 1 upgrades** — passive ability strengthens | Shield Wall: Ironclad allies gain +20% HP |
-| **Level 4** | **Skill 2 unlocks** — an active/triggered ability | Fortified Stance: On merge, gains Taunt for 5 seconds |
-| **Level 5** | **Skill 2 upgrades** + **Skill 3 unlocks** (for Epic/Legendary only) | Fortified Stance: Taunt for 8 seconds + Iron Will: Cannot be killed for 2 seconds after Taunt ends |
+| **Level 1–29** | Base stats only (ATK, HP, Speed) + 1 keyword | Shield 10% |
+| **Level 30** | **Skill 1 unlocks** — a powerful passive ability | Shield Wall: Friendly cards gain +15% HP |
+| **Level 31–59** | Upgraded stats (ATK, HP, Speed) | Higher stats |
+| **Level 60** | **Skill 2 unlocks** — a triggered/active combat ability | Fortified Stance: On deploy, gains Taunt for 2 rounds |
+| **Level 61–99** | Advanced stats (ATK, HP, Speed) | Higher stats |
+| **Level 100** | **Skill 3 unlocks** — ultimate faction signature ability | Iron Will: Cannot be killed for 1 round after HP drops to 0 |
+
+#### Leveling & Milestones
+- **Max Level:** 100.
+- **Normal Levels:** Upgrading from level 1 to 29, 31 to 59, and 61 to 99 is done by consuming low-tier/unwanted cards as XP fodder.
+- **Milestone Levels (30, 60, 100):** To break through the milestone levels and unlock the respective skills, players must obtain and sacrifice **3 duplicate copies** of the same card.
 
 #### Skill Types
 | Skill Type | Trigger | Example |
 |---|---|---|
 | **Passive** | Always active while card is on field | "All Ironclad allies gain +20% HP" |
-| **On Deploy** | Triggers once when the card is first placed | "Freeze the nearest enemy for 3 seconds" |
-| **On Merge** | Triggers when this card participates in a merge | "Deal 10 damage to all enemy cards in the lane" |
-| **On Death** | Triggers when this card is destroyed | "Explode for 20 damage to the entire enemy lane" |
+| **On Deploy** | Triggers once when the card is first placed | "Freeze the opposing card for 1 round" |
+| **On Attack** | Triggers when the card attacks | "Deals double damage on first strike" |
+| **On Death** | Triggers when this card is destroyed | "Explode for 20 damage to the opposing slot" |
 | **Last Stand** | Triggers when card drops below 25% HP | "ATK doubles for remaining attacks" |
 
 #### Detailed Skill Unlock Examples
@@ -294,51 +305,55 @@ Each card has up to **3 skill slots** that unlock at specific card levels:
 **Common Card — Thornwall (Verdant)**
 | Level | Unlock | Description |
 |---|---|---|
-| 1 | Base + Thorns 10% | Reflects 10% damage |
-| 2 | Skill 1: Barbed Growth | Thorns increases by 5% for each Verdant card on field |
-| 3 | Skill 1+: Barbed Growth | Thorns increases by 8% per Verdant card |
-| 4 | Skill 2: Root Anchor | On Deploy — cannot be moved or swapped by enemy spells for 6 seconds |
-| 5 | Skill 2+: Deep Roots | Root Anchor lasts 10 seconds and heals 5 HP/s during anchor |
+| 1–29 | Base + Thorns 10% | Reflects 10% of physical damage taken back to attacker |
+| 30 | **Skill 1: Barbed Growth** | Thorns reflection increases by 5% for each Verdant card on the field |
+| 31–59 | Advanced Stats | Incremental HP/ATK increases |
+| 60 | **Skill 2: Root Anchor** | On Deploy — cannot be affected or moved by enemy spells for 2 rounds |
+| 61–99 | Elite Stats | Incremental HP/ATK increases |
+| 100 | **Skill 3: Eternal Timber** | On Death — grants your Hero a shield that absorbs 30 damage |
 
 **Rare Card — Sandstorm Caller (Al-Noor)**
 | Level | Unlock | Description |
 |---|---|---|
-| 1 | Base + Freeze 2s | Freezes enemy on deploy for 2 seconds |
-| 2 | Skill 1: Desert Wind | On Deploy — reduces all enemy attack speed by 15% for 4 seconds |
-| 3 | Skill 1+: Desert Wind | Duration increases to 6 seconds |
-| 4 | Skill 2: Sandwall | On Merge — creates a barrier that absorbs the next 30 damage to your Forge Core |
-| 5 | Skill 2+: Sandwall | Barrier absorbs 50 damage and reflects 10 back |
+| 1–29 | Base + Freeze 1 Round | Freezes opposing card on deploy for 1 round |
+| 30 | **Skill 1: Desert Wind** | On Deploy — reduces opposing slot card's attack speed by 30% for 2 rounds |
+| 31–59 | Advanced Stats | Incremental HP/ATK increases |
+| 60 | **Skill 2: Sandwall** | On Deploy — creates a barrier that absorbs the next 30 damage to your Hero |
+| 61–99 | Elite Stats | Incremental HP/ATK increases |
+| 100 | **Skill 3: Sand Tomb** | On Death — stuns the opposing card for 2 rounds |
 
 **Epic Card — Mamluk Vanguard (Al-Noor)**
 | Level | Unlock | Description |
 |---|---|---|
-| 1 | Base + Haste | Attacks immediately on deploy |
-| 2 | Skill 1: Cavalry Momentum | First attack deals +50% damage |
-| 3 | Skill 1+: Cavalry Momentum | First attack deals +100% damage (double) |
-| 4 | Skill 2: Push Back | On first attack, pushes enemy card to back of lane queue |
-| 5 | Skill 2+: Push Back + Skill 3: Commander's Charge | Push Back stuns for 2s. Skill 3: If this card kills an enemy, gain +3 mana instantly |
+| 1–29 | Base + Haste | Attacks immediately on the round of deployment |
+| 30 | **Skill 1: Cavalry Momentum** | First attack deals +100% damage (double damage) |
+| 31–59 | Advanced Stats | Incremental HP/ATK increases |
+| 60 | **Skill 2: Vanguard Push** | On first attack, stuns opposing card for 1 round |
+| 61–99 | Elite Stats | Incremental HP/ATK increases |
+| 100 | **Skill 3: Commander's Charge** | If this card kills an enemy, reduce spawn delay of all cards in hand by 1 round |
 
 **Legendary Card — The Golden Architect (Al-Noor)**
 | Level | Unlock | Description |
 |---|---|---|
-| 1 | Base stats (very high HP) | No special abilities yet — raw stat power |
-| 2 | Skill 1: Geometric Shield | All friendly cards gain Shield 10% while Architect is alive |
-| 3 | Skill 1+: Geometric Shield | Shield 15% + heals 2 HP/s to adjacent cards |
-| 4 | Skill 2: Bayt Al-Hikmah | While alive, all merges produce 3★ regardless of star level. Once per match. |
-| 5 | Skill 2+ & Skill 3: House of Wisdom + Eternal Design | Bayt Al-Hikmah can trigger twice per match. Skill 3: On Death, all remaining friendly cards gain +30% ATK for 10 seconds (legacy buff) |
+| 1–29 | Base stats (very high HP) | Featureless steel automaton, pure high stats |
+| 30 | **Skill 1: Geometric Shield** | All friendly cards gain Shield 15% while Architect is alive |
+| 31–59 | Advanced Stats | Incremental HP/ATK increases |
+| 60 | **Skill 2: Bayt Al-Hikmah** | While alive, reduces spawn delay of all cards in hand by 1 round |
+| 61–99 | Elite Stats | Incremental HP/ATK increases |
+| 100 | **Skill 3: House of Wisdom** | On Death — all remaining friendly cards gain +30% ATK for 2 rounds |
 
 #### Design Philosophy
-> **Why lock skills behind levels?** This creates a meaningful progression curve. A Level 1 Tower Knight is a decent tank — but a Level 5 Tower Knight is a strategic powerhouse with Taunt, Shield Wall, and Iron Will. This makes leveling feel **rewarding** rather than just "+10% stats." It also means new players can understand a card's basic function immediately, then discover deeper strategic possibilities as they invest in it.
+> **Why lock skills behind levels?** This creates a meaningful progression curve. A Level 1 Tower Knight is a decent tank — but a Level 100 Tower Knight is a strategic powerhouse with Taunt, Shield Wall, and Iron Will. This makes leveling feel **rewarding** rather than just "+10% stats." It also means new players can understand a card's basic function immediately, then discover deeper strategic possibilities as they invest in it.
 
-> **Balance Rule:** Card level caps remain **arena-gated** (Section 7.4). This means a Copper Forge player can never face a Level 5 card with Skill 3 unlocked — they only face Level 1–3 cards. The skill system adds depth without breaking fairness.
+> **Balance Rule:** Card level caps remain **arena-gated** (Section 7.4). This means a Copper Forge player can never face a Level 100 card with Skill 3 unlocked — they only face cards scaled to their rank. The skill system adds depth without breaking fairness.
 
 ### 5.7 Faction Synergy Bonus
 Running 3+ cards of the same faction in your deck activates a **passive bonus**:
 - **Ironclad** (3+): All your cards gain +15% HP
-- **Verdant** (3+): Regenerate 0.5 HP/s per card on field
+- **Verdant** (3+): Regenerate 3 HP per round per card on field
 - **Ember** (3+): All attacks deal +10% damage
-- **Phantom** (3+): Cards enter with a 2-second stealth phase on deploy
-- **Al-Noor** (3+): Every merge heals all your other cards for 5 HP (Radiance)
+- **Phantom** (3+): Cards enter with a 1-round stealth phase on deploy
+- **Al-Noor** (3+): Deployed cards heal your Hero for 5 HP on deploy (Radiance)
 
 Running a **mixed deck** (2 from each faction) activates **Harmony Bonus**: slight bonus to all stats — rewards smart hybrid builders.
 
@@ -370,12 +385,17 @@ The Forge Commander is your anchor — a large card that sits behind your lanes 
 
 This is where you can fix what's broken in all 4 reference games. **The goal: skill matters first, power level matters second.**
 
-### 7.1 Card Leveling
-- Cards level up by collecting **Shards** (duplicate cards become shards)
-- Card levels: 1 → 5 (max), each level gives +10% ATK and HP
-- **Skill unlocks** at levels 2, 3, 4, and 5 (see Section 5.6) — this is the primary reason to level cards
-- Level-up cost uses **Iron** (soft currency, earned through gameplay)
-- Level cap is **arena-gated**: you can't level a card beyond your current arena's cap → this keeps matchmaking fair
+### 7.1 Card Leveling & Milestone Breakthroughs
+- **Leveling Up (Normal Levels):**
+  - Cards level up from 1 to 100.
+  - Normal levels (1-29, 31-59, 61-99) require consuming other low-tier/unwanted cards as XP fodder.
+  - Each level increases a card's ATK and HP by a small percentage (e.g., +2%).
+  - Leveling up also requires a small amount of **Iron** (soft currency, earned through gameplay).
+- **Milestone Breakthrough Levels (30, 60, 100):**
+  - Level 30, 60, and 100 act as milestone breakthroughs where powerful passive, active, and ultimate skills are unlocked.
+  - To pass level 29 → 30, level 59 → 60, and level 99 → 100, the user must obtain and sacrifice **3 duplicate cards** of the exact same type.
+  - Breaking through a milestone also unlocks that level's respective skill (Skill 1 at 30, Skill 2 at 60, Skill 3 at 100).
+- Level cap is **arena-gated**: you can't break through milestone levels beyond your current arena's unlocked capabilities → this keeps matchmaking and progression balanced.
 
 ### 7.2 Forge Core Upgrades (Base Progression)
 Players upgrade their **Forge** (base HQ) which unlocks:
@@ -496,6 +516,19 @@ Shards → Level Up Card → Unlock New Skills
 Stronger Card (with new skills) → Win More → Better Chests
 ```
 Free players always have something to open, always making progress.
+
+### 8.5 Thekr Reward System (Ethical Ad Alternative)
+To maintain an ad-free environment while still providing optional reward accelerators (e.g., speed up chest timers, gain extra daily reward keys), the game features the **Thekr Reward System**.
+
+- **Core Mechanics:**
+  - **Voluntary Access:** Players voluntarily choose to view the screen to get a reward.
+  - **5-Second Focus Timer:** The player must view a beautifully rendered "Thekr" (remembrance/supplication) card for a minimum of 5 seconds. The count-down timer is server-verified.
+  - **Random, Non-Repeating Selection:**
+    - Thekr entries are pulled at random from the database pool.
+    - The server tracks which entries the user has already seen.
+    - A Thekr cannot be shown again until all available Thekrs in the database pool have been viewed.
+    - Once all Thekrs have been viewed, the user's seen history resets, starting a new randomized cycle.
+  - **Anti-Cheat Verification:** To prevent client-side speed-hacking or API manipulation, when the client requests a Thekr, the server logs the transaction with a timestamp. When the client attempts to claim the reward, the server verifies that at least 5 seconds have elapsed since the request timestamp.
 
 ---
 
@@ -990,7 +1023,7 @@ Flutter + Flame is a valid choice **if you already have Flutter developers** (wh
 | **Deployment** | **GCP Compute Engine me-central1 + Laravel Forge** |
 | Push Notifications | OneSignal (free tier, works with Laravel via HTTP API) |
 | Analytics | Unity Analytics (free) + custom Laravel event logging |
-| Ads (optional) | Unity Ads (rewarded video only) |
+| Thekr System (Ad-Free) | Custom Thekr Reward Module (5s view time, randomized, zero-repetition pool) |
 | Art Generation | Midjourney / SDXL for card illustrations |
 | Animation (card art) | Rive (export to Unity) |
 
@@ -1104,7 +1137,7 @@ Why would players choose FORGE over Ludus, Black Deck, BFTT, or Deck Heroes?
 | What's Broken in Competitors | What FORGE Does Differently |
 |---|---|
 | Winner's chest locked behind paywall (Ludus) | All PvP rewards unlock on win, period |
-| Ads every 2 minutes (Black Deck) | Ads are voluntary, rewarded only |
+| Ads every 2 minutes (Black Deck) | 100% Ad-Free (Thekr system for voluntary rewards instead) |
 | Stale, no updates (Deck Heroes) | Biweekly card + event drops in roadmap |
 | Identical visual style (all use fantasy faces) | Unique helmets/constructs/plants — stands out in app store |
 | P2W levels ruin PvP fairness | Arena-gated level caps ensure fair matchmaking |

@@ -220,9 +220,9 @@ tab active with teal glow. Dark background #0A0E1A. No human faces.
 
 **Layout:**
 - **Top:** "MATCH FOUND" header with opponent info on right side
-- **Center:** The battlefield preview showing the 3 lanes from a top-down angled view. 1-2 lane modifier badges are displayed on their respective lanes (e.g., "🔥 Burning Ground" on Lane 2)
+- **Center:** The battlefield preview showing the 5 columns from a top-down angled view. Active column modifier badges are displayed on their respective columns (e.g., "🔥 Burning Ground" on Column 3)
 - **10-second countdown timer** in the center
-- **Bottom:** Player's selected deck shown as 12 small card thumbnails in a 6×2 grid. The Forge Commander card is larger and centered below.
+- **Bottom:** Player's selected deck shown as 12 small card thumbnails in a 6×2 grid. The Hero card is larger and centered below.
 - **"READY" button** — gold, pulsing
 
 **AI Prompt:**
@@ -232,10 +232,10 @@ Dark UI with glassmorphism. At the top, text "MATCH FOUND" in gold. On the
 left, the player's geometric emblem crest with "Player Lv.12", and on the 
 right the opponent's geometric emblem with "Opponent Lv.13".
 
-In the center, a top-down angled preview of the 3-lane battlefield: 
+In the center, a top-down angled preview of the 5-column battlefield: 
 polished white-marble floor tiles with inlaid gold geometric lines dividing 
-3 vertical lanes. Lane 2 (center) has a glowing red badge reading "BURNING 
-GROUND 🔥" floating above it, indicating a lane modifier. The lanes are 
+5 vertical slots. Column 3 (center) has a glowing red badge reading "BURNING 
+GROUND 🔥" floating above it, indicating a column modifier. The slots are 
 empty but ready.
 
 A large circular countdown timer shows "7" seconds in the center of the 
@@ -243,8 +243,8 @@ battlefield, with a circular teal progress ring around it.
 
 At the bottom half, the player's deck is shown: 12 small card thumbnails 
 arranged in a 6×2 grid with rarity-colored borders (gray, blue, purple). 
-Below the grid, a larger Forge Commander card is centered — showing a 
-faceless mechanical construct with the name "Ironmaster" and a gold border.
+Below the grid, a larger Hero card is centered — showing a 
+faceless mechanical construct with the name "Ironclad Hero" and a gold border.
 
 A large pulsing gold gradient button at the very bottom reads "READY". Dark 
 background #0A0E1A. No human faces anywhere.
@@ -256,23 +256,22 @@ background #0A0E1A. No human faces anywhere.
 
 **Layout (top to bottom):**
 - **Top HUD bar:**
-  - Left: Player Forge Core HP bar (red, "78/100") + player emblem
-  - Center: Match timer "1:42" countdown
-  - Right: Enemy Forge Core HP bar (red, "55/100") + enemy emblem
-- **Forge Commander panel (top-left):** Small Commander portrait (construct, no face) with a circular charge bar showing Surge readiness (65% charged)
+  - Left: Player Hero HP bar (red, "78/100") + player emblem
+  - Center: Round Indicator "ROUND 4" countdown timer (25s per round)
+  - Right: Enemy Hero HP bar (red, "55/100") + enemy emblem
 - **Battlefield (center, 60% of screen):** 
-  - 3 lanes viewed from a slightly angled top-down perspective
-  - White marble floor with gold geometric line dividers between lanes
-  - Each lane slot shows deployed cards as animated sprites
-  - Cards have small HP bars floating above them and ATK/star-level indicators
-  - Active spell effects (vine tendrils, fire trails) visible on affected lanes
-  - Lane modifier badge visible if active (e.g., "Overgrowth 🌿" on lane 1)
+  - 5 slots columns viewed from a slightly angled top-down perspective
+  - White marble floor with gold geometric line dividers between slots
+  - Each slot shows deployed cards as animated sprites
+  - Cards have small HP bars floating above them and ATK/level indicators
+  - Active spell effects (vine tendrils, fire trails) visible on affected slots
+  - Column modifier badge visible if active (e.g., "Overgrowth 🌿" on column 1)
 - **Card hand (bottom, 25% of screen):**
-  - 4 cards fanned out in a slight arc
-  - Each card shows: mana cost (top-left circle), small card art, name, ATK/HP stats
-  - Draggable — player drags a card up onto a lane to deploy
-  - Playable cards are fully lit; unaffordable cards are dimmed
-- **Mana bar (bottom edge):** Full-width teal gradient bar, "7/10 ⚡" text, smoothly filling
+  - 5 cards fanned out in a slight arc
+  - Each card shows: Spawn Delay cost in rounds (top-left circle, e.g., "0", "1", "3"), small card art, name, ATK/HP stats
+  - Draggable — player drags a card up onto a slot to deploy
+  - Playable cards (delay = 0) are fully lit with a gold glowing border; delayed cards are dimmed with the round countdown overlay
+- **Active Deck Indicator (bottom edge):** Faint count of cards left in deck (e.g., "Deck: 7 | Hand: 5 | Graveyard: 2")
 
 **AI Prompt:**
 ```
@@ -280,41 +279,33 @@ A vertical 9:16 mobile game battle screen HUD for the card game "FORGE".
 Modern, clean, dark glassmorphism UI.
 
 TOP HUD: A thin glass-panel header bar. On the left, a red health bar 
-showing "78/100" with a geometric player emblem. In the center, a match 
-timer showing "1:42" in white bold text. On the right, the enemy's red 
-health bar showing "55/100" with a different geometric emblem. Below the 
-left emblem, a small circular Forge Commander icon (a faceless mechanical 
-construct bust) with a teal circular charge ring around it showing 65% 
-filled, labeled "SURGE".
+showing "78/100" for the Player Hero with a geometric player emblem. In the center, a round 
+indicator showing "ROUND 4" with a small 25s timer. On the right, the enemy Hero's red 
+health bar showing "55/100" with a different geometric emblem.
 
-CENTER BATTLEFIELD (60% of screen): A 3-lane arena viewed from a slightly 
+CENTER BATTLEFIELD (60% of screen): A 5-slot grid arena viewed from a slightly 
 angled top-down perspective. The floor is polished white marble with thin 
-glowing gold geometric lines (girih patterns) dividing the 3 lanes. 
+glowing gold geometric lines (girih patterns) dividing the 5 slots. 
 
-In Lane 1 (left): A sleek steel-blue clockwork automaton construct (no 
+In Slot 1 (left): A sleek steel-blue clockwork automaton construct (no 
 face, teal energy core in chest) on the player's side, fighting a dark 
 obsidian plasma creature on the enemy's side, with orange slash VFX between 
 them. Small red HP bars float above each.
 
-In Lane 2 (center): A glowing neon-green bio-luminescent vine creature on 
-the player's side. The enemy side is empty — the vine creature's attacks are 
-shown as projectiles heading toward the enemy Forge Core.
+In Slot 2 (center-left): A glowing neon-green bio-luminescent vine creature on 
+the player's side. The enemy side is empty — the vine creature is attacking 
+the enemy Hero directly, showing green thorns heading towards the top of the screen.
 
-In Lane 3 (right): Empty on both sides, with a subtle "OVERGROWTH 🌿" 
-modifier badge floating in the center of the lane.
+In Slot 3, 4, 5: Empty slots with glowing gold borders.
 
-BOTTOM CARD HAND (25% of screen): 4 cards fanned in a slight arc. Each card 
-is a small rectangle with rounded corners showing: a blue mana-cost circle 
-in the top-left (showing "3", "4", "2", "5"), a small card illustration 
-(abstract constructs, spell books, shields — no faces), the card name in 
-small text, and tiny ATK/HP numbers. The "5" cost card is slightly dimmed 
-(not enough mana). The other 3 are fully lit and interactive.
-
-MANA BAR (very bottom edge): A full-width bar with a teal gradient fill 
-showing "7 / 10" with a small lightning bolt icon. The bar is at 70% fill.
+BOTTOM CARD HAND (25% of screen): 5 cards fanned in a slight arc. Each card 
+is a small rectangle with rounded corners showing: a spawn delay badge 
+in the top-left (showing "0" in glowing gold, "1", "0" in gold, "3", "4"), a small card illustration 
+(abstract constructs, shields — no faces), the card name in 
+small text, and tiny ATK/HP numbers. The cards showing "0" delay are fully lit and glowing gold, ready to deploy. The delayed cards are dimmed with a gray overlay.
 
 Overall aesthetic: ultra-clean, premium, futuristic. Dark background 
-#0A0E1A. Gold accents for UI borders. Teal for mana/energy. No human faces 
+#0A0E1A. Gold accents for UI borders. Teal for energy. No human faces 
 anywhere in the UI, cards, or battlefield units.
 ```
 
@@ -434,54 +425,49 @@ tab active (teal glow). Dark background #0A0E1A. No human faces on any card.
 
 ---
 
-### SCREEN 09: Card Detail View
+### SCREEN 09: Card Detail View & Leveling UI
 
 **Layout:**
 - **Dimmed overlay** behind a centered large card
 - **Large card (center, ~60% screen width):**
   - Top half: Full card art (construct/golem, no face)
   - Faction icon badge (top-left)
-  - Mana cost (top-right, in a circle)
+  - Spawn delay (top-right, in a circle, e.g., "Delay: 3")
   - Rarity banner across middle
   - Card name (bold)
-  - Star level: ★★☆ (2/3 stars)
-  - Stats row: ATK ⚔ 14 | HP ❤ 22 | Speed: Normal
+  - Level indicator: "Lv. 28 / 100"
+  - Stats row: ATK ⚔ 54 | HP ❤ 120 | Speed: Normal
   - Keywords row: Shield | Taunt (as small icon pills)
 - **Skills section (below card):** Glass panel showing:
-  - Skill 1: "Shield Wall" — Lv.2 unlocked ✅ — description
-  - Skill 2: "Fortified Stance" — Lv.4 🔒 LOCKED — "Reach Level 4 to unlock"
-  - Skill 3: "Iron Will" — Lv.5 🔒 LOCKED
-- **Upgrade button:** "UPGRADE TO LV.3 — ⚒ 250 Iron + 10 Shards" (gold)
+  - Skill 1: "Shield Wall" (unlocked at Level 30) 🔒 LOCKED — "Reach Level 30 to unlock"
+  - Skill 2: "Fortified Stance" (unlocked at Level 60) 🔒 LOCKED — "Reach Level 60 to unlock"
+  - Skill 3: "Iron Will" (unlocked at Level 100) 🔒 LOCKED — "Reach Level 100 to unlock"
+- **Leveling / Upgrade Panel (bottom):**
+  - XP Bar: "XP 150/300"
+  - Grid of 6 small slots to select low-tier/fodder cards to consume for XP.
+  - "LEVEL UP" button: "CONSUME FODDER (⚒ 150 Iron)" (gold)
+  - *If level is 29, 59, or 99:* The panel displays "BREAKTHROUGH REQUIRED". Shows 3 slots labeled "SACRIFICE DUPLICATES" requiring 3 identical cards. The button transitions to "BREAKTHROUGH (⚒ 1,000 Iron)".
 - **Close button (X)** top-right corner
 
 **AI Prompt:**
 ```
-A vertical 9:16 mobile game card detail popup for "FORGE". Dimmed dark 
+A vertical 9:16 mobile game card detail and leveling popup for "FORGE". Dimmed dark 
 overlay background with a large card centered on screen.
 
 The card takes up about 60% of the screen width. The top half shows 
 detailed art of a massive steel-blue clockwork knight construct — fully 
 helmeted with no face visible, teal energy core in chest, geometric shield 
-plate in one hand. The art style is clean, illustrated, slightly stylized — 
-not photorealistic.
+plate in one hand.
 
-Below the art: a steel-blue "IRONCLAD" faction badge on the left, a blue 
-mana cost circle showing "4" on the right. A thin blue "RARE" banner 
-across. The card name "Tower Knight" in bold white. Star rating showing 
-★★☆ (2 of 3 stars filled in gold). A stats row: "ATK ⚔ 14 | HP ❤ 22 | 
-Speed: Normal". Below stats, two small keyword pills: "Shield" (blue icon) 
-and "Taunt" (gold icon).
+Below the art: a steel-blue "IRONCLAD" faction badge on the left, a gold spawn delay 
+badge showing "3" on the right. A thin gold "RARE" banner across. The card name "Tower Knight" in bold white. Level rating showing "Lv. 28/100". A stats row: "ATK ⚔ 54 | HP ❤ 120 | Speed: Normal". Below stats, keyword pills: "Shield" and "Taunt".
 
-Below the card, a glass-panel section titled "SKILLS":
-- Skill 1: "Shield Wall" — green checkmark, "Lv.2" badge, description: 
-"Ironclad allies gain +20% HP" 
-- Skill 2: "Fortified Stance" — locked 🔒 icon, "Lv.4", grayed out 
-description: "On merge, gains Taunt for 5s"
-- Skill 3: "Iron Will" — locked 🔒 icon, "Lv.5", grayed out
+Below the card, a glass-panel section titled "LEVELING & SKILLS":
+- Skill 1: "Shield Wall" (Lv.30) — locked 🔒 icon, grayed out description: "Friendly cards gain +15% HP"
+- Skill 2: "Fortified Stance" (Lv.60) — locked 🔒 icon, grayed out description: "On deploy, gains Taunt for 2 rounds"
+- Skill 3: "Iron Will" (Lv.100) — locked 🔒 icon
 
-At the bottom, a large gold gradient button: "UPGRADE TO LV.3 — ⚒ 250 + 
-10 Shards". A small white X close button in the top-right corner. Dark 
-glassmorphism. No human faces.
+At the very bottom, an XP bar at 50% fill with a grid of 6 empty slot boxes for choosing low-level fodder cards, next to a large gold gradient button: "LEVEL UP (⚒ 150)". A small white X close button is in the top-right corner. Dark glassmorphism. No human faces.
 ```
 
 ---
@@ -489,15 +475,15 @@ glassmorphism. No human faces.
 ### SCREEN 10: Deck Builder
 
 **Layout:**
-- **Top:** "MY DECK" title + deck name (editable) + deck stats (avg. mana cost, faction breakdown pie chart)
+- **Top:** "MY DECK" title + deck name (editable) + deck stats (avg. spawn delay, faction breakdown pie chart)
 - **Deck slots (top section, 40% screen):** 
   - 12 card slots in a 4×3 grid
-  - 1 larger Commander card slot centered above the grid
+  - 1 larger Hero card slot centered above the grid
   - Filled slots show card thumbnails, empty slots show dashed outlines with "+"
   - Slot 1-10: creature cards, Slot 11-12: spell cards (labeled)
 - **Divider line**
-- **Available cards (bottom section, 50% screen):** Scrollable 4-column grid of all owned cards. Tap a card to add it to the deck.
-- **Constraints display:** "8/12 Cards | 1/4 Spells | Commander: ✅"
+- **Available cards (bottom section, 50% screen):** Scrollable 4-column grid of all owned cards. Tap a card to add it to the deck. Shows card level (e.g., "Lv.42") and spawn delay.
+- **Constraints display:** "8/12 Cards | 1/4 Spells | Hero: ✅"
 - **"SAVE DECK" button** (gold)
 
 **AI Prompt:**
@@ -507,22 +493,21 @@ glassmorphism UI with gold and teal accents.
 
 At the top: title "MY DECK" in gold, with a small editable deck name 
 "Ironclad Rush" next to a pencil icon. Below the title, tiny stats: "Avg. 
-Mana: 3.2 | Ironclad 60% | Verdant 40%" displayed as small text.
+Delay: 2.8 Rounds | Ironclad 60% | Verdant 40%" displayed as small text.
 
-TOP SECTION (40% of screen): The active deck display. A larger Commander 
+TOP SECTION (40% of screen): The active deck display. A larger Hero 
 card slot centered at the top showing a glass-framed card of "Ironmaster" 
 (a faceless mechanical forge-master construct) with a gold border. Below 
-the commander, a 4×3 grid of 12 card slots. 8 slots are filled with card 
-thumbnails showing various faceless constructs and spell books with rarity 
-borders (gray, blue, purple). 4 slots are empty, shown as dashed gold 
+the hero, a 4×3 grid of 12 card slots. 8 slots are filled with card 
+thumbnails showing various faceless constructs and spell cards with level badges (e.g., "Lv.35", "Lv.72") and rarity borders. 4 slots are empty, shown as dashed gold 
 outlines with a "+" icon in the center. Slots 11-12 have a small "SPELL" 
 label below them.
 
 A thin gold divider line separates the sections. A constraints bar reads: 
-"8/12 Cards | 1/4 Spells | Commander: ✅" in small teal text.
+"8/12 Cards | 1/4 Spells | Hero: ✅" in small teal text.
 
 BOTTOM SECTION (50% of screen): A scrollable 4-column grid of all owned 
-cards (the collection), showing card thumbnails with mana costs and rarity 
+cards (the collection), showing card thumbnails with spawn delay values, levels, and rarity 
 borders. Cards already in the deck have a small teal checkmark overlay.
 
 At the very bottom (above the nav bar): a large gold gradient button "SAVE 
@@ -711,36 +696,33 @@ drift upward. No human faces. No slot-machine or gacha visual language
 ### SCREEN 15: Onboarding — Match 1 (Deploy Tutorial)
 
 **Layout:**
-- **Simplified battlefield:** Only 1 lane visible (lanes 1 and 3 are darkened/hidden)
-- **Hand:** Only 1 card available, glowing with a pulsing teal highlight
-- **Visual guide:** A large glowing arrow animates from the card in hand upward to the lane, showing the drag gesture
+- **Simplified battlefield:** Only Column 1 (Slot 1) is active; columns 2-5 are darkened/hidden
+- **Hand:** Only 1 card available, glowing with a pulsing teal highlight (spawn delay = 0)
+- **Visual guide:** A large glowing arrow animates from the card in hand upward to Slot 1, showing the drag gesture
 - **No text popup** — only the visual arrow and a dimmed-out everything else
-- **Top:** Simplified HUD showing only "Your Core: 100 HP" and "Enemy Core: 30 HP"
-- **Enemy side:** A single weak enemy card already deployed
+- **Top:** Simplified HUD showing only "Your Hero: 100 HP" and "Enemy Hero: 30 HP"
+- **Enemy side:** A single weak enemy card already deployed in Column 1
 
 **AI Prompt:**
 ```
 A vertical 9:16 mobile game onboarding tutorial screen for "FORGE". A 
 simplified, focused version of the battle screen.
 
-The battlefield shows only 1 active lane (center lane) — the left and 
-right lanes are heavily dimmed and darkened, clearly not interactive yet. 
-The single lane has a white marble floor with gold geometric lines.
+The battlefield shows only Column 1 active — Columns 2-5 are heavily dimmed and darkened, clearly not interactive yet. The single active column has a white marble floor with gold geometric lines.
 
-On the enemy side of the lane, a single small, weak-looking construct 
+On the enemy side of Column 1, a single small, weak-looking construct 
 (a tiny stone golem) is deployed.
 
 At the bottom, the card hand area shows a single card — a glowing 
-clockwork construct card with a pulsing teal border highlight. Everything 
+clockwork construct card with a pulsing teal border highlight showing spawn delay "0". Everything 
 else in the hand area is empty/dimmed.
 
 A large, animated glowing teal arrow curves from the card upward to the 
-empty player-side of the lane, showing the drag-to-deploy gesture. The 
+empty player-side of Column 1, showing the drag-to-deploy gesture. The 
 arrow pulses gently.
 
-The top HUD is simplified: only "YOUR CORE: 100 HP" on the left and 
-"ENEMY CORE: 30 HP" on the right. No timer, no mana bar (simplified for 
-tutorial). The overall feel is clean, focused, and non-intimidating. No 
+The top HUD is simplified: only "YOUR HERO: 100 HP" on the left and 
+"ENEMY HERO: 30 HP" on the right. No timer, no mana bar. The overall feel is clean, focused, and non-intimidating. No 
 text popups or instruction boxes. Dark background. No human faces.
 ```
 
@@ -772,6 +754,25 @@ The top 3 members have a subtle gold, silver, bronze highlight on their row.
 At the bottom, a gold button "INVITE FRIENDS" and below that, the standard 
 5-tab navigation bar. Dark background #0A0E1A. No human faces — all player 
 identities use geometric crest emblems.
+```
+
+---
+
+### SCREEN 17: Thekr Reward Screen (Ad Alternative)
+
+**AI Prompt:**
+```
+A vertical 9:16 mobile game screen for "FORGE", showing a premium glassmorphism card containing Islamic remembrance (Thekr). 
+
+In the center of the dark cosmic background (#0A0E1A), a floating frosted-glass tablet with a thin glowing gold border. On the tablet, elegant glowing gold Arabic calligraphy reads "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ" (Subhan-Allahi wa bihamdihi). Directly below, clean white sans-serif text reads:
+"Glory be to Allah and His is the praise" (Translation)
+"Subhan-Allahi wa bihamdihi" (Transliteration)
+
+Above the calligraphy card, a small gold label reads "REMEMBRANCE REWARD". 
+
+Below the card, a circular glowing gold progress timer shows "5s" in the center with a circular ring filling up to indicate progress (represented at 60% complete). 
+
+At the very bottom, a wide, disabled gold gradient button reads "CLAIM REWARD" with a lock icon. Once the timer completes, it will transition into a glowing button with particles. Faint golden geometric girih (Islamic pattern) lines decorate the dark background. The design is elegant, serene, premium, and clean, with absolutely no human figures or faces.
 ```
 
 ---
