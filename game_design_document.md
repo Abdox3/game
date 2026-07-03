@@ -7,7 +7,7 @@
 
 ## 1. Game Summary
 
-**FORGE** is a 2D real-time auto-battle card game where players collect, upgrade, and strategically deploy warrior cards onto a 3-lane battlefield. Cards represent armored soldiers, magical constructs, elemental beings, and mythical creatures — all designed without visible human faces (helmets, masks, silhouettes, plants, golems, spirits, etc.) to respect Islamic guidelines.
+**FORGE** is a 2D **round-based** auto-battle card game where players collect, upgrade, and strategically deploy warrior cards onto a 5-slot battlefield. Cards represent armored soldiers, magical constructs, elemental beings, and mythical creatures — all designed without visible human faces (helmets, masks, silhouettes, plants, golems, spirits, etc.) to respect Islamic guidelines.
 
 The core loop: **collect cards → build a deck → fight PvP/PvE → earn rewards → get stronger → build a better deck**. Matches last 2–4 minutes. Strategy happens before the match (deck building), and during it (card placement timing, merge decisions, spell usage, and lane reading).
 
@@ -45,18 +45,24 @@ Characters are strictly **Constructs, Golems, and Automata** (which avoids human
 ### 3.2 Factions (Modernized Visuals)
 | Faction | Modern Identity | Visual Style | Example Cards |
 |---|---|---|---|
-| **Ironclad** | Sleek Cyber-Clockwork Constructs | Minimalist steel contours, brass gears, geometric shield plates, teal energy cores | Chrono-Sentinel, Alloy Tower, Kinetic Golem |
-| **Verdant** | Bio-Luminescent Botanical Entities | Glowing neon-green vines, crystalline bark armor, floating spore nodes | Synth-Thornwall, Neo-Colossus, Bio-Mystic |
-| **Ember** | Plasma-Molten Glass Reactors | Matte-black obsidian chassis containing white-hot plasma, floating magma rings | Plasma Drake, Obsidian Brute, Ignis Warden |
-| **Phantom** | Holographic Neon Specters | Floating void-glass fragments, dark violet mist forms, geometric hollow eyes | Void Sentinel, Phantasm Anchor, Eclipse Shade |
-| **Al-Noor** | Sacred Geometric Celestial Light | White marble with inlaid gold traces, floating turquoise ribbons, geometric light beams | Solar Vanguard, Dome Sentinel, Prism Archon |
+| **Ironclad** | Sleek Cyber-Clockwork Constructs | Steel blue-gray contours, brass gears, geometric shield plates, teal energy cores — reads cleanly on both light and dark backgrounds with minimal adjustment | Chrono-Sentinel, Alloy Tower, Kinetic Golem |
+| **Verdant** | Bio-Luminescent Botanical Entities | Grounded leaf green as the primary read; neon lime reserved for small highlight accents only (glowing spore nodes, crystalline bark edge-lighting). Desaturated from the original bio-neon to avoid garish contrast on cream backgrounds | Synth-Thornwall, Neo-Colossus, Bio-Mystic |
+| **Ember** | Plasma-Molten Glass Reactors | **Warm coral-orange as the primary read** (the plasma glow, foregrounded). Matte obsidian black repositioned as a small accent detail rather than the chassis base tone — makes the faction readable on a light background without losing its heat identity | Plasma Drake, Obsidian Brute, Ignis Warden |
+| **Phantom** | Holographic Neon Specters | **Jewel-toned plum/violet as the primary read** — mystery communicated through saturation and geometric void shapes rather than through darkness itself. Floating fragments and geometric hollow eyes remain; void-black mist is a subtle accent, not the dominant tone | Void Sentinel, Phantasm Anchor, Eclipse Shade |
+| **Al-Noor** | Sacred Geometric Celestial Light | White marble with inlaid gold traces, turquoise ribbons, geometric light beams — **already the light-theme palette.** This faction is the natural UI chrome anchor: its colors form the base for menus, buttons, and card frames across the whole game | Solar Vanguard, Dome Sentinel, Prism Archon |
 
-### 3.3 UI Design: Modern Glassmorphism
-To stand out in the current mobile market, FORGE abandons the heavy, muddy wood-and-stone UI common in older fantasy card games and adopts a high-end, clean look:
-- **UI Styling:** Dark glassmorphic panels (semi-transparent blur) with thin, crisp gold, turquoise, and white-neon outlines.
-- **Typography:** Sleek, modern sans-serif fonts (e.g., *Outfit*, *Inter*) for a clean, legible mobile display.
-- **Visual Feedback:** Tactile micro-animations, glowing hover states, and smooth card scale-up transitions.
-- **VFX & Particles:** Smooth particle emitters, floating light ribbons, and clean dust paths instead of chaotic flashes. Card merges trigger a geometric ring wave (girih pattern) expanding from the center.
+### 3.3 UI Design: Warm Minimalism (Light Theme)
+
+FORGE uses a **warm minimalist UI** — think Duolingo or Headspace in aesthetic register, not a moody fantasy card game. This is a deliberate choice: a light-background game is rarer in the CCG space, it naturally reinforces the Al-Noor-led identity, and it photographs and screenshots better in daylight environments (the primary context for mobile play in MENA markets).
+
+- **UI Chrome:** Warm cream/off-white base (#F9F5EE or similar), thin **gold hairline borders** (1–2px), and soft drop shadows (no glowing halos). Flat card panels with generous whitespace. Al-Noor's marble-and-gold palette functions as the default chrome — it's already the game's aesthetic north star.
+- **Typography:** Sleek, modern sans-serif fonts (*Outfit* or *Inter*) for clean mobile legibility. Arabic UI uses a high-quality Arabic sans with RTL mirror layouts.
+- **Visual Feedback:** Tactile micro-animations, warm-gold hover states, and smooth card scale-up transitions. Feedback states use warmth (gold glow on select, soft green pulse on heal) rather than neon.
+- **Color Separation — Two Palettes, Never One:**
+  - **Faction color** (card background wash, faction icon) = muted/desaturated per faction (see §3.2). Keeps faction identity legible without fighting the light background.
+  - **Rarity color** (card frame/border treatment) = clean, saturated gray→gold ramp: Common = mid-gray / Uncommon = soft teal / Rare = sky blue / Epic = rich violet / Legendary = warm gold. Kept on a separate palette from faction colors so an Epic Ember card and a Rare Phantom card never visually blur together — which matters more on a light background where inherent contrast is lower.
+- **VFX & Particles:** Smooth particle emitters, floating light ribbons, and clean dust paths. Card star-tier evolution triggers a **girih-pattern geometric ring wave** expanding from the card center — gold particle bursts on cream read as **celebratory** rather than mystical, which is arguably a better tonal fit for a reward moment.
+- **Menu & Background Art:** Sunlit courtyard aesthetic — daylight filtering through **mashrabiya lattice**, blue sky glimpses through pointed arches, warm stone textures and muqarnas shadow patterns. Same Islamic architectural motifs as §3.1, just lit in day rather than night. Battlefield backgrounds are slightly moodier (time-of-day gradient toward dusk) to provide contrast with the bright menus without abandoning the overall light theme.
 
 ### 3.4 Animation Style
 - **Fluid & Tactile:** Sprites use modern skeletal bone animations (via Spine or Rive) for smooth, subtle breathing, attack swings, and drift animations.
@@ -77,61 +83,71 @@ The playground consists of 5 slot columns per player, aligned vertically, and a 
 [ Player Hero (HP Bar)   ]
 ```
 - Each slot on the playground can contain exactly one creature card.
-- There are no merges during battle.
+- **There are no merges during battle.** Star-tier evolution (merging duplicate cards) is a collection-screen action performed outside of matches. Any ability text referencing "merge" refers to this pre-battle collection action, not an in-battle mechanic.
 
-### 4.2 Playing from Hand: Round-Based Deployment Delay (Deck Heroes Style)
-- Each card in a player's hand has a **spawn cost** representing a deployment delay in rounds.
-- Stronger cards have higher initial round delays (e.g., 2–6 rounds), while weak cards have 0–1 round delay.
-- At the start of each round, all cards in a player's hand have their remaining round delay count decreased by 1.
-- Once a card's delay count reaches 0, it can be deployed to any of the 5 slots on the player's side of the playground.
+### 4.2 Playing from Hand
+- Cards in a player's hand are ready to deploy immediately — there is **no deployment delay or spawn cost**.
+- On their Placement Phase, a player can deploy any card from their hand to any empty slot on their side of the field.
+- There is no mana gate or timer preventing deployment — strategic choice is *which card* to deploy and *where*, not *when* a cost timer runs down.
 
-### 4.3 Round & Turn Structure
-- **Draw Phase:** Players start with a hand of cards from their deck. If their hand is not full, they draw up to their maximum hand size (e.g., 5 cards).
-- **Spawn Delay Tick:** All cards in hand have their spawn delay decreased by 1.
-- **Placement Phase:** Players take turns deploying any cards in their hand whose delay count is 0 to their empty playground slots.
-- **Combat Phase:** Deployed creatures attack automatically in slot order.
+### 4.3 Combat Clock & Round Structure
+
+FORGE uses a **round-based system driven by a shared wall clock** — the most important design decision in the document. Rounds are not player-triggered; they fire automatically on a timer. This makes the system event-relay friendly (suits Reverb/WebSocket architecture), gives the game a clear battle clock for the HUD, and eliminates any ambiguity about "real-time vs. turn-based" in the UI.
+
+**One round = 2 seconds of wall-clock time (tunable during playtesting).**
+
+Each round resolves in this fixed sequence:
+1. **Draw Phase:** If a player's hand has empty slots, they draw up to their hand size limit.
+2. **Placement Phase:** Both players simultaneously choose one card from hand to deploy to an empty slot. Placement is simultaneous — no waiting on opponent.
+3. **Combat Phase:** All deployed creatures auto-attack their targets (see §4.4). Damage resolves instantly. Dead cards are removed.
+4. **Round ticks:** Wall clock advances. Timed effects (Burn, Stealth, Freeze) tick down their durations in seconds, not in rounds.
+
+> **Note on timed effects and events:** Durations expressed in seconds (e.g., "Stealth for 5 seconds," "Freeze for 3 seconds") are real wall-clock seconds, not round counts. Arena Modifiers (§4.6) that reference HP/s also run on the wall clock between rounds. This gives continuous-feeling combat feedback while keeping resolution deterministic and server-authoritative.
 
 ### 4.4 Combat & Targeting Rules
 - Deployed creatures attack in a direct line-of-sight manner.
 - A creature in Slot X always attacks the opposing creature in Slot X.
-- If the opposing Slot X is empty, the attacking creature directly attacks the enemy **Hero**.
+- **Hero Shielding Rule:** The Hero is protected by their deployed creatures (acting as a shield). The Hero can only be attacked directly if the opposing player's board is completely empty (no creatures deployed in any of the 5 slots).
+- If the opposing Slot X is empty:
+  - If the opposing board has other creatures deployed elsewhere, the attacking creature redirects its attack to the nearest occupied opposing slot (prioritizing the closest lane, e.g., Slot X-1 or Slot X+1).
+  - If the opposing board is completely empty, the attacking creature directly attacks the enemy **Hero**.
 - Attacks resolve automatically each round during the Combat Phase.
 
-### 4.5 Win Conditions
-To secure victory, a player must satisfy one of the following conditions:
-1. **Reduce the Enemy Hero's HP to 0** (Hero starts with 100 HP).
-2. **Destroy all opponent cards** (all deployed creatures on the battlefield, cards in hand, and remaining cards in their deck).
+### 4.5 Win Condition
+There is **one win condition**: **Reduce the Enemy Hero's HP to 0** (Hero starts at 100 HP).
 
-### 4.6 Forge Spells (Action Cards) ✨ NEW
+Because of the Hero Shielding Rule (§4.4), a player must first clear all creatures from the opponent's board before their own creatures can reach and damage the Hero directly. This creates a single, legible countdown that both players can read at a glance during an auto-resolving battle.
 
-Not every card is a creature. **Forge Spells** are instant-effect cards that cost no slot but have a round delay cost. They add **reactive gameplay** — the ability to respond to what your opponent does — and create dramatic swings.
+### 4.6 Forge Spells (Action Cards)
+
+Not every card is a creature. **Forge Spells** are instant-effect cards that occupy no slot and deploy from hand like any other card during the Placement Phase — no delay, no separate cost. They add **reactive gameplay** — the ability to respond to what your opponent does — and create dramatic swings.
 
 #### Spell Card List (Core Set)
-| Spell | Faction | Round Delay | Effect |
-|---|---|---|---|
-| **Iron Tempering** | Ironclad | 3 | Give one friendly card +30% HP |
-| **Vine Snare** | Verdant | 2 | Freeze an enemy card for 1 round (cannot attack) |
-| **Flame Wave** | Ember | 4 | Deal 15 damage to all cards on the enemy field |
-| **Shadow Swap** | Phantom | 3 | Swap the positions of two of your deployed cards |
-| **Radiant Burst** | Al-Noor | 3 | Heal all your cards for 10 HP and reveal enemy hand |
-| **Forge Strike** | Neutral | 5 | Deal 20 damage directly to enemy Hero |
-| **Ironhide** | Ironclad | 2 | One friendly card becomes immune to spells for 2 rounds |
-| **Overgrowth** | Verdant | 4 | Summon a Thornwall in an empty slot |
-| **Ember Trail** | Ember | 3 | All your Ember cards deal Burn 3 for 2 rounds |
-| **Veil of Shadows** | Phantom | 3 | All your cards gain Stealth for 1 round |
+| Spell | Faction | Effect |
+|---|---|---|
+| **Iron Tempering** | Ironclad | Give one friendly card +30% HP |
+| **Vine Snare** | Verdant | Freeze an enemy card for 3 seconds (cannot attack) |
+| **Flame Wave** | Ember | Deal 15 damage to all cards on the enemy field |
+| **Shadow Swap** | Phantom | Swap the positions of two of your deployed cards |
+| **Radiant Burst** | Al-Noor | Heal all your cards for 10 HP and reveal enemy hand |
+| **Forge Strike** | Neutral | Deal 20 damage directly to enemy Hero |
+| **Ironhide** | Ironclad | One friendly card becomes immune to spells for 6 seconds |
+| **Overgrowth** | Verdant | Summon a Thornwall in an empty slot |
+| **Ember Trail** | Ember | All your Ember cards gain Burn 3 for 6 seconds |
+| **Veil of Shadows** | Phantom | All your cards gain Stealth for 4 seconds |
 
 #### Spell Rules
-- Spells are drawn into hand like any card. Once their round delay reaches 0, they can be cast.
+- Spells are drawn into hand like any card and deployed freely during the Placement Phase.
 - A deck can contain **2–4 spells** out of the 12 total cards.
 - Max 2 copies of any single spell.
 - When played, spells show a brief visual effect on the battlefield (vine tendrils wrapping, flames erupting, etc.).
 
 #### Why Spells Matter
-Spells create **interactive gameplay**. When your opponent plays Flame Wave, you need to think about card placement. When they hold cards with 0 delay and haven't played them, you wonder "are they holding a spell?" This creates **psychological tension** that pure creature deployment can't achieve.
+Spells create **interactive gameplay**. When your opponent plays Flame Wave, you need to think about card placement. When they hold a card and haven't played it, you wonder "is that a spell?" This creates **psychological tension** that pure creature deployment can't achieve.
 
-### 4.6 Battlefield Environments (Forge Arenas) ✨ NEW
+### 4.7 Battlefield Environments (Forge Arenas)
 
-Every match isn't the same anymore. Each match randomly assigns **1–2 lane modifiers** from a pool. These are visible to both players at match start and change how those specific lanes behave.
+Every match isn't the same. Each match randomly assigns **1 lane modifier** from a pool (2 in Grand Forge arena). Modifiers are visible to both players at match start and change how those specific lanes behave.
 
 #### Arena Modifier Pool
 | Arena Modifier | Effect | Strategic Impact |
@@ -139,42 +155,38 @@ Every match isn't the same anymore. Each match randomly assigns **1–2 lane mod
 | **Burning Ground** | All cards in this lane lose 2 HP/s | Favors high-HP Ironclad/Al-Noor; punishes swarm |
 | **Shadow Veil** | Cards in this lane are invisible to opponent until they attack | Phantom faction dream lane |
 | **Overgrowth** | Cards in this lane heal 3 HP/s | Makes this lane very hard to clear; Verdant paradise |
-| **Crumbling Bridge** | Lane only holds 2 cards instead of 3 | Forces quality over quantity |
-| **Mana Spring** | Deploying to this lane costs -1 mana | Rush lane; tempo play |
-| **Ancient Forge** | Merges in this lane produce 3★ directly (skip 2★) | High-value merge target |
-| **Void Rift** | Cards here can attack ANY enemy lane, not just the opposite | Disrupts lane-matching strategy |
+| **Void Rift** | Cards here can attack ANY enemy slot, not just the directly opposite one | Disrupts lane-matching strategy |
 | **Sandstorm** | All cards in this lane have -20% attack speed | Punishes aggro builds, favors tanks |
 | **Sacred Ground** | Cards in this lane cannot be targeted by spells | Safe haven; forces direct combat |
-| **Crumbling Ruins** | At 1:30, this lane collapses — all cards in it are destroyed | Timed risk; deploy late |
+| **Crumbling Ruins** | At the 90-second mark, this slot collapses — the card in it is destroyed | Timed risk; deploy late |
 
 #### Implementation Rules
 - **PvP Arena**: 1 random modifier per match (2 modifiers in Grand Forge arena)
-- **PvE Campaign**: Story missions have fixed, thematic modifiers (e.g., a volcano level = Burning Ground on all lanes)
+- **PvE Campaign**: Story missions have fixed, thematic modifiers (e.g., a volcano level = Burning Ground on all slots)
 - **Draft Mode**: 2 random modifiers to increase variance and skill expression
-- Modifiers are shown during a **10-second "Arena Reveal" phase** before the match starts — gives players a moment to mentally adjust their strategy
+- Modifiers are shown during a **10-second "Arena Reveal" phase** before the match starts
 - Both players always see the same modifiers simultaneously — no information asymmetry
 
-### 4.7 Mid-Match Forge Events ✨ NEW
+### 4.8 Mid-Match Forge Events (Post-MVP — Phase 2+)
 
-At the **1:30 mark** (halfway through the match), a random event triggers with a 5-second warning animation. These create **"moment of drama"** that prevent matches from feeling predictable.
+> **Scope Decision:** Mid-Match Forge Events are **deferred to Phase 2**. Arena Modifiers (§4.7) already solve the problem of preventing match predictability, and shipping both in MVP would duplicate the same design goal while adding substantial server-side event-scheduling complexity. Events will be added in Phase 2 once playtesting confirms whether Modifiers alone provide sufficient match variance.
+
+At the **90-second mark**, a random event triggers with a 5-second warning animation. These create **"moment of drama"** that prevent matches from feeling predictable.
 
 | Event | Effect | Duration |
 |---|---|---|
-| **Mana Storm** | Both players gain +3 mana instantly | One-time |
 | **Quake** | All cards lose 20% current HP | One-time |
-| **The Forge Awakens** | A neutral 3★ card spawns in a random empty lane slot — first to defeat it claims it | Until defeated |
+| **The Forge Awakens** | A neutral 3★ card spawns in a random empty slot — first to defeat it claims it | Until defeated |
 | **Eclipse** | All card abilities are disabled for 10 seconds | 10 seconds |
 | **Double Time** | All attack speeds doubled for 15 seconds | 15 seconds |
 | **Reinforcements** | Both players draw 2 extra cards | One-time |
-| **Iron Rain** | All cards gain +10% ATK for the rest of the match | Permanent |
 | **Healing Winds** | All cards heal 20% of their max HP | One-time |
 
 #### Event Rules
 - Only **1 event per match** — never stacks
-- Events happen in **PvP Arena** and **Dungeon Crawl** modes
 - Events are **disabled** in Grand Tournament and Draft Clash to preserve pure competitive integrity
-- Both players see the event simultaneously with a dramatic screen-wide animation ("THE FORGE AWAKENS" with screen rumble)
-- Events are NOT random dice rolls — they're selected from a curated pool that balances the current match state (e.g., if both players have low HP cards, Healing Winds is more likely)
+- Both players see the event simultaneously with a dramatic screen-wide animation
+- Events are selected from a curated pool weighted by current match state (e.g., if both sides have low HP, Healing Winds is more likely)
 
 ### 4.8 Comeback Mechanics ✨ NEW
 
@@ -223,20 +235,29 @@ FORGE has two card types:
 Each creature card has:
 - **Name** (e.g., "Iron Sentinel")
 - **Faction** (Ironclad / Verdant / Ember / Phantom / Al-Noor)
-- **Rarity** (Common, Rare, Epic, Legendary)
+- **Rarity** (Common, Uncommon, Rare, Epic, Legendary)
 - **ATK** — damage per attack cycle
 - **HP** — health before card dies
 - **Speed** — how fast the card attacks (Slow / Normal / Fast)
 - **Keywords** — standardized ability tags (see 5.5)
 - **Skills** — special abilities that unlock at specific card levels (see 5.6)
 
-### 5.3 Card Rarities
-| Rarity | Color | Drop Rate | Power Level |
-|---|---|---|---|
-| Common | Gray | 70% | Starter cards, easy to merge |
-| Rare | Blue | 20% | Mid-tier synergy cards |
-| Epic | Purple | 8% | Game-changers, strong abilities |
-| Legendary | Gold | 2% | Most powerful, unique effects |
+### 5.3 Card Rarities & Star Progression
+Cards in FORGE are classified by rarity, which determines their starting star rating (Base Stars), their maximum growth limit (Max Stars), and the number of permanent Skills they possess.
+
+| Rarity | Color | Base Stars | Max Stars | Skill Slots Gated | Role & Identity |
+|---|---|---|---|---|---|
+| **Common** | Gray | 1★ | 3★ | 1 (Passive) | Starter constructs, inexpensive to upgrade. |
+| **Uncommon** | Green | 2★ | 3★ | 2 (Passive + Active) | Standard utility units with specialized lane duties. |
+| **Rare** | Blue | 3★ | 6★ | 2 (Passive + Active) | High-potential core units that scale heavily. |
+| **Epic** | Purple | 4★ | 6★ | 3 (Passive + Active + Ultimate) | Powerful constructs with game-changing impact. |
+| **Legendary** | Gold | 5★ | 6★ | 3 (Passive + Active + Ultimate) | Ultimate cards defining faction synergy and archetypes. |
+
+#### Star Evolution Rules:
+- **Common & Uncommon cards** are capped at **3★ max**, meaning they are highly effective early-to-mid game but have stat ceilings.
+- **Rare, Epic, and Legendary cards** can evolve all the way to **6★**, making them the premier choices for end-game optimization.
+
+---
 
 ### 5.4 Sample Card Abilities (no faces, themed)
 | Card | Faction | Keywords | Ability |
@@ -245,7 +266,7 @@ Each creature card has:
 | Thornwall | Verdant | Thorns | **Thorn Barrier** — reflects 15% damage back to attacker |
 | Cinder Drake | Ember | Burn | **Searing Breath** — deals 5 damage per second to all enemy lane cards |
 | Void Shade | Phantom | Stealth | **Phased** — untargetable for first 5 seconds after deployment |
-| Root Colossus | Verdant | Freeze, Last Stand | **Entangle** — freezes the enemy card in front for 3 seconds on merge |
+| Root Colossus | Verdant | Freeze, Last Stand | **Entangle** — freezes the enemy card in front for 3 seconds on deploy |
 | Siege Golem | Ironclad | Pierce | **Armor Pierce** — ignores 30% of enemy HP when attacking base |
 | Shield Bearer | Al-Noor | Shield, Taunt, Last Stand | **Fortify** — takes 20% less damage when adjacent to another Al-Noor card |
 | Desert Scout | Al-Noor | Haste | **Swift Strike** — attacks twice before opponent responds on first deploy |
@@ -270,82 +291,30 @@ All card abilities use a **standardized keyword system** for instant readability
 
 > **Design Note:** Keywords are displayed as **icons with tooltips** on the card. In-game, a player can long-press any keyword icon to see a brief explanation. This keeps the UI clean while remaining accessible to new players.
 
-### 5.6 Card Skill Unlock System ✨ NEW
+### 5.6 Card Skill Unlock System (Fixed Identity)
 
-Cards don't start with all their abilities. **Skills unlock progressively as a card levels up**, giving players a sense of growth and mastery with every card they invest in.
+Skills represent a card’s **fixed, printed identity**. They define exactly what a creature is and the fundamental role it plays (e.g., a tank, a burst damage dealer, or a support construct). They cannot be changed or swapped, though they are unlocked and strengthened as the card grows.
 
-#### How It Works
-Each card has up to **3 skill slots** that unlock at specific milestone levels:
+#### Skill Gating by Rarity
+- **Common:** 1 Skill Slot (1 Passive).
+- **Uncommon & Rare:** 2 Skill Slots (1 Passive + 1 Active).
+- **Epic & Legendary (and Heroes):** 3 Skill Slots (1 Passive + 1 Active + 1 Ultimate/Signature).
 
-| Card Level | What Unlocks | Example (Tower Knight) |
-|---|---|---|
-| **Level 1–29** | Base stats only (ATK, HP, Speed) + 1 keyword | Shield 10% |
-| **Level 30** | **Skill 1 unlocks** — a powerful passive ability | Shield Wall: Friendly cards gain +15% HP |
-| **Level 31–59** | Upgraded stats (ATK, HP, Speed) | Higher stats |
-| **Level 60** | **Skill 2 unlocks** — a triggered/active combat ability | Fortified Stance: On deploy, gains Taunt for 2 rounds |
-| **Level 61–99** | Advanced stats (ATK, HP, Speed) | Higher stats |
-| **Level 100** | **Skill 3 unlocks** — ultimate faction signature ability | Iron Will: Cannot be killed for 1 round after HP drops to 0 |
-
-#### Leveling & Milestones
-- **Max Level:** 100.
-- **Normal Levels:** Upgrading from level 1 to 29, 31 to 59, and 61 to 99 is done by consuming low-tier/unwanted cards as XP fodder.
-- **Milestone Levels (30, 60, 100):** To break through the milestone levels and unlock the respective skills, players must obtain and sacrifice **3 duplicate copies** of the same card.
+#### How Skills Unlock
+Skills unlock progressively as a card increases its **Star level** and **Milestone Levels**:
+- **Skill 1 (Passive):** Available at base Star level (Level 1).
+- **Skill 2 (Active):** Unlocks when the card reaches **3★** (and Level 30).
+- **Skill 3 (Ultimate/Signature):** Unlocks when the card reaches **5★** (and Level 60).
 
 #### Skill Types
-| Skill Type | Trigger | Example |
-|---|---|---|
-| **Passive** | Always active while card is on field | "All Ironclad allies gain +20% HP" |
-| **On Deploy** | Triggers once when the card is first placed | "Freeze the opposing card for 1 round" |
-| **On Attack** | Triggers when the card attacks | "Deals double damage on first strike" |
-| **On Death** | Triggers when this card is destroyed | "Explode for 20 damage to the opposing slot" |
-| **Last Stand** | Triggers when card drops below 25% HP | "ATK doubles for remaining attacks" |
-
-#### Detailed Skill Unlock Examples
-
-**Common Card — Thornwall (Verdant)**
-| Level | Unlock | Description |
-|---|---|---|
-| 1–29 | Base + Thorns 10% | Reflects 10% of physical damage taken back to attacker |
-| 30 | **Skill 1: Barbed Growth** | Thorns reflection increases by 5% for each Verdant card on the field |
-| 31–59 | Advanced Stats | Incremental HP/ATK increases |
-| 60 | **Skill 2: Root Anchor** | On Deploy — cannot be affected or moved by enemy spells for 2 rounds |
-| 61–99 | Elite Stats | Incremental HP/ATK increases |
-| 100 | **Skill 3: Eternal Timber** | On Death — grants your Hero a shield that absorbs 30 damage |
-
-**Rare Card — Sandstorm Caller (Al-Noor)**
-| Level | Unlock | Description |
-|---|---|---|
-| 1–29 | Base + Freeze 1 Round | Freezes opposing card on deploy for 1 round |
-| 30 | **Skill 1: Desert Wind** | On Deploy — reduces opposing slot card's attack speed by 30% for 2 rounds |
-| 31–59 | Advanced Stats | Incremental HP/ATK increases |
-| 60 | **Skill 2: Sandwall** | On Deploy — creates a barrier that absorbs the next 30 damage to your Hero |
-| 61–99 | Elite Stats | Incremental HP/ATK increases |
-| 100 | **Skill 3: Sand Tomb** | On Death — stuns the opposing card for 2 rounds |
-
-**Epic Card — Mamluk Vanguard (Al-Noor)**
-| Level | Unlock | Description |
-|---|---|---|
-| 1–29 | Base + Haste | Attacks immediately on the round of deployment |
-| 30 | **Skill 1: Cavalry Momentum** | First attack deals +100% damage (double damage) |
-| 31–59 | Advanced Stats | Incremental HP/ATK increases |
-| 60 | **Skill 2: Vanguard Push** | On first attack, stuns opposing card for 1 round |
-| 61–99 | Elite Stats | Incremental HP/ATK increases |
-| 100 | **Skill 3: Commander's Charge** | If this card kills an enemy, reduce spawn delay of all cards in hand by 1 round |
-
-**Legendary Card — The Golden Architect (Al-Noor)**
-| Level | Unlock | Description |
-|---|---|---|
-| 1–29 | Base stats (very high HP) | Featureless steel automaton, pure high stats |
-| 30 | **Skill 1: Geometric Shield** | All friendly cards gain Shield 15% while Architect is alive |
-| 31–59 | Advanced Stats | Incremental HP/ATK increases |
-| 60 | **Skill 2: Bayt Al-Hikmah** | While alive, reduces spawn delay of all cards in hand by 1 round |
-| 61–99 | Elite Stats | Incremental HP/ATK increases |
-| 100 | **Skill 3: House of Wisdom** | On Death — all remaining friendly cards gain +30% ATK for 2 rounds |
+| Skill Type | Description |
+|---|---|
+| **Passive** | Always active while the card is on the field (e.g., "All adjacent allies gain +15% Shield"). |
+| **Active** | Triggers under a specific combat condition (e.g., On Deploy, On Attack, or On Death). |
+| **Ultimate** | A high-impact signature move representing faction mastery, triggering once or on a cool down. |
 
 #### Design Philosophy
-> **Why lock skills behind levels?** This creates a meaningful progression curve. A Level 1 Tower Knight is a decent tank — but a Level 100 Tower Knight is a strategic powerhouse with Taunt, Shield Wall, and Iron Will. This makes leveling feel **rewarding** rather than just "+10% stats." It also means new players can understand a card's basic function immediately, then discover deeper strategic possibilities as they invest in it.
-
-> **Balance Rule:** Card level caps remain **arena-gated** (Section 7.4). This means a Copper Forge player can never face a Level 100 card with Skill 3 unlocked — they only face cards scaled to their rank. The skill system adds depth without breaking fairness.
+> **Skills vs. Perks:** Skills answer the question: *"What is this creature?"* They are fixed, printed on the card, and define its core identity. Perks (Section 7.6) answer: *"How am I playing this creature in this build?"* and are flexible, slot-in modifiers that players can borrow and customize. This two-layer strategy system gives high depth without overloading UI complexity.
 
 ### 5.7 Faction Synergy Bonus
 Running 3+ cards of the same faction in your deck activates a **passive bonus**:
@@ -353,7 +322,7 @@ Running 3+ cards of the same faction in your deck activates a **passive bonus**:
 - **Verdant** (3+): Regenerate 3 HP per round per card on field
 - **Ember** (3+): All attacks deal +10% damage
 - **Phantom** (3+): Cards enter with a 1-round stealth phase on deploy
-- **Al-Noor** (3+): Deployed cards heal your Hero for 5 HP on deploy (Radiance)
+- **Al-Noor** (3+): Each card you deploy heals your Hero for 5 HP on arrival (**Deploy Light**)
 
 Running a **mixed deck** (2 from each faction) activates **Harmony Bonus**: slight bonus to all stats — rewards smart hybrid builders.
 
@@ -374,7 +343,7 @@ The Forge Commander is your anchor — a large card that sits behind your lanes 
 | Commander | Faction | Passive Aura | Surge Ability |
 |---|---|---|---|
 | **Ironmaster** | Ironclad | All deployed cards gain +10 armor for first 10 seconds | **Iron Curtain** — All cards become invulnerable for 4 seconds |
-| **Grove Shaper** | Verdant | One free merge per match costs 0 mana | **Full Bloom** — Heal all your cards to full HP |
+| **Grove Shaper** | Verdant | All friendly Verdant cards regen 1 HP/s passively | **Full Bloom** — Heal all your cards to full HP |
 | **Emberlord** | Ember | Every 30 seconds, deals 10 damage to all enemy cards | **Inferno** — Deal 30 damage to all enemy cards |
 | **Voidkeeper** | Phantom | Reduces enemy attack speed by 10% passively | **Void Collapse** — Remove the strongest enemy card for 6 seconds |
 | **Al-Hakim** | Al-Noor | Every 45s, reveals the 3 rarest cards in opponent's deck | **Illumination** — All your cards attack twice for 8 seconds |
@@ -390,7 +359,7 @@ This is where you can fix what's broken in all 4 reference games. **The goal: sk
   - Cards level up from 1 to 100.
   - Normal levels (1-29, 31-59, 61-99) require consuming other low-tier/unwanted cards as XP fodder.
   - Each level increases a card's ATK and HP by a small percentage (e.g., +2%).
-  - Leveling up also requires a small amount of **Iron** (soft currency, earned through gameplay).
+  - Leveling up also requires a small amount of **Gold** (soft currency, earned through gameplay).
 - **Milestone Breakthrough Levels (30, 60, 100):**
   - Level 30, 60, and 100 act as milestone breakthroughs where powerful passive, active, and ultimate skills are unlocked.
   - To pass level 29 → 30, level 59 → 60, and level 99 → 100, the user must obtain and sacrifice **3 duplicate cards** of the exact same type.
@@ -404,7 +373,7 @@ Players upgrade their **Forge** (base HQ) which unlocks:
 - Passive income speed (resource generation)
 - Clan participation
 
-Forge upgrades use **Iron** (free currency) + **Crystals** (premium), but Iron is enough for all core upgrades.
+Forge upgrades use **Gold** (free currency) + **Crystals** (premium), but Gold is enough for all core upgrades.
 
 ### 7.3 Runes (Artifact Equivalent)
 Equip **Runes** to your Forge Commander to add passive bonuses:
@@ -413,13 +382,18 @@ Equip **Runes** to your Forge Commander to add passive bonuses:
 - Runes drop from dungeons and event chests, NOT behind heavy paywalls
 
 ### 7.4 Arena Ladder (PvP Rank System)
-| Arena | Name | Cup Range | Card Level Cap | Skills Available |
+
+> **Vocabulary Note:** Two separate progression axes exist and must never be confused in UI copy or code:
+> - **Star Tier** (1★–6★): How far a card has been evolved via duplicate sacrifice. Determines which skills are unlocked.
+> - **Power Level** (1–100): The card's XP-based stat multiplier (ATK, HP). Increases incrementally via fodder cards.
+
+| Arena | Name | Cup Range | Max Star Tier Allowed | Skills Available |
 |---|---|---|---|---|
-| 1 | Copper Forge | 0–400 | Level 3 max | Skill 1 only |
-| 2 | Iron Forge | 400–900 | Level 4 max | Skill 1 + Skill 2 |
-| 3 | Steel Forge | 900–1600 | Level 5 max | All skills |
-| 4 | Crystal Forge | 1600–2500 | Level 5 + Epic unlock | All skills |
-| 5 | Shadow Forge | 2500–4000 | Level 5 + Legendary unlock | All skills |
+| 1 | Copper Forge | 0–400 | 2★ max | Skill 1 (Passive) only |
+| 2 | Iron Forge | 400–900 | 3★ max | Skill 1 + Skill 2 |
+| 3 | Steel Forge | 900–1600 | 4★ max | All skills |
+| 4 | Crystal Forge | 1600–2500 | 5★ max | All skills |
+| 5 | Shadow Forge | 2500–4000 | 6★ (Rare/Epic/Legendary) | All skills |
 | 6 | Grand Forge | 4000+ | Uncapped, tournament tier | All skills |
 
 Win PvP → earn **Cups** → rise in arena. Lose → lose cups. This creates fair bracket play — you always face players at your same strength tier.
@@ -431,21 +405,32 @@ Win PvP → earn **Cups** → rise in arena. Lose → lose cups. This creates fa
 4. **Draft Mode** — each player picks from random card pool (levels disabled) — pure skill, no pay-to-win
 5. **Challenge Events** — limited-time modes with fixed decks, everyone on equal footing
 
-### 7.6 Perk System (Post-MVP — Phase 4+) ✨ NEW
+### 7.6 Perk System (Post-MVP — Phase 4+) ✨ REVISED
 
 > **Note:** Perks are a major depth layer designed for **post-launch**. They should NOT be included in the MVP. This section documents the design so it's ready when the time comes.
 
 #### What Are Perks?
-Perks are **equippable passive bonuses** that modify your overall playstyle. Unlike Runes (which attach to your Commander), Perks attach to your **Forge Core** and affect your entire battlefield.
+Perks are **flexible, equippable modifiers** that players slot into their creature cards. While **Skills** represent a card's fixed identity (*"What is this creature?"*), **Perks** define the build and playstyle (*"How am I playing this creature in this specific deck/match?"*). Perks let players bend a creature's default role without rewriting it.
 
-#### Perk Slots
-- Players start with **0 perk slots**
-- Slot 1 unlocks at Forge Level 8
-- Slot 2 unlocks at Forge Level 12
-- Slot 3 unlocks at Forge Level 15 (end-game content)
+#### Perk Slots & Customization
+- Each creature card has **1–2 Perk slots** (unlocked via card progression or Forge level milestones).
+- Perks are drafted, borrowed, or slotted from a player's collection.
+- Perks can be leveled up to increase their potency.
 
-#### Perk Leveling
-Each perk can be leveled from **Level 1 → Level 5** using **Perk Shards** (a new resource earned from Forge Depths runs and Clan Raids).
+#### The Faction Guardrail: Borrowing Rules
+To reinforce faction identity and prevent overpowered combinations, the following borrowing rules apply:
+1. **Faction-Locked Perks:** A creature can equip perks belonging specifically to its own faction.
+2. **Universal Perks:** A small, curated pool of neutral/general perks is accessible by all factions (e.g., generic speed/health boosts).
+3. **No Cross-Faction Borrowing:** An Ironclad unit cannot equip Ember-specific or Phantom-specific perks. This preserves faction strategy and makes balancing new cards much safer.
+
+#### Bending Roles: How Skills and Perks Interact
+Because perks are slot-in modifiers, they allow players to customize creatures for specific roles:
+- **Default Role:** An Al-Noor unit might naturally be a high-defense tank (via its fixed Skills).
+- **The "Mana Battery" Build:** Equip a *"Damage taken generates Mana"* perk. The tank now snowballs the player's spell output.
+- **The "Healer-Guardian" Build:** Equip a *"Heal adjacent allies on basic attacks"* perk. The tank now sustains the frontline.
+
+#### Perk Leveling & Progression
+Each perk can be leveled from **Level 1 → Level 5** using **Perk Shards** (earned from Forge Depths runs and Clan Raids).
 
 | Perk Level | Cost | Improvement |
 |---|---|---|
@@ -455,93 +440,174 @@ Each perk can be leveled from **Level 1 → Level 5** using **Perk Shards** (a n
 | Level 4 | 400 Perk Shards | +75% effect strength + visual upgrade |
 | Level 5 | 1000 Perk Shards | +100% effect strength + unique particle effect |
 
-#### Sample Perks
+#### Sample Perks (Bending Faction Roles)
 
-| Perk | Base Effect (Lv 1) | Max Effect (Lv 5) | Playstyle |
-|---|---|---|---|
-| **Swift Deployment** | Cards deploy 10% faster (reduced animation delay) | 20% faster | Aggro/Rush |
-| **Fortified Core** | Forge Core starts with +10 HP (110 total) | +20 HP (120 total) | Defensive/Control |
-| **Mana Flow** | +0.1 mana/second generation | +0.2 mana/second | Economy/Spell-heavy |
-| **Merge Mastery** | Merged cards gain +5% bonus ATK | +10% bonus ATK | Merge-focused |
-| **Battle Wisdom** | Start with 5th card drawn at match start | 5th card + first spell costs -1 mana | Combo |
-| **Thorn Aura** | All your cards reflect 3% damage | 6% damage | Verdant synergy |
-| **Shadow Step** | All your cards gain 1 second of Stealth on deploy | 2 seconds of Stealth | Phantom synergy |
-| **Ember Heart** | Your Burn effects deal +10% damage | +20% damage | Ember synergy |
-| **Iron Constitution** | Your cards with Shield keyword gain +10% bonus HP | +20% bonus HP | Ironclad synergy |
-| **Radiant Favor** | Merge healing (Al-Noor synergy) heals +2 extra HP | +4 extra HP | Al-Noor synergy |
+| Perk Name | Faction | Base Effect (Lv 1) | Max Effect (Lv 5) | Strategic Playstyle |
+|---|---|---|---|---|
+| **Alloy Shielding** | Ironclad | Converts 5% of damage dealt into a personal shield | Converts 10% into a shield | Bends a damage-dealer into a self-sustaining tank. |
+| **Spore Burst** | Verdant | On taking a critical hit, releases spores that heal adjacent allies for 5 HP | Spores heal for 10 HP | Bends a frontliner into a passive area-of-effect healer. |
+| **Overheat** | Ember | Attacks deal splash damage but cost 2 HP per swing | Splash damage, costs 4 HP | Bends a single-target attacker into a high-risk area sweeper. |
+| **Spectral Anchor** | Phantom | Increases own aggro/Taunt when in Stealth | Max aggro/Taunt in Stealth | Bends a stealthy assassin into a distraction/disruption unit. |
+| **Radiant Surge** | Al-Noor | Generating light/healing gains +1 Mana | Healing gains +2 Mana | Bends a healer into an economy accelerator. |
+| **Kinetic Flow** | Universal | Increases attack speed by 5% after every second attack (stacks up to 3 times) | 10% attack speed | Basic combat utility for any unit. |
 
 #### Perk Acquisition
-- **Common Perks**: Guaranteed drop from completing Forge Depths Floor 1
-- **Rare Perks**: Random drop from Forge Depths Floor 2+, or purchasable in Shard Shop
-- **Epic Perks**: Rare drop from Forge Depths Floor 3 boss, or Season milestone reward
-- **Perk Shards for leveling**: Earned from Forge Depths runs, Clan Raids, and weekly challenge completions
-
-#### Why Perks Are Post-MVP
-Perks add a **third layer of strategy** (deck building → card skills → perks). Introducing them too early would overwhelm new players. They're designed as a "depth expansion" for players who've mastered the core game and need more to optimize.
+- **Common Perks**: Guaranteed drop from completing Forge Depths Floor 1.
+- **Rare Perks**: Random drop from Forge Depths Floor 2+, or purchasable in Shard Shop.
+- **Epic/Legendary Perks**: Rare drop from bosses or Season Pass milestones.
+- **Perk Shards**: Earned from daily play, dungeons, and event chests.
 
 ---
 
 ## 8. Economy & Monetization (Fair Design)
 
-The biggest failure of Ludus, Black Deck, and Deck Heroes is **punishing free players**. Here's a balanced model:
+The biggest failure of Ludus, Black Deck, and Deck Heroes is **punishing free players**. Here's a balanced model built on four distinct currencies, each with a clear identity and no overlap.
 
-### 8.1 Currencies
-| Currency | Name | How Earned | Used For |
-|---|---|---|---|
-| Soft (free) | **Iron** | Battles, daily quests, chests | Card leveling, Forge upgrades |
-| Shards | **Shards** | Duplicate cards, weekly chest | Card leveling |
-| Hard (paid/earnable) | **Crystals** | Purchase, seasonal rewards, achievements | Speed-ups, cosmetics, chest refreshes |
+### 8.1 Currency Map
 
-### 8.2 What Crystals Can Buy (CRITICAL for F2P trust & Islamic Compliance)
-✅ Cosmetic card skins (visual only)  
-✅ Extra chest slots / speed-ups (convenience, not power)  
-✅ Season Pass (bonus Iron income, cosmetics — NOT exclusive cards)  
-✅ Direct Purchase Shop: Buying specific, pre-revealed cards, Commanders/Heroes, or materials (always fully visible prior to purchase)  
-✅ Event-Specific Shop: Directly buying a specific card or Hero during designated events  
-❌ **NEVER sell random draws/loot boxes/mystery chests** — all premium currency purchases must have 100% transparent and deterministic outcomes (no buying what you don't know)  
-❌ **NEVER sell power directly** — no card level boosts, no Legendary card bundles  
-❌ **NEVER gate tournament winner's reward behind payment** (Ludus's biggest mistake)
+| Currency | Type | How Acquired | Spent On | Convertible? |
+|---|---|---|---|---|
+| **Gold** | Soft (free) | Battles, daily quests, earned chests, or purchased with Crystals | Card leveling, Forge upgrades, Milestone Breakthrough costs | Crystals → Gold ✅ / Gold → anything else ❌ |
+| **Shards** | Collection | Duplicate card pulls (auto-convert), Shard Shop, dungeon/event drops, Tower floor clears | 100 Shards of the same card → obtain that card directly | Not exchangeable for other currencies |
+| **Gems** | Earnable (gameplay only) | Battle wins, daily quests, event milestones, PvE clears | Packages (card draws), Wildcard Tickets, Milestone Breakthrough Skips | ❌ Cannot be purchased or converted — earned exclusively by playing |
+| **Crystals** | Hard (real money) | Real-money purchase, Season Pass, achievements | Direct Shop (specific cards/heroes), Gold conversion, Energy/Tickets, cosmetics, speed-ups | Crystals → Gold ✅ / Crystals → Gems ❌ never |
+
+> **Design rationale:** Gems being completely non-purchasable is the key ethical unlock in this system. It means Packages (random draws) are funded entirely by playtime — never by a credit card — which eliminates the *gharar*/gambling concern around random draws entirely. A player who wants a specific card still has a deterministic path: grind 100 Shards of that card and obtain it directly. Every card in the game therefore has two routes to ownership: a randomised one (Gems → Packages) and a fully transparent one (Shards → direct). This gives F2P players a "I know exactly how far away I am" feeling even when their pulls run cold.
+
+### 8.2 What Crystals Can & Cannot Buy
+✅ Cosmetic card skins (visual only)
+✅ Speed-ups (convenience, never power)
+✅ Season Pass (bonus Gold income, cosmetics — NOT exclusive cards)
+✅ Direct Purchase Shop: specific, pre-revealed cards/heroes with price shown before payment
+✅ Event-Specific Shop: specific new Heroes/Commanders during events (fully revealed before purchase)
+✅ Gold (soft currency conversion)
+✅ Energy Cells / Battle Tickets (consumable top-up)
+❌ **Gems — never.** Packages are a Gems-only mechanic; Crystals cannot access the draw pool
+❌ **Direct power** — no card level boosts, no Legendary bundles, no Star Tier skips
+❌ **Tournament access** — winning is gated by skill, never payment
 
 ### 8.3 Battle Pass (Season Pass)
-- Free track: 30 days of daily Iron rewards, Shards, Common/Rare cards
-- Paid track (~$4.99/month): 2x Iron rate + cosmetic skins + 1 guaranteed Epic card per season
-- The paid pass gives speed, not power — F2P can reach the same card levels in ~2 weeks longer
+- Free track: 30 days of daily Gold rewards, Shards, Common/Uncommon cards
+- Paid track (~$4.99/month): 2× Gold rate + cosmetic skins + 1 guaranteed Epic card per season + bonus Gems on milestone completions
+- The paid pass gives speed, not power — F2P can reach the same card levels ~2 weeks slower
 
 ### 8.4 Reward Loop
 ```
-Win Battle → Earn Iron + Chest Slot fills
+Win Battle → Earn Gold + Gems + Chest Slot fills
 Open Chest (1–4 hours) → Get Cards + Shards
-Duplicate Card → Becomes Shards
-Shards → Level Up Card → Unlock New Skills
-Stronger Card (with new skills) → Win More → Better Chests
+Duplicate Card → Auto-converts to Shards
+Shards (100 of same card) → Directly claim that card
+Shards / Gold → Level Up Card → Unlock New Skills
+Gems → Packages → New Cards + pity counter progress
+Stronger Cards → Win More → Better Chests → More Gold/Gems
 ```
-Free players always have something to open, always making progress.
+Free players always know where they stand: Gold for leveling, Gems for draws, Shards for guaranteed targeting.
 
-### 8.5 Thekr Reward System (Ethical Ad Alternative)
-To maintain an ad-free environment while still providing optional reward accelerators (e.g., speed up chest timers, gain extra daily reward keys), the game features the **Thekr Reward System**.
+### 8.5 Thekr Wellbeing System (Ethical Energy Gate)
 
-- **Core Mechanics:**
-  - **Voluntary Access:** Players voluntarily choose to view the screen to get a reward.
-  - **5-Second Focus Timer:** The player must view a beautifully rendered "Thekr" (remembrance/supplication) card for a minimum of 5 seconds. The count-down timer is server-verified.
-  - **Random, Non-Repeating Selection:**
-    - Thekr entries are pulled at random from the database pool.
-    - The server tracks which entries the user has already seen.
-    - A Thekr cannot be shown again until all available Thekrs in the database pool have been viewed.
-    - Once all Thekrs have been viewed, the user's seen history resets, starting a new randomized cycle.
-  - **Anti-Cheat Verification:** To prevent client-side speed-hacking or API manipulation, when the client requests a Thekr, the server logs the transaction with a timestamp. When the client attempts to claim the reward, the server verifies that at least 5 seconds have elapsed since the request timestamp.
+FORGE's energy gate is designed not as a paywall but as a **genuine wellbeing pause** — a moment of calm that respects the player's time and aligns with Islamic values of balance (mizan) in all things. The system is built to never feel preachy, automated, or manipulative.
+
+---
+
+#### 8.5.1 The Depletion Dialog — Warm, Not Clinical
+
+When a player's **Energy** (AI auto-battle fuel) or **Battle Tickets** (manual PvE entry) runs empty, a dialog appears. Its tone is designed to feel like a caring friend, not a warning label or a guilt trip.
+
+**Message Behaviour:**
+- **First depletion of the day:** Shows the full wellbeing message (pulled from the Depletion Message Pool — see 8.5.4).
+- **Subsequent depletions same day:** Shows only a short one-liner (e.g., *"Still resting? Energy refills at 6:42 PM"*), also from the pool. This prevents the message from feeling robotic on repeat.
+- The admin can mark any message as **"1st-time only"** or **"repeat-use"** — so sincere, longer messages are never over-exposed.
+
+**Example Messages (Full, 1st-time):**
+> *"You're out of energy for now. Games are meant to bring joy — not take over your time. Take a breath, maybe pray, check in on someone you love. Forge will be here when you're back. 🌙"*
+
+> *"Energy's empty — and that's okay. A game should add to your life, not replace it. Step away for a bit; come back refreshed."*
+
+> *(Ramadan / Friday only):* *"Time for a small break. The Prophet ﷺ taught us balance in all things — even in play. Rest, remember Allah, and return when you're ready."*
+
+**Example Messages (Short, repeat-use):**
+> *"Still resting? Energy refills at 6:42 PM."*
+> *"Come back refreshed — Forge will be waiting."*
+> *"No rush. Real life first. 🌿"*
+
+---
+
+#### 8.5.2 Three-CTA Dialog Structure
+
+The depletion screen offers **three exits** — never two. Making "Close" clearly visible is part of the anti-addiction design intent.
+
+| CTA | Action | Limit |
+|---|---|---|
+| **Buy Energy / Tickets** | IAP or soft-currency top-up | Unlimited |
+| **Read Thekr** | View a dhikr/dua card for 5–10 seconds to earn a partial refill | **3× per day** (Energy) / **3× per day** (Tickets) — separate counters |
+| **Not Now / Close** | Dismiss dialog, energy/tickets refill on their natural timer | Always available, clearly visible — never buried |
+
+> **Design Note:** "Close" must be a prominent button — not a tiny `✕`. A dialog that makes leaving harder than paying violates the wellbeing intent and recreates the exact dark pattern this system is designed to avoid.
+
+---
+
+#### 8.5.3 The Thekr Dialog — A Genuine Micro-Pause
+
+To prevent players from mindlessly tapping through Thekr like a reward-ad button, the experience is designed as a **genuine moment of stillness**.
+
+**How it works:**
+1. A beautifully rendered **dhikr / dua card** appears — calligraphic Arabic text, soft geometric gold-on-dark background, subtle ambient animation (floating particles, soft glow).
+2. The Arabic text is shown with transliteration and a translation in the player's locale (e.g., *"SubhanAllahi wa bihamdihi — Glory and praise be to Allah"*).
+3. A **soft countdown timer of 5–10 seconds** runs — server-verified. The player may optionally tap a **tasbeeh counter** on screen to follow along (purely optional, not required to claim).
+4. After the timer completes, the reward is granted automatically — **no "Claim" button tap required**. The reward amount decreases with each use per day (see below).
+
+**Reward Scaling (per resource, per day):**
+| Use | Energy Reward | Tickets Reward |
+|---|---|---|
+| 1st Thekr of the day | +2 Energy Cells | +2 Battle Tickets |
+| 2nd Thekr of the day | +1 Energy Cell | +1 Battle Ticket |
+| 3rd Thekr of the day | +1 Energy Cell | +1 Battle Ticket |
+| 4th+ | ❌ Not available until next reset | ❌ Not available until next reset |
+
+> **Design Note:** Diminishing reward quantities are acceptable; diminishing sincerity is not. The dhikr content itself stays short, authentic, and never feels like a chore — no matter which use it is that day.
+
+**Anti-Cheat Verification:**
+- The server logs a timestamp when the Thekr card is requested.
+- The reward endpoint validates that at least the minimum view duration (5 seconds, up to 10) has elapsed before crediting the reward.
+- The client cannot manually trigger the reward — it is server-pushed after timer completion.
+
+---
+
+#### 8.5.4 Admin-Managed Content Pools (CMS)
+
+All human-facing strings in this system are managed through an **admin CMS** — not hardcoded. This allows the team to update, expand, or contextualise content without shipping an app update.
+
+**Thekr (Dhikr/Dua) Pool:**
+- Each entry contains:
+  - Arabic text (required)
+  - Transliteration (required)
+  - Translation per supported locale (English, Arabic; extensible to others)
+  - Category tag (e.g., *Morning Adhkar*, *Gratitude*, *Protection*, *General Remembrance*)
+  - Optional seasonal tag (e.g., `ramadan`, `friday`, `general`) — used to filter contextually relevant entries
+- The server tracks which entries a player has already seen. An entry cannot repeat until the full pool for that player has been exhausted, then the cycle resets.
+- Admins can add, edit, deactivate, or reorder entries at any time.
+
+**Depletion Message Pool:**
+- Each entry contains:
+  - Message text per supported locale
+  - Resource type it applies to: `energy`, `tickets`, or `both`
+  - Display mode: `first_time` (shown only on first depletion of the day) or `repeat` (shown on 2nd+ depletions)
+  - Optional seasonal/contextual tag (e.g., `ramadan`, `friday`, `general`)
+- Admins control the entire message pool — no messages are hardcoded in the client.
+- The client fetches the appropriate message from the server at the moment of depletion, ensuring real-time updates without app releases.
 
 ---
 
 ## 9. AI Automation System
 
 ### 9.1 Purpose
-To reduce grind, players can use AI to automatically complete routine battles (campaign farming, daily dungeons, event grinding) while offline. The AI learns from the player's playstyle and deck preferences to make intelligent decisions during auto-battles.
+To reduce grind, players can use AI to automatically complete routine battles (campaign farming, daily dungeons, event grinding) while offline.
 
-### 9.2 AI Fuel — Energy / Tokens
+### 9.2 AI Fuel — Energy Cells
 The AI requires **Energy Cells** (a consumable resource) to run. Each auto-battle consumes 1 Energy Cell.
 - **Free cap:** Players regenerate 5 Energy Cells per day for free (capped at 10 stored)
 - **Subscription:** Monthly pass ($4.99) grants +15 Energy Cells per day and raises the cap to 50
-- **Direct purchase:** 20 Energy Cells = 100 Crystals (not recommended for daily play, available as top-up)
+- **Direct purchase:** 20 Energy Cells = 100 Crystals (available as a top-up; not the intended daily method)
 
 ### 9.3 AI Tokens (Subscription Perk)
 Subscribing to the **Forge Pass** gives you **AI Tokens** each month:
@@ -550,25 +616,35 @@ Subscribing to the **Forge Pass** gives you **AI Tokens** each month:
 - AI Tokens are consumed **only** when AI fails a task and retries — a safety net to prevent infinite auto-farming
 - 1 AI Token = 1 retry attempt on a failed auto-battle
 
-### 9.4 AI Learning System
-The AI doesn't just random-play — it learns from the player:
-- **Playstyle mirroring:** The AI records your manual battle decisions (when you merge, which lane you prioritize, when you save mana) and builds a lightweight behavioral model per deck
-- **Deck-specific profiles:** Each saved deck has its own AI profile — swap decks and the AI adapts its strategy
-- **Learning persistence:** AI performance improves the more you play manually with a given deck; after ~20 manual matches, the AI reaches ~80% of your skill level with that deck
-- **Reset:** Players can manually reset a deck's AI profile at any time (no cost)
+### 9.4 AI Bot System (Scripted Heuristics — MVP Scope)
+
+> **Scope Decision:** True per-player behavioral cloning ("the AI reaches 80% of your skill after ~20 matches") is a genuine ML research problem, not a feature toggle — it is **out of scope for MVP and Phase 1**. For MVP, the AI runs a scripted heuristic bot with tiered difficulty.
+
+**Heuristic Bot Tiers:**
+| Tier | Behaviour | Unlocked By |
+|---|---|---|
+| **Cautious** | Fills slots from left to right, no spell usage | Default |
+| **Balanced** | Prioritizes matching factions, uses spells when available | Forge Level 3+ |
+| **Aggressive** | Targets weakest enemy slot first, holds spells for high-value moments | Forge Level 5+ |
+
+- Players select a bot tier in the AI settings screen.
+- The bot operates only on PvE content; it **cannot** play in PvP Arena, ranked, or clan wars.
+- Bot tier selection is free — no paywall on difficulty.
+
+**Post-MVP Roadmap (Phase 3+):** True behavioral personalization (recording player decisions, deck-specific profiles) is documented as a future R&D track but will be designed and estimated separately before committing.
 
 ### 9.5 AI Limitations
 - AI cannot play in **PvP Arena** (ranked) — only in PvE modes (Campaign, Dungeon Crawl, Event battles)
-- AI cannot make strategic decisions like choosing which chest to open or when to upgrade — these remain player-only
-- AI has a **max confidence threshold**: if the AI calculates a <40% win chance for a battle, it will refuse to auto-battle and notify the player
+- AI cannot make meta-level decisions like choosing which chest to open or when to upgrade — these remain player-only
+- If the bot's pre-match win probability estimate is below 40%, it will decline to auto-battle and notify the player
 
 ### 9.6 Why This Design?
 | Problem | Solution |
 |---|---|
-| Players burn out repeating easy campaign battles | AI farms them while offline |
-| P2W concerns about auto-play | AI is limited to PvE only, no rank advantage |
-| Bot abuse risk | AI Tokens cap + manual play requirement keeps it fair |
-| AI too dumb to be useful | Learning system makes AI smarter the more you play |
+| Players burn out repeating easy campaign battles | Heuristic bot farms them while offline |
+| P2W concerns about auto-play | Bot is limited to PvE only, no rank advantage |
+| Bot abuse risk | AI Tokens cap keeps retry farming in check |
+| Behavioral cloning is too complex for MVP | Scripted tiers ship on time; personalization is a Phase 3 track |
 | Subscription must feel worth it | +Energy Cells + AI Tokens = quality-of-life upgrade, not power |
 
 ---
@@ -615,7 +691,8 @@ FORGE's primary market is the MENA region (Saudi Arabia, UAE, Egypt). Arabic sup
 | Mode | Description | Unlock |
 |---|---|---|
 | **Story Campaign** | 50 levels of PvE battles, introduces lore and mechanics via interactive onboarding | Day 1 |
-| **PvP Arena** | Real-time 1v1 matchmaking with Battlefield Environments | Forge Level 2 |
+| **PvP Arena** | Round-based 1v1 matchmaking with Battlefield Environments | Forge Level 2 |
+| **Forge Tower** | 5 faction-specific 50-floor PvE ladders. Permanent progress — cleared floors stay cleared. Farm Shards at any unlocked floor. Uses Battle Tickets. | Forge Level 2 |
 | **Dungeon Crawl** | Daily 5-room PvE gauntlet, unique rewards | Forge Level 3 |
 | **Forge Depths** ✨ | Roguelike PvE dungeon runs with branching paths, temporary relics, and bosses | Forge Level 4 |
 | **Draft Clash** | Limited-time equal-level draft format | Forge Level 5 |
@@ -648,7 +725,7 @@ Each run you collect 3–5 relics that modify your deck *for that run only*. The
 | Relic | Effect |
 |---|---|
 | 🔮 **Glass Cannon** | All your cards deal +50% damage but have -30% HP |
-| 🌿 **Lifebloom** | Heal 5 HP after every merge |
+| 🌿 **Lifebloom** | All your cards regen 3 HP/s passively for the entire run |
 | ⚔️ **Berserker's Edge** | Cards below 30% HP deal double damage |
 | 🛡️ **Fortress Protocol** | Your Forge Core starts with 150 HP instead of 100 |
 | 🌀 **Spell Echo** | Every spell you cast triggers twice |
@@ -676,7 +753,7 @@ Bosses have unique rules that break normal gameplay and force creative solutions
 
 ### 12.5 Rewards
 - Run currency (can't be hoarded — use it or lose it within the run)
-- Completing a full run gives: **Iron + Shards + chance at Rune drops + Perk Shards (post-MVP)**
+- Completing a full run gives: **Gold + Shards + chance at Rune drops + Perk Shards (post-MVP)**
 - **Weekly Leaderboard**: "Deepest run" + "Fastest clear" + "Fewest cards lost"
 
 ### 12.6 Why This Matters
@@ -684,21 +761,140 @@ Roguelike runs are the #1 proven format for PvE retention in card games (Slay th
 
 ---
 
-## 13. Card Acquisition (No Gacha Frustration & Transparent Purchase)
+## 13. Card Acquisition — Dual-Path System
 
-The most important F2P fix — **no buying random draws**:
+Every card in FORGE has **two routes to ownership**: a randomised draw path (Gems → Packages) and a fully deterministic grind path (Shards). A patient player always knows exactly how far away they are from any specific card. No RNG hell, no credit-card dependency for pulls.
 
-1. **Draws & Chests are ONLY Earned through Gameplay:** You cannot buy random card packs, chest draws, or mystery boxes with Crystals or real money (preventing *gharar*/gambling). They are strictly earned by active play:
-   - **Battle Chests** — earned by winning PvP matches, containing cards from your current arena pool.
-   - **Daily Free Chest** — 1 free Common/Rare chest per day.
-   - **Season Milestone Chest** — complete 30/60/90 battles in a season → guaranteed Rare/Epic/Legendary chests.
-2. **Direct Shop & Event-Based Sales (No Mystery):** Players spend currency only on fully transparent, specific cards/heroes:
-   - **Rotating Daily Shop** — Buy specific, pre-revealed cards using Crystals or Iron.
-   - **Shard Shop** — Exchange duplicate-card shards for specific cards/materials of your choice.
-   - **Event-Specific Purchases** — Limited-time game events where users can directly buy specific new Heroes/Commanders or cards (every purchase is fully shown beforehand; absolutely no blind draws).
-3. **Clan Donation** — request cards from clanmates once per day, donate to earn Iron.
+---
 
-This means: a patient player **always knows how many more battles or exactly how much currency** is needed to unlock the specific card/hero they want. No RNG monetization hell.
+### 13.1 Acquisition Paths
+
+**Path A — Packages (Gem-Funded Random Draws)**
+Packages are the primary way to discover new cards. They are funded exclusively by **Gems** (the gameplay-earned, non-purchasable currency), making them a playtime reward rather than a payment gateway. This fully resolves the *gharar* (uncertainty/gambling) concern: no real money ever buys a Package.
+
+**Path B — Shard Targeting (Deterministic)**
+- Every card pull that produces a card you already fully own auto-converts to **Shards** of that card.
+- Shards also drop from dungeons, event completions, and the Shard Shop.
+- Collect **100 Shards** of any specific creature or hero → claim that card directly, no draw required.
+- The Shard Shop lets players spend Shards on specific cards at known, fixed costs.
+
+**Path C — Direct Shop & Events (Crystal-Funded, Fully Transparent)**
+- **Rotating Daily Shop:** Buy specific, pre-revealed cards/heroes with Crystals or Gold.
+- **Event-Specific Purchases:** During limited events, specific new Heroes/Commanders are available at a clearly shown price. No mystery. No blind boxes.
+- Clan Donation: request specific cards from clanmates once per day; donate to earn Gold.
+
+---
+
+### 13.2 Package Types & Drop Rates
+
+Two separate draw pools exist. Neither can be accessed with real money — only Gems.
+
+#### Standard Card Package (Creatures)
+This pool contains Common, Uncommon, Rare, Epic, and Legendary creature cards.
+
+| Rarity | Drop Rate | Notes |
+|---|---|---|
+| **Common** (1★) | 55.0% | Starter fodder; high volume |
+| **Uncommon** (2★) | 28.0% | Solid utility units |
+| **Rare** (3★) | 12.0% | Core competitive units |
+| **Epic** (4★) | 4.0% | Strong faction anchors |
+| **Legendary** (5★) | 1.0% | Faction-defining powerhouses |
+
+> **Calibration note:** 1% Legendary / 4% Epic / 12% Rare is a standard mobile CCG competitive baseline. The guaranteed pity counters below make these feel fair rather than punishing — most players will see a Legendary within their pity window even on a cold streak.
+
+#### Hero Package (Commanders/Heroes only)
+This pool contains **Rare, Epic, and Legendary Heroes only** — no Common/Uncommon cards dilute the pool. Because the floor rarity is higher, the pool size is smaller and pulls feel more impactful.
+
+| Rarity | Drop Rate | Notes |
+|---|---|---|
+| **Rare Hero** | 70.0% | Solid faction commanders |
+| **Epic Hero** | 24.0% | Strong signature abilities |
+| **Legendary Hero** | 6.0% | Top-tier Surge + Passive combo |
+
+> **Calibration note:** 6% Legendary on a hero-only pool (no Common/Uncommon dilution) is proportionally equivalent in "grind weight" to the 1% Legendary in the Standard pool. The 30-pull pity below keeps the worst-case streak bounded.
+
+---
+
+### 13.3 Pity Counter System
+
+The pity counters are **visible in the Package UI at all times** — e.g., "6 / 10 to next Epic guarantee." This visible countdown is itself a fair retention hook: it shows players true information instead of manufacturing artificial urgency. Both counters are stored server-side and persist across sessions.
+
+#### Standard Package Pity
+| Pull Count | Guarantee |
+|---|---|
+| Every **10 pulls** | Guaranteed Epic or higher (resets counter on hit) |
+| Every **50 pulls** | Guaranteed Legendary (resets on hit; an Epic-pity hit at pull 10/20/30/40 does **not** reset this counter) |
+
+#### Hero Package Pity
+| Pull Count | Guarantee |
+|---|---|
+| Every **30 pulls** | Guaranteed Legendary Hero (resets on hit) |
+
+---
+
+### 13.4 Gems as a Strategic Sink (MVP: 2 Sinks)
+
+Gems need a clear spending identity beyond Packages — otherwise early collectors run out of things to spend them on. The two MVP sinks are chosen because they are **deterministic** (no *gharar* question), create genuine "spend now vs. save later" decisions, and stay relevant from early game to end-game.
+
+#### Sink 1 — Wildcard Ticket
+- Spend a set amount of Gems to obtain a **Wildcard Ticket** of a chosen rarity (Common, Rare, Epic, or Legendary).
+- A Wildcard Ticket redeems for **any specific card of that rarity** — completely bypasses RNG.
+- **Strategic tension:** "Do I keep pulling Packages for a chance at my target, or save Gems to guarantee it?"
+- Wildcard Tickets can be stored; players can save across multiple sessions.
+
+#### Sink 2 — Milestone Breakthrough Skip
+- Spend Gems to skip the **3-duplicate-sacrifice requirement** for a Level 30, 60, or 100 Milestone Breakthrough on any card.
+- The card advances to the next milestone and unlocks the corresponding Skill without needing duplicate copies.
+- **Strategic tension:** "Do I spend my Gems to fast-track my main card's Skill 3, or save them for Packages?"
+- This is a one-time spend per milestone per card — not infinitely repeatable.
+
+#### Post-MVP Sinks (Phase 4+)
+Once Perks ship, a **Perk Reroll** sink (spend Gems to reroll an unwanted perk on a creature) will be added to keep Gems relevant for end-game min-maxers.
+
+> **Explicitly avoided:** "Package Pity Reduction" (spend Gems to shave pulls off your pity counter) is **not implemented** — it muddies the clean pity-counter promise and risks feeling like "paying to reduce bad luck," which recreates the psychological pressure this system is designed to avoid.
+
+---
+
+### 13.5 The Forge Tower — Faction Shard Progression
+
+The Forge Tower is the **permanent, grindable Shard farm** — the third leg of the acquisition system alongside Packages (random draws) and Shard targeting (deterministic). Unlike Forge Depths (roguelike, run resets, temporary relics), the Tower tracks persistent progress: once you clear a floor, it stays cleared and can be freely replayed for Shard drops.
+
+#### Structure
+Five permanent towers — one per faction (Ironclad, Verdant, Ember, Phantom, Al-Noor) — each with **50 fixed PvE floors** of increasing difficulty. Each tower's card pool is restricted to its faction, making Tower progression a targeted tool for building out a specific faction collection.
+
+#### Entry Cost — Battle Tickets
+Tower attempts consume **Battle Tickets** (the same resource used for manual PvE). This means the Tower automatically inherits the **Thekr Wellbeing Gate** (§8.5) at no additional system cost — no new depletion dialog, no new CMS content required. One gate, two use-cases.
+
+#### Drop Rate & Rarity Unlock by Floor Bracket
+
+| Floor Range | Drop Chance / Win | Shards per Drop | Rarity Pool Unlocked |
+|---|---|---|---|
+| 1–9 | 0% | — | None — warm-up floors; reward Gold + XP fodder cards only |
+| 10–19 | 10% | 2 | Common + Uncommon shards |
+| 20–29 | 20% | 3 | + Rare |
+| 30–39 | 35% | 4 | + Epic |
+| 40–49 | 50% | 5 | + Legendary |
+| **50 — Tower Peak** | 100% | 8 | All rarities; repeatable weekly for a bonus reward box |
+
+> **Calibration note:** Drop rates and quantities are a first-pass baseline — treat them the same way as the round timer in §4.3: tune during playtesting. The escalation curve (10% → 20% → 35% → 50% → 100%) is intentionally steep at the top to make the final floors feel meaningful and aspirational.
+
+#### Favorite Card & Hero Bias
+For each faction tower, the player marks **one Favorite Creature** and **one Favorite Hero** (free to change at any time, no cooldown — this is a preference, never a purchase). When a shard drop triggers:
+- **60%** of that drop's shards go to the marked Favorite — if it belongs to the rarity pool unlocked at that floor bracket
+- **40%** spread across the rest of the faction's eligible pool, weighted toward lower rarity
+
+This keeps the floor bracket in full control of *rate and quantity* (the progression pacing lever), while Favorite selection only controls *which specific card* benefits most. The two axes are cleanly separated and explainable in a single tooltip.
+
+#### Server Authority
+Consistent with §18.5: floor completion, drop rolls, and Favorite selection are all validated and stored server-side. The client submits a Tower attempt request; the server resolves the combat outcome and the shard roll, then pushes the result to the client. Same pattern as existing chest and Battle Ticket flows — no new anti-cheat surface.
+
+#### MVP Scope (Phase 2)
+> **Scope Flag:** 5 towers × 50 floors = 250 individual balance points. To avoid pre-launch content debt, the Tower ships in **Phase 2** with:
+> - **2 towers** at launch: **Ironclad** and **Al-Noor** (the flagship factions)
+> - **Floors 1–20** unlocked at launch; floors 21–50 backfilled in content updates (same pattern as the Story Campaign)
+> - Remaining 3 faction towers added in Phase 3 content drops
+>
+> This delivers the system's retention and Shard-farming value from Day 2 without asking the team to hand-balance 250 floors before launch.
 
 ---
 
@@ -762,7 +958,7 @@ This section defines a dedicated **5th faction** — or an integrated cross-fact
 - Light particle effects — cards glow with warm golden light when abilities activate
 
 **Faction Synergy Bonus (3+ Al-Noor cards):**
-> **Radiance** — Every time a card merges, it releases a burst of light that heals all your other cards for 5 HP. Rewards the merge-heavy playstyle.
+> **Deploy Light** — Every time you deploy an Al-Noor card onto the battlefield, it releases a burst of warm golden light that heals your Hero for 5 HP. Rewards Al-Noor-heavy decks with sustained Hero durability. *(Note: this is a deploy trigger, not a merge trigger — in FORGE, all star-tier evolution happens outside of battle on the collection screen.)*
 
 ---
 
@@ -843,7 +1039,7 @@ These are the real historical sources to draw visual inspiration from — all ve
 
 ### How Al-Noor Fits the Other Factions Strategically
 
-Al-Noor is designed as the **support + precision** faction — it counters Ember's aggression (Radiance heals cancel burn damage), synergizes with Ironclad (both are armor-heavy), and is countered by Phantom's stealth (can't heal what it can't see). This gives the faction a clear identity in the meta:
+Al-Noor is designed as the **support + precision** faction — it counters Ember's aggression (Deploy Light heals offset burn damage), synergizes with Ironclad (both are armor-heavy), and is countered by Phantom's stealth (can't heal what it can't see). This gives the faction a clear identity in the meta:
 
 ```
 Al-Noor (Heal/Wisdom) ←→ strong vs Ember (Burn/Aggro)
@@ -1043,7 +1239,7 @@ To prevent cheating, game exploits, database tampering, and Remote Code Executio
 - **Victory Resolution:** Match outcomes (win/loss/draw) are determined exclusively by the server. The client cannot send a "match_won" event to claim victory.
 
 #### 2. Economy & Currency Integrity
-- **Server-Side Ledgers:** All progression variables (Iron, Shards, Crystals, XP, Chest status) are computed and stored on the PostgreSQL database. The client cannot modify these values locally.
+- **Server-Side Ledgers:** All progression variables (Gold, Shards, Gems, Crystals, XP, Chest status) are computed and stored on the PostgreSQL database. The client cannot modify these values locally.
 - **Time Tampering Protection:** Chest unlock schedules and daily quest resets are tracked using server UTC timestamps. The game is fully immune to local device time modification (time-travel cheats).
 
 #### 3. Secure File Uploads & RCE Prevention (Account Security)
@@ -1078,7 +1274,7 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 - [ ] Interactive onboarding (6-match tutorial flow) ✨
 - [ ] Story Campaign: 20 levels (PvE only) with fixed environment modifiers
 - [ ] Basic deck builder (8-card deck in MVP, 6 creatures + 2 spells)
-- [ ] Iron currency + card leveling (Level 1–3 only)
+- [ ] Gold currency + card leveling (Power Level 1–3 only)
 
 ### Phase 2 — PvP + Economy (Month 3–4)
 - [ ] Laravel API + Reverb PvP matchmaking (async fallback first, real-time in Phase 2 end)
@@ -1090,6 +1286,7 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 - [ ] Commander Surge abilities ✨
 - [ ] Comeback mechanics (Desperate Forge mana acceleration) ✨
 - [ ] Mid-match Forge Events (4 events for launch) ✨
+- [ ] Forge Tower — 2 factions (Ironclad + Al-Noor), floors 1–20 (Phase 2 launch) ✨
 - [ ] Card Skill unlocks at Level 4 (Skill 2) ✨
 - [ ] Friendly Challenges ✨
 
