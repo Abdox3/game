@@ -242,20 +242,37 @@ Each creature card has:
 - **Keywords** — standardized ability tags (see 5.5)
 - **Skills** — special abilities that unlock at specific card levels (see 5.6)
 
-### 5.3 Card Rarities & Star Progression
-Cards in FORGE are classified by rarity, which determines their starting star rating (Base Stars), their maximum growth limit (Max Stars), and the number of permanent Skills they possess.
+### 5.3 Card Rarities, Star Progression & Base Stats
+Cards in FORGE are classified by rarity, which determines their starting star rating (Base Stars), their maximum growth limit (Max Stars), the number of permanent Skills they possess, and their baseline combat stats.
 
-| Rarity | Color | Base Stars | Max Stars | Skill Slots Gated | Role & Identity |
-|---|---|---|---|---|---|
-| **Common** | Gray | 1★ | 3★ | 1 (Passive) | Starter constructs, inexpensive to upgrade. |
-| **Uncommon** | Green | 2★ | 3★ | 2 (Passive + Active) | Standard utility units with specialized lane duties. |
-| **Rare** | Blue | 3★ | 6★ | 2 (Passive + Active) | High-potential core units that scale heavily. |
-| **Epic** | Purple | 4★ | 6★ | 3 (Passive + Active + Ultimate) | Powerful constructs with game-changing impact. |
-| **Legendary** | Gold | 5★ | 6★ | 3 (Passive + Active + Ultimate) | Ultimate cards defining faction synergy and archetypes. |
+| Rarity | Color | Base ★ | Max ★ | Skill Slots | Base HP | Base ATK | Role & Identity |
+|---|---|---|---|---|---|---|---|
+| **Common** | Gray | 1★ | 3★ | 1 (Passive) | 100 | 12 | Starter constructs, inexpensive to upgrade. |
+| **Uncommon** | Green | 2★ | 3★ | 2 (Passive + Active) | 145 | 16 | Standard utility units with specialized lane duties. |
+| **Rare** | Blue | 3★ | 6★ | 2 (Passive + Active) | 210 | 22 | High-potential core units that scale heavily — 3 available star ranks lets them close the gap on higher rarities at full investment. |
+| **Epic** | Purple | 4★ | 6★ | 3 (Passive + Active + Ultimate) | 290 | 30 | Powerful constructs with game-changing impact. |
+| **Legendary** | Gold | 5★ | 6★ | 3 (Passive + Active + Ultimate) | 390 | 40 | Faction-defining powerhouses. Only rarity that can equip Perks. |
 
-#### Star Evolution Rules:
-- **Common & Uncommon cards** are capped at **3★ max**, meaning they are highly effective early-to-mid game but have stat ceilings.
-- **Rare, Epic, and Legendary cards** can evolve all the way to **6★**, making them the premier choices for end-game optimization.
+#### Star Growth Formula
+**+15% HP and ATK per star rank above base, compounding.**
+
+| Rarity | At Max ★ | HP (max) | ATK (max) |
+|---|---|---|---|
+| Common | 3★ | 132 | 16 |
+| Uncommon | 3★ | 167 | 18 |
+| Rare | 6★ | 319 | 33 |
+| Epic | 6★ | 384 | 40 |
+| Legendary | 6★ | 449 | 46 |
+
+> Rare's 3 available star ranks (vs. Epic's 2, Legendary's 1) is what lets it close the gap on higher rarities at full investment — matching its "scales heavily" design intent.
+
+#### Power Level Growth Formula
+**+1% of star-adjusted stats per Power Level (1–100).** At Level 100, stats are approximately ×1.99 on top of the star bonus. A fully maxed 6★ Level 100 Legendary: ~892 HP / ~92 ATK. The Arena's Max Star Tier caps (§7.4) ensure players never face this gap unfairly; it only exists at Grand Forge where both sides are equally scaled.
+
+#### Star Evolution Rules
+- **Common & Uncommon cards** are capped at **3★ max** — effective early-to-mid game with clear stat ceilings.
+- **Rare, Epic, and Legendary cards** can evolve to **6★** — premier choices for end-game optimization.
+- Star Tier advances **at the same three Milestone Breakthroughs** as skill unlocks — one star rank per breakthrough (see §7.1). This means Rare gains exactly 3 stars across exactly 3 milestones, a perfect fit.
 
 ---
 
@@ -300,11 +317,16 @@ Skills represent a card’s **fixed, printed identity**. They define exactly wha
 - **Uncommon & Rare:** 2 Skill Slots (1 Passive + 1 Active).
 - **Epic & Legendary (and Heroes):** 3 Skill Slots (1 Passive + 1 Active + 1 Ultimate/Signature).
 
-#### How Skills Unlock
-Skills unlock progressively as a card increases its **Star level** and **Milestone Levels**:
-- **Skill 1 (Passive):** Available at base Star level (Level 1).
-- **Skill 2 (Active):** Unlocks when the card reaches **3★** (and Level 30).
-- **Skill 3 (Ultimate/Signature):** Unlocks when the card reaches **5★** (and Level 60).
+#### How Skills & Star Tier Unlock (Unified Milestone Rule)
+Skills and Star Tier advances happen at the **same three Milestone Breakthroughs** — one system, not two:
+
+| Milestone | Power Level | Star Advance | Skill Unlocked |
+|---|---|---|---|
+| **1st Breakthrough** | Level 29 → 30 | +1★ (e.g., 3★ → 4★ for Rare) | Skill 1 (Passive) fully active |
+| **2nd Breakthrough** | Level 59 → 60 | +1★ (4★ → 5★) | Skill 2 (Active) unlocked |
+| **3rd Breakthrough** | Level 99 → 100 | +1★ (5★ → 6★) | Skill 3 (Ultimate) unlocked |
+
+Breakthroughs require sacrificing **3 duplicate cards** of the exact same type (or spending a **Milestone Breakthrough Skip** Gem sink — §13.4). This rule applies uniformly across all rarities, including Heroes (Hero star advances increase Passive Aura and Surge magnitude — see §5.6 Hero Stats).
 
 #### Skill Types
 | Skill Type | Description |
@@ -314,7 +336,18 @@ Skills unlock progressively as a card increases its **Star level** and **Milesto
 | **Ultimate** | A high-impact signature move representing faction mastery, triggering once or on a cool down. |
 
 #### Design Philosophy
-> **Skills vs. Perks:** Skills answer the question: *"What is this creature?"* They are fixed, printed on the card, and define its core identity. Perks (Section 7.6) answer: *"How am I playing this creature in this build?"* and are flexible, slot-in modifiers that players can borrow and customize. This two-layer strategy system gives high depth without overloading UI complexity.
+> **Skills vs. Perks:** Skills answer the question: *"What is this creature?"* They are fixed, printed on the card, and define its core identity. Perks (Section 7.6) answer: *"How am I playing this creature in this build?"* — flexible, slot-in modifiers for Legendary-rarity cards only. This two-layer strategy system gives high depth without overloading UI complexity.
+
+### 5.6b Hero Base Stats
+Heroes use a deliberately **narrow HP band** across rarities. Hero HP is the match's core countdown timer (§4.5) — a wide spread would make some rarities feel unkillable or paper-thin once the board clears. Rarity differentiation for Heroes lives in Passive Aura and Surge potency, not raw survivability. Star advances for Heroes increase Passive Aura and Surge magnitude by +12% per star — they do **not** increase ATK (Heroes don't attack directly).
+
+| Hero Rarity | Base HP | HP at Power Level 100 | Star Effect |
+|---|---|---|---|
+| **Rare** | 100 | 140 (+0.4%/level) | +12%/star to Passive Aura & Surge magnitude only |
+| **Epic** | 112 | 156 | same |
+| **Legendary** | 125 | 175 | same |
+
+> The 140–175 HP cap band lines up naturally with the Forge Depths relic "Fortress Protocol: Hero starts at 150 HP" — that number sits inside this band, confirming it's calibrated sensibly.
 
 ### 5.7 Faction Synergy Bonus
 Running 3+ cards of the same faction in your deck activates a **passive bonus**:
@@ -354,24 +387,56 @@ The Forge Commander is your anchor — a large card that sits behind your lanes 
 
 This is where you can fix what's broken in all 4 reference games. **The goal: skill matters first, power level matters second.**
 
-### 7.1 Card Leveling & Milestone Breakthroughs
-- **Leveling Up (Normal Levels):**
-  - Cards level up from 1 to 100.
-  - Normal levels (1-29, 31-59, 61-99) require consuming other low-tier/unwanted cards as XP fodder.
-  - Each level increases a card's ATK and HP by a small percentage (e.g., +2%).
-  - Leveling up also requires a small amount of **Gold** (soft currency, earned through gameplay).
-- **Milestone Breakthrough Levels (30, 60, 100):**
-  - Level 30, 60, and 100 act as milestone breakthroughs where powerful passive, active, and ultimate skills are unlocked.
-  - To pass level 29 → 30, level 59 → 60, and level 99 → 100, the user must obtain and sacrifice **3 duplicate cards** of the exact same type.
-  - Breaking through a milestone also unlocks that level's respective skill (Skill 1 at 30, Skill 2 at 60, Skill 3 at 100).
-- Level cap is **arena-gated**: you can't break through milestone levels beyond your current arena's unlocked capabilities → this keeps matchmaking and progression balanced.
+### 7.1 Card Leveling, EXP & Milestone Breakthroughs
+
+#### Power Level EXP Curve
+Cards level from **1 to 100**. EXP to advance from one level to the next follows:
+> **EXP to next level = 10 × Level^1.5 (rounded to nearest 5)**
+
+| Level Transition | EXP Required |
+|---|---|
+| 1 → 2 | 10 |
+| 10 → 11 | 315 |
+| 20 → 21 | 895 |
+| 29 → 30 (Milestone) | 1,560 |
+| 40 → 41 | 2,530 |
+| 59 → 60 (Milestone) | 4,530 |
+| 80 → 81 | 7,155 |
+| 99 → 100 (Milestone) | 9,850 |
+
+> Treat this as a first-pass curve — tune the exponent/multiplier once you have real playtest data measuring session lengths.
+
+#### Two EXP Sources (Both Kept — Different Jobs)
+**1. Participation EXP — earned every match, automatically**
+Every card **deployed in a match** earns EXP at the end of that battle. Bench cards in hand that were never deployed earn 0 — this nudges players to rotate their roster rather than playing the same 5 favorites forever. The Hero earns EXP every match by definition (always on the field).
+
+| Mode | Creature EXP (Win) | Creature EXP (Loss) | Hero EXP (Win) | Hero EXP (Loss) |
+|---|---|---|---|---|
+| The Forest (chapter-scaled — see §12.6) | see §12.6 table | 60% of win | same as creature | same |
+| Forge Tower (floor-scaled — see §13.5) | see §13.5 table | 60% of win | same as creature | same |
+| PvP Arena (Tickets) | 60 | 30 | 60 | 30 |
+
+> Arena pays roughly 2.4× Forest early-chapters per win — it should, since it's higher-skill and cannot be AI-automated (§9.5).
+
+**2. Fodder Feed EXP — optional accelerant, sacrifice duplicates**
+Sacrifice any unwanted card as EXP fodder for a target card:
+> **Fodder EXP = 20 × Rarity Tier × Fed Card's Power Level**
+
+(Rarity Tier: Common = 1, Uncommon = 2, Rare = 3, Epic = 4, Legendary = 5)
+
+This fills the gap that pure participation EXP leaves: a new pull or an off-meta card that rarely sees playtime would crawl to max level on battle EXP alone. Fodder feeding lets players redirect collection surplus into targeted leveling without grinding hundreds of matches.
+
+#### Milestone Breakthroughs (Level 30 / 60 / 100)
+At Milestones, the card advances by **+1 Star Tier** and unlocks the next Skill (see §5.6). To pass a Milestone, the player must sacrifice **3 duplicate cards** of the exact same type. Alternatively, spend a **Milestone Breakthrough Skip** (Gem sink — §13.4) to bypass the duplicate requirement.
+
+- Level cap is **arena-gated**: a card cannot break through milestone levels beyond the current arena's Max Star Tier cap (§7.4).
 
 ### 7.2 Forge Core Upgrades (Base Progression)
 Players upgrade their **Forge** (base HQ) which unlocks:
 - New card slots in deck (starts at 8, unlocks to 12 gradually)
 - New arena access
 - Passive income speed (resource generation)
-- Clan participation
+- **Clan participation** (unlocks at **Forge Level 2** — same gate as PvP Arena)
 
 Forge upgrades use **Gold** (free currency) + **Crystals** (premium), but Gold is enough for all core upgrades.
 
@@ -405,57 +470,84 @@ Win PvP → earn **Cups** → rise in arena. Lose → lose cups. This creates fa
 4. **Draft Mode** — each player picks from random card pool (levels disabled) — pure skill, no pay-to-win
 5. **Challenge Events** — limited-time modes with fixed decks, everyone on equal footing
 
-### 7.6 Perk System (Post-MVP — Phase 4+) ✨ REVISED
+### 7.6 Perk System (Post-MVP — Phase 4+)
 
 > **Note:** Perks are a major depth layer designed for **post-launch**. They should NOT be included in the MVP. This section documents the design so it's ready when the time comes.
 
 #### What Are Perks?
-Perks are **flexible, equippable modifiers** that players slot into their creature cards. While **Skills** represent a card's fixed identity (*"What is this creature?"*), **Perks** define the build and playstyle (*"How am I playing this creature in this specific deck/match?"*). Perks let players bend a creature's default role without rewriting it.
+Perks are **flexible, equippable modifiers** that players slot into their Legendary cards. While **Skills** represent a card's fixed identity, Perks define the build and playstyle — how a player bends a Legendary creature or hero's role for a specific matchup or strategy.
 
-#### Perk Slots & Customization
-- Each creature card has **1–2 Perk slots** (unlocked via card progression or Forge level milestones).
-- Perks are drafted, borrowed, or slotted from a player's collection.
-- Perks can be leveled up to increase their potency.
+#### Equip Rule — Legendary Only, Faction-Gated
+> **A Perk may only be equipped on a Legendary-rarity creature or hero.**
+> - **Faction Perks** require the card's faction to match the Perk's faction.
+> - **Universal Perks** may be equipped on any Legendary card regardless of faction.
+> - Each Legendary card has **2 Perk slots**, each accepting either type.
+> - No rarity tier exists for Perks themselves — only two types: Faction and Universal.
 
-#### The Faction Guardrail: Borrowing Rules
-To reinforce faction identity and prevent overpowered combinations, the following borrowing rules apply:
-1. **Faction-Locked Perks:** A creature can equip perks belonging specifically to its own faction.
-2. **Universal Perks:** A small, curated pool of neutral/general perks is accessible by all factions (e.g., generic speed/health boosts).
-3. **No Cross-Faction Borrowing:** An Ironclad unit cannot equip Ember-specific or Phantom-specific perks. This preserves faction strategy and makes balancing new cards much safer.
+This means Rare and Epic creatures/heroes — even fully maxed at 6★ / Level 100 — can never equip a Perk. The rarity gate happens once, at the equip step. This raises the stakes on reaching Legendary, but it doesn't tip into pay-to-win because the Shard path (§13.1 Path B) already gives every player a guaranteed, grind-based route to any specific Legendary.
 
-#### Bending Roles: How Skills and Perks Interact
-Because perks are slot-in modifiers, they allow players to customize creatures for specific roles:
-- **Default Role:** An Al-Noor unit might naturally be a high-defense tank (via its fixed Skills).
-- **The "Mana Battery" Build:** Equip a *"Damage taken generates Mana"* perk. The tank now snowballs the player's spell output.
-- **The "Healer-Guardian" Build:** Equip a *"Heal adjacent allies on basic attacks"* perk. The tank now sustains the frontline.
+#### Perk Slots & Roles
+Because perks are slot-in modifiers, they allow players to customize Legendary cards for specific roles:
+- **Default Role:** An Al-Noor Legendary might naturally be a high-defense tank (via its fixed Skills).
+- **The "Mana Battery" Build:** Equip a *"Damage taken generates Mana"* Perk. The tank now snowballs spell output.
+- **The "Healer-Guardian" Build:** Equip a *"Heal adjacent allies on basic attacks"* Perk. The tank now sustains the frontline.
 
-#### Perk Leveling & Progression
-Each perk can be leveled from **Level 1 → Level 5** using **Perk Shards** (earned from Forge Depths runs and Clan Raids).
+#### Perk Levels & Milestones (6 levels, 3 milestones)
+Every Perk levels from 1 to 6. Each level increases the Perk's stat magnitude by a flat step (e.g., +1 HP on a heal perk). Milestone levels (2, 4, 6) additionally bolt on a new clause.
 
-| Perk Level | Cost | Improvement |
+> **Example — Heal Perk lifecycle:**
+
+| Perk Level | Perk EXP Needed | Magnitude | Extra Unlocked at Milestone |
+|---|---|---|---|
+| 1 (base) | — | Heal 1 HP | — |
+| 2 — Milestone 1 | 20 | Heal 2 HP | + Cleanses 1 debuff from the healed ally |
+| 3 | 50 | Heal 3 HP | — |
+| 4 — Milestone 2 | 90 | Heal 4 HP | + Healed ally gains +5% Shield for 3s |
+| 5 | 150 | Heal 5 HP | — |
+| 6 — Milestone 3 (max) | 240 | Heal 6 HP | + If healed ally was at full HP, gain +10% ATK for 5s instead |
+
+> Milestone clauses should be playtested on 2–3 sample perks across different roles (heal, shield, damage) before writing all of them — a clause balanced for a heal perk may be broken on a damage perk.
+
+#### Perk EXP — Two Sources, Different Jobs
+- **Boss drop duplicates:** A duplicate Perk dropped by a Forest or Tower boss auto-converts to Perk EXP for that specific Perk.
+  - Universal duplicate → 10 Perk EXP
+  - Faction-specific duplicate → 20 Perk EXP (rarer, since only one faction's tower/pool produces it)
+- **Universal Perk Shards:** A scarce top-up currency earned from Forge Depths runs and Clan Raids — spend on any specific Perk the player wants to prioritize. Boss-drop EXP is the primary, free-flowing source; Perk Shards are the targeted supplement.
+
+#### Perk Drop Sources
+Perks only drop on **boss floors** — Forest chapter bosses and Tower boss floors (every 10th floor). The two PvE modes give Perks distinct identities:
+
+| Source | Perk Drop Bias | Why |
 |---|---|---|
-| Level 1 | Free (on acquire) | Base effect |
-| Level 2 | 50 Perk Shards | +25% effect strength |
-| Level 3 | 150 Perk Shards | +50% effect strength |
-| Level 4 | 400 Perk Shards | +75% effect strength + visual upgrade |
-| Level 5 | 1000 Perk Shards | +100% effect strength + unique particle effect |
+| **Forest (chapter bosses)** | 70% Universal / 30% random-faction | Forest is the generalist mode — mostly hands out broadly-useful Perks |
+| **Tower (every 10th floor boss)** | 80% that tower's own faction / 20% Universal | Grinding the Ironclad Tower should yield Ironclad Perks — a clean, legible reason to specialize |
 
-#### Sample Perks (Bending Faction Roles)
+**Forest boss Perk drop chance by chapter:**
+| Chapters | Drop Chance (Boss only) |
+|---|---|
+| 1–4 | 0% — no Perks before players are ready for them |
+| 5–9 | 8% |
+| 10–13 | 15% |
+| 14–18 (plateau) | 22% (main long-term Perk farm) |
 
-| Perk Name | Faction | Base Effect (Lv 1) | Max Effect (Lv 5) | Strategic Playstyle |
+**Tower boss Perk drop chance by floor:**
+| Boss Floor | Drop Chance |
+|---|---|
+| Floor 10 | 0% |
+| Floor 20 | 12% |
+| Floor 30 | 20% |
+| Floor 40 | 30% |
+| Floor 50 (Tower Peak, weekly repeatable) | 45% |
+
+#### Sample Perks
+| Perk Name | Type | Base Effect (Lv 1) | Max Effect (Lv 6) | Strategic Role |
 |---|---|---|---|---|
-| **Alloy Shielding** | Ironclad | Converts 5% of damage dealt into a personal shield | Converts 10% into a shield | Bends a damage-dealer into a self-sustaining tank. |
-| **Spore Burst** | Verdant | On taking a critical hit, releases spores that heal adjacent allies for 5 HP | Spores heal for 10 HP | Bends a frontliner into a passive area-of-effect healer. |
-| **Overheat** | Ember | Attacks deal splash damage but cost 2 HP per swing | Splash damage, costs 4 HP | Bends a single-target attacker into a high-risk area sweeper. |
-| **Spectral Anchor** | Phantom | Increases own aggro/Taunt when in Stealth | Max aggro/Taunt in Stealth | Bends a stealthy assassin into a distraction/disruption unit. |
-| **Radiant Surge** | Al-Noor | Generating light/healing gains +1 Mana | Healing gains +2 Mana | Bends a healer into an economy accelerator. |
-| **Kinetic Flow** | Universal | Increases attack speed by 5% after every second attack (stacks up to 3 times) | 10% attack speed | Basic combat utility for any unit. |
-
-#### Perk Acquisition
-- **Common Perks**: Guaranteed drop from completing Forge Depths Floor 1.
-- **Rare Perks**: Random drop from Forge Depths Floor 2+, or purchasable in Shard Shop.
-- **Epic/Legendary Perks**: Rare drop from bosses or Season Pass milestones.
-- **Perk Shards**: Earned from daily play, dungeons, and event chests.
+| **Alloy Shielding** | Ironclad | Converts 5% of damage dealt into a personal shield | Converts 10% + at full HP, gain Taunt | Self-sustaining tank |
+| **Spore Burst** | Verdant | On taking a hit, heals adjacent allies for 1 HP | Heals 6 HP + cleanses debuff | Passive area healer |
+| **Overheat** | Ember | Attacks deal splash but cost 1 HP per swing | Splash + costs 6 HP — activates Last Stand faster | High-risk sweeper |
+| **Spectral Anchor** | Phantom | +1 Taunt while in Stealth | Max Taunt + reduces enemy ATK by 10% | Distraction/disruption |
+| **Radiant Surge** | Al-Noor | Healing generates +1 Mana | Healing generates +6 Mana | Economy accelerator |
+| **Kinetic Flow** | Universal | +5% ATK speed after every 2nd attack (stacks 3×) | +10% ATK speed per stack | General combat utility |
 
 ---
 
@@ -604,10 +696,11 @@ All human-facing strings in this system are managed through an **admin CMS** —
 To reduce grind, players can use AI to automatically complete routine battles (campaign farming, daily dungeons, event grinding) while offline.
 
 ### 9.2 AI Fuel — Energy Cells
-The AI requires **Energy Cells** (a consumable resource) to run. Each auto-battle consumes 1 Energy Cell.
+The AI requires **Energy Cells** (a consumable resource) to run. **Energy gates two PvE modes: The Forest (§12.6) and the Forge Tower (§13.5).** Each auto-battle or manual Tower attempt consumes Energy according to the chapter/floor's energy cost (see tables in those sections). PvP Arena uses Battle Tickets, not Energy.
 - **Free cap:** Players regenerate 5 Energy Cells per day for free (capped at 10 stored)
 - **Subscription:** Monthly pass ($4.99) grants +15 Energy Cells per day and raises the cap to 50
 - **Direct purchase:** 20 Energy Cells = 100 Crystals (available as a top-up; not the intended daily method)
+- **Thekr gate:** When Energy runs to zero, the Thekr Wellbeing System (§8.5) activates — 3× per day Thekr option for partial Energy refills
 
 ### 9.3 AI Tokens (Subscription Perk)
 Subscribing to the **Forge Pass** gives you **AI Tokens** each month:
@@ -690,19 +783,33 @@ FORGE's primary market is the MENA region (Saudi Arabia, UAE, Egypt). Arabic sup
 
 | Mode | Description | Unlock |
 |---|---|---|
-| **Story Campaign** | 50 levels of PvE battles, introduces lore and mechanics via interactive onboarding | Day 1 |
-| **PvP Arena** | Round-based 1v1 matchmaking with Battlefield Environments | Forge Level 2 |
-| **Forge Tower** | 5 faction-specific 50-floor PvE ladders. Permanent progress — cleared floors stay cleared. Farm Shards at any unlocked floor. Uses Battle Tickets. | Forge Level 2 |
+| **The Forest** | 18-chapter PvE story campaign. Each chapter has 4 normal levels + 1 boss. Energy-gated, chapter-scaled EXP/Gold. Home of Perk drops (Phase 4+). | Day 1 |
+| **PvP Arena** | Round-based 1v1 matchmaking with Battlefield Environments. Uses Battle Tickets. | Forge Level 2 |
+| **Forge Tower** | 5 faction-specific 50-floor PvE ladders. Permanent progress. Farm Shards at any cleared floor. Uses Energy. Rotates daily (see schedule below). | Forge Level 2 |
 | **Dungeon Crawl** | Daily 5-room PvE gauntlet, unique rewards | Forge Level 3 |
 | **Forge Depths** ✨ | Roguelike PvE dungeon runs with branching paths, temporary relics, and bosses | Forge Level 4 |
 | **Draft Clash** | Limited-time equal-level draft format | Forge Level 5 |
 | **Clan War** | Weekly clan-vs-clan tournament | Forge Level 5 |
-| **Clan Raid** ✨ | Weekly co-op PvE mega-boss with clan-wide rewards | Forge Level 5 |
+| **Clan Raid** ✨ | **Every Thursday.** Weekly co-op PvE mega-boss with clan-wide rewards | Forge Level 5 |
 | **Grand Tournament** | Monthly top-100 bracket, pure skill, no mid-match events | Grand Forge arena |
+
+### 11.1 Forge Tower — Weekly Rotation Schedule
+
+Only one faction tower is open per day. **Friday is the exception: all five towers are open simultaneously.** Friday's open-all design reuses the Friday-awareness already built into the Thekr message pool (§8.5.1), and the rotating gate is itself a wellbeing-aligned design choice — it caps daily farm depth without adding a new mechanic.
+
+| Day | Tower Open |
+|---|---|
+| **Saturday** | 🔩 Ironclad Tower |
+| **Sunday** | 🌿 Verdant Tower |
+| **Monday** | 🔥 Ember Tower |
+| **Tuesday** | 👻 Phantom Tower |
+| **Wednesday** | ✨ Al-Noor Tower |
+| **Thursday** | 🛡️ Clan Raid — no individual Tower access |
+| **Friday** | 🌟 All 5 Towers open |
 
 ---
 
-## 12. The Forge Depths — Roguelike PvE Mode ✨ NEW
+## 12. The Forge Depths — Roguelike PvE Mode
 
 A dedicated PvE mode where players take their deck into a **procedurally-generated dungeon** with branching paths. Each run is unique — no two experiences are the same.
 
@@ -758,6 +865,57 @@ Bosses have unique rules that break normal gameplay and force creative solutions
 
 ### 12.6 Why This Matters
 Roguelike runs are the #1 proven format for PvE retention in card games (Slay the Spire, Monster Train, Inscryption). The temporary relics let players experience wild, overpowered combos they'd never see in PvP — which is *incredibly fun* and gives PvE its own identity beyond "easier PvP."
+
+---
+
+## 12.7 The Forest — Chapter-Based PvE Story Mode
+
+The Forest is the primary PvE content pillar and the game's onboarding spine. It is structured into **18 chapters**, each with **4 normal levels + 1 boss level** (90 total levels). Chapters 1–4 (20 levels) map exactly to Phase 1 MVP scope. Energy costs and rewards scale chapter by chapter, then plateau for the final chapters to keep the end-game farm loop stable.
+
+> **Note on naming:** "The Forest" replaces the earlier "Story Campaign" label throughout. Same content slot, restructured into a chapter-based shape.
+
+#### Energy Cost by Chapter
+> **Formula: Energy(chapter) = min(14, chapter + 1)** for normal levels. **Boss = normal + 2** (auto-caps at 16 exactly).
+
+| Chapter | Normal Energy | Boss Energy |
+|---|---|---|
+| 1 | 2 | 4 |
+| 2 | 3 | 5 |
+| 3 | 4 | 6 |
+| … | … | … |
+| 13 | 14 | 16 |
+| 14–18 (plateau) | 14 | 16 |
+
+#### EXP & Gold per Level by Chapter
+Loss = 60% of win value throughout. Boss win = Normal win × 1.2.
+
+| Chapter | Normal EXP (Win / Loss) | Boss EXP (Win) | Normal Gold (Win / Loss) | Boss Gold (Win) |
+|---|---|---|---|---|
+| 1 | 25 / 15 | 30 | 40 / 24 | 48 |
+| 5 | 65 / 39 | 78 | 100 / 60 | 120 |
+| 9 | 105 / 63 | 126 | 160 / 96 | 192 |
+| 13 (ramp ends) | 145 / 87 | 174 | 220 / 132 | 264 |
+| 14–18 (plateau) | 145 / 87 | 174 | 220 / 132 | 264 |
+
+> Both Creature and Hero earn the same chapter-scaled amount per match. All numbers are first-pass baselines — tune once real session lengths are measurable in playtesting.
+
+#### Boss Perk Drops (Phase 4+)
+Perk drops only trigger on the **boss level** (5th level of each chapter). See §7.6 for equip rules and drop-bias tables.
+
+| Chapters | Boss Perk Drop Chance |
+|---|---|
+| 1–4 | 0% — warm-up, Perks not introduced yet |
+| 5–9 | 8% |
+| 10–13 | 15% |
+| 14–18 (plateau) | 22% — main long-term Perk farm |
+
+#### Chapter Structure Notes
+- **Chapter Boss:** harder fight, +2 Energy cost, EXP ×1.2, Gold ×1.2, Perk drop chance.
+- **Chapters 1–4 (MVP):** Shipped at Phase 1 launch. Energy 2–5. Introduces all 5 factions.
+- **Chapters 5–13:** Shipped by Phase 3. Energy ramp continues.
+- **Chapters 14–18 (plateau):** Same Energy/EXP/Gold as Chapter 13. The core daily farm loop for end-game players — ~120 games across this stretch gives equivalent reward density to earlier chapters with more floors to replay.
+
+
 
 ---
 
@@ -857,44 +1015,54 @@ Once Perks ship, a **Perk Reroll** sink (spend Gems to reroll an unwanted perk o
 
 ### 13.5 The Forge Tower — Faction Shard Progression
 
-The Forge Tower is the **permanent, grindable Shard farm** — the third leg of the acquisition system alongside Packages (random draws) and Shard targeting (deterministic). Unlike Forge Depths (roguelike, run resets, temporary relics), the Tower tracks persistent progress: once you clear a floor, it stays cleared and can be freely replayed for Shard drops.
+The Forge Tower is the **permanent, grindable Shard farm** — the third acquisition leg alongside Packages (random draws) and Shard targeting (deterministic). Unlike Forge Depths (roguelike, run resets), the Tower tracks persistent progress: cleared floors stay cleared and can be replayed for Shard drops.
 
 #### Structure
-Five permanent towers — one per faction (Ironclad, Verdant, Ember, Phantom, Al-Noor) — each with **50 fixed PvE floors** of increasing difficulty. Each tower's card pool is restricted to its faction, making Tower progression a targeted tool for building out a specific faction collection.
+Five permanent towers — one per faction (Ironclad, Verdant, Ember, Phantom, Al-Noor) — each with **50 fixed PvE floors**. Boss floors occur at every **10th floor** (floors 10, 20, 30, 40, 50). Each tower's card pool is faction-restricted, making it a targeted Shard farm for that faction's collection.
 
-#### Entry Cost — Battle Tickets
-Tower attempts consume **Battle Tickets** (the same resource used for manual PvE). This means the Tower automatically inherits the **Thekr Wellbeing Gate** (§8.5) at no additional system cost — no new depletion dialog, no new CMS content required. One gate, two use-cases.
+#### Entry Cost — Energy Cells
+Tower attempts consume **Energy Cells** (same resource as The Forest — §9.2). This means the Tower inherits the **Thekr Wellbeing Gate** (§8.5) automatically.
 
-#### Drop Rate & Rarity Unlock by Floor Bracket
+#### EXP & Gold by Floor Bracket
+Loss = 60% of win value. Boss floors (every 10th) pay higher.
+
+| Floor Range | Normal EXP (Win / Loss) | Boss EXP (Win) | Normal Gold (Win / Loss) | Boss Gold (Win) |
+|---|---|---|---|---|
+| 1–9 | 20 / 12 | 24 | 30 / 18 | 36 |
+| 10–19 | 35 / 21 | 42 | 55 / 33 | 66 |
+| 20–29 | 55 / 33 | 66 | 85 / 51 | 102 |
+| 30–39 | 80 / 48 | 96 | 125 / 75 | 150 |
+| 40–49 | 110 / 66 | 132 | 170 / 102 | 204 |
+| 50 (Peak, weekly repeatable) | 150 flat | — | 230 flat | — |
+
+> All numbers are first-pass baselines — calibrate against real session data.
+
+#### Shard Drop Rate & Rarity Unlock by Floor Bracket
 
 | Floor Range | Drop Chance / Win | Shards per Drop | Rarity Pool Unlocked |
 |---|---|---|---|
-| 1–9 | 0% | — | None — warm-up floors; reward Gold + XP fodder cards only |
+| 1–9 | 0% | — | None — warm-up floors; reward Gold + XP fodder only |
 | 10–19 | 10% | 2 | Common + Uncommon shards |
 | 20–29 | 20% | 3 | + Rare |
 | 30–39 | 35% | 4 | + Epic |
 | 40–49 | 50% | 5 | + Legendary |
 | **50 — Tower Peak** | 100% | 8 | All rarities; repeatable weekly for a bonus reward box |
 
-> **Calibration note:** Drop rates and quantities are a first-pass baseline — treat them the same way as the round timer in §4.3: tune during playtesting. The escalation curve (10% → 20% → 35% → 50% → 100%) is intentionally steep at the top to make the final floors feel meaningful and aspirational.
-
 #### Favorite Card & Hero Bias
-For each faction tower, the player marks **one Favorite Creature** and **one Favorite Hero** (free to change at any time, no cooldown — this is a preference, never a purchase). When a shard drop triggers:
-- **60%** of that drop's shards go to the marked Favorite — if it belongs to the rarity pool unlocked at that floor bracket
-- **40%** spread across the rest of the faction's eligible pool, weighted toward lower rarity
-
-This keeps the floor bracket in full control of *rate and quantity* (the progression pacing lever), while Favorite selection only controls *which specific card* benefits most. The two axes are cleanly separated and explainable in a single tooltip.
+For each tower, the player marks **one Favorite Creature** and **one Favorite Hero** (free to change anytime — a preference, never a purchase). When a shard drop triggers:
+- **60%** of shards go to the marked Favorite (if within the floor's rarity pool)
+- **40%** spread across the faction's eligible pool, weighted toward lower rarity
 
 #### Server Authority
-Consistent with §18.5: floor completion, drop rolls, and Favorite selection are all validated and stored server-side. The client submits a Tower attempt request; the server resolves the combat outcome and the shard roll, then pushes the result to the client. Same pattern as existing chest and Battle Ticket flows — no new anti-cheat surface.
+Floor completion, drop rolls, and Favorite selection are validated and stored server-side. Same pattern as chest and Energy flows — no new anti-cheat surface.
+
+#### Weekly Schedule
+See §11.1 for the day-by-day tower rotation. Friday is all-towers-open day.
 
 #### MVP Scope (Phase 2)
-> **Scope Flag:** 5 towers × 50 floors = 250 individual balance points. To avoid pre-launch content debt, the Tower ships in **Phase 2** with:
-> - **2 towers** at launch: **Ironclad** and **Al-Noor** (the flagship factions)
-> - **Floors 1–20** unlocked at launch; floors 21–50 backfilled in content updates (same pattern as the Story Campaign)
-> - Remaining 3 faction towers added in Phase 3 content drops
->
-> This delivers the system's retention and Shard-farming value from Day 2 without asking the team to hand-balance 250 floors before launch.
+> - **2 towers** at launch: **Ironclad** and **Al-Noor**
+> - **Floors 1–20** at launch; 21–50 backfilled in content updates
+> - Remaining 3 faction towers added in Phase 3
 
 ---
 
@@ -1108,18 +1276,18 @@ Watch live clan members' PvP matches in real-time.
 - Viewer can send predefined emotes ("Nice merge!", "Wow!", "Come on!")
 - Builds community, creates content creators, gives new players a way to learn strategies
 
-### 16.3 Clan Raids (Weekly Co-op PvE Boss)
-Each week, the clan faces a **Mega Boss** with 10,000 HP. Each member gets **3 attacks per day**. The clan collectively chips away at the boss.
+### 16.3 Clan Raids (Weekly Co-op PvE Boss — Every Thursday)
+Each **Thursday**, the clan faces a **Mega Boss** with 10,000 HP. Each member gets **3 attacks per day**. The clan collectively chips away at the boss. On Thursdays, individual Forge Towers are not accessible — the Raid is the day's main PvE event.
 
 **Boss Phases:**
 - **Phase 1 (100%–75% HP)**: Standard fight with strong AI deck
 - **Phase 2 (75%–50% HP)**: Boss gains a new ability (e.g., deploys a free card every 15 seconds)
 - **Phase 3 (50%–25% HP)**: Battlefield modifier activates (e.g., Burning Ground on all lanes)
-- **Phase 4 (25%–0% HP)**: Boss uses "Desperate Forge" — gains +50% attack speed
+- **Phase 4 (25%–0% HP)**: Boss uses "Desperate Forge" — gains +50% attack speed. **Guaranteed Perk drop (Phase 4+ only)** for the top 3 damage contributors of that week — distinct from Forest/Tower's per-run drop chance, giving the Raid its own identity in the Perk economy.
 
 **Rewards:**
-- Individual damage leaderboard within clan → top 3 get bonus Iron
-- Clan milestone thresholds (e.g., deal 5000 damage total → everyone gets a Rare chest)
+- Individual damage leaderboard within clan → top 3 get bonus Gold
+- Clan milestone thresholds (e.g., deal 5,000 damage total → everyone gets a Rare chest)
 - Weekly rotation of different bosses keeps it fresh
 
 ### 16.4 2v2 Tag Battle (Phase 4+ Feature)
@@ -1130,6 +1298,84 @@ Players can share deck builds with a **sharable code** (like Clash Royale deck l
 - Community can upvote popular builds on an in-game "Deck Browser"
 - Each shared deck shows win rate, arena used, and player rank
 - Creates a metagame discussion layer that extends engagement beyond the app
+
+---
+
+## 16.6 Clan System — Full Design
+
+> **Phase Note:** The Clan System is **NOT in Phase 1 (MVP)**. Core structure ships in **Phase 2** (Clan chat + basic structure), Clan Wars ships in **Phase 3**, and Clan Raids + Perk-economy integration ships in **Phase 4**. Building the Clan feature before PvP matchmaking and the core economy are stable is premature scope for a 2-person team.
+
+> **Terminology:** The doc previously listed "Guild Wars" in Phase 4 as a separate item from "Clan War" in §7.5/§11. These are the same feature named twice at different points in the document's evolution. This section consolidates everything under **Clan** — the term used everywhere else in the doc.
+
+### Clan Structure
+
+| Property | Value |
+|---|---|
+| **Max members** | 30 (grows with Clan Level — see table below) |
+| **Roles** | Leader (1), Officer (up to 3), Member |
+| **Join types** | Open / Request (needs approval) / Invite-only |
+| **Identity** | Name, 3–4 letter tag, custom banner (uses MIME-validated upload pipeline from §18.5), description |
+| **Unlock** | Forge Level 2 — same gate as PvP Arena (§7.2) |
+
+**Role permissions:**
+- **Leader:** Full control — invite, kick, approve join requests, trigger Clan Raid, disband, transfer leadership.
+- **Officer:** Invite, kick, approve join requests, trigger Clan Raid.
+- **Member:** Donate cards, chat, participate in all Clan events.
+- No role can affect any combat stat or card power — the social/QoL boundary is absolute.
+
+### Clan XP & Clan Level
+Member activity feeds a shared **Clan XP** pool. Clan Level unlocks **convenience and social perks only** — never combat power, keeping this consistent with §17.2 monetization ethics.
+
+| Action | Clan XP Earned |
+|---|---|
+| PvP win | +2 |
+| Forest or Tower boss clear | +3 |
+| Card donated | +1 |
+| Clan Raid damage milestone hit | +5 |
+
+| Clan Level | Member Cap | Donations/day per member | Clan War Roster Size |
+|---|---|---|---|
+| 1 | 20 | 1 | 8 |
+| 5 | 25 | 2 | 10 |
+| 10 | 30 | 3 | 12 |
+
+### Clan Donation (§13 Path C)
+A member can **request 1 specific card per day**; clanmates fulfill it up to their daily donation cap.
+- **Donor gets:** small Gold trickle + Clan XP.
+- **Requester gets:** the card directly.
+- **Anti-abuse guardrail:** No donating or requesting for the first **48 hours** after joining — closes the clan-hop-for-freebies loophole without anything more punitive.
+
+### Clan Wars — Full Design
+
+> **Phase 3+ Feature.** Resolves the previously undefined "10 members each" line from §7.5 — that's the War Roster, a subset picked from the full 30-member clan, not the clan's total size.
+
+**Cadence:**
+- Matchmaking: **Monday**
+- Battles window: **Tuesday–Friday**
+- Results: **Saturday**
+- War attacks do **not** consume Energy or Battle Tickets — no resource competition, no schedule collision with the Tower daily rotation.
+
+**Matchmaking:** Paired against a clan with similar average Arena tier, mirroring the existing Arena Ladder fairness logic (§7.4).
+
+**Format:** Each War Roster member gets **2 attacks** during the battle window, fighting an async snapshot of an opposing roster member's current deck — same delay-based fairness pattern as Spectate Mode (§16.2), preventing live coaching and info asymmetry.
+
+**Scoring:**
+| Result | Points |
+|---|---|
+| Win | 3 |
+| Draw | 1 |
+| Loss | 0 |
+Clan score = sum across all roster members' attacks.
+
+**Rewards:** Fixed Gold + Gem tiers for the winning clan; smaller-but-positive consolation for the losing clan. Deterministic, not chance-based — consistent with §17.2. No reward is gated behind payment.
+
+### Clan Chat — Deliberately Scoped Down
+Full free-text chat carries a real moderation and localization burden (profanity filtering across English and Arabic, abuse reports, live moderation tooling) disproportionate for a 2-person team.
+
+- **Phase 3:** Chat is limited to the **preset phrase/emote pool** already built for Spectate Mode (§16.2 — "Nice merge!", "Wow!", "Come on!") plus a small set of clan-specific presets ("Nice win!", "Help needed!", "Raid starting!"). No free-text.
+- **Phase 4+:** Free-text Clan Chat added once the team can realistically staff moderation for Arabic + English. Flagged as a stretch goal, not a launch blocker.
+
+This keeps the social feature shippable without opening a support burden the team can't cover at launch.
 
 ---
 
@@ -1305,21 +1551,23 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 
 ### Phase 4 — Depth Expansion (Post-Launch)
 - [ ] Forge Depths (Roguelike PvE mode) ✨
-- [ ] Clan Raids (weekly co-op boss) ✨
-- [ ] Perk System (equippable + levelable Forge Core perks) ✨
+- [ ] Clan Raids (weekly co-op boss — §16.3) ✨
+- [ ] Perk System (equippable + levelable, Legendary-only — §7.6) ✨
 - [ ] 2v2 Tag Battle ✨
 - [ ] Draft Mode
-- [ ] Guild Wars
+- [ ] Clan Wars — Phase 3/4 war battles (§16.6) ✨
 - [ ] Full Battlefield Environment pool (10 modifiers)
 - [ ] Grand Tournament
 - [ ] Prayer Mode (optional Islamic feature) ✨
 - [ ] Legendary cards (full set)
+- [ ] Free-text Clan Chat (requires moderation tooling for AR + EN)
 
 ### What NOT to build in MVP
+- Clan System (Phase 2+) — no clan features before PvP matchmaking and economy are stable
 - Perk System (Phase 4+)
 - Forge Depths roguelike (Phase 4+)
 - 2v2 Tag Battle (Phase 4+)
-- Guild wars (Phase 4+)
+- Clan Wars (Phase 3+)
 - Draft mode (Phase 4+)
 - Legendary cards (Phase 3 end at earliest)
 - Grand Tournament (post-launch)
