@@ -1567,8 +1567,7 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 - Perk System (Phase 4+)
 - Forge Depths roguelike (Phase 4+)
 - 2v2 Tag Battle (Phase 4+)
-- Clan Wars (Phase 3+)
-- Draft mode (Phase 4+)
+- Clan Wars (Phase - Draft mode (Phase 4+)
 - Legendary cards (Phase 3 end at earliest)
 - Grand Tournament (post-launch)
 - 3D anything
