@@ -1,11 +1,11 @@
-## Skills from Deck Heroes
+## Deck Heroes
 ### Factions:
 - Fean: focuses on healing and more HP, also skill dmg instead of direct dmg
 - Neader: focuses on breaking shields/dodge when attacking direct hits
 - Mortii: focuses on insta kill, and removing cards from hand to graveyard, and returning from graveyard
 - Human: focuses on shields 
 
-### skills:
+### Skills:
 C = Creature, H = hero, 
 note that sometime a skill is activated upon death so a [D] is put before the skill name, [S] means when card is played (will be activated once battle started and before the first C attacks), but we will not write them here now
 | Name          | Description                                                                                                                                                                                                                                                                    | Effect Lvl                                     | Learnable |
@@ -237,7 +237,77 @@ Freeze uses the ice graphic. It prevents the frozen creature from performing any
 
 ### Factions
 
-### Creatures
+### Units/Heroes
+| Name          | Type (melee/ranged)       | Faction | hero/unit | how it attacks (single attack, 2 random attacks, attacks vertical line and horizontal line, etc) 
+|-----|----|-------|------|------|
+| Ageldur, King of Kalam | Melee | City | Hero | single attack |
+| Alchemist | Ranged Poison | Wasteland | Unit | single attack |
+| Alina Bloodseeker | Ranged | Abyss | Hero | single attack |
+| Ancient Gatekeeper | Melee | Abyss | Unit | attacks horizontal line |
+| Ancient Keymaster | Melee | Abyss | Unit | single attack |
+| Arcane Archer | Ranged | Temple | Unit | random attack |
+| Archbishop | Melee | Temple | Unit | single attack |
+| Balthazar of Lithil | Melee | Crypt | Hero | single attack |
+| Banshee | Ranged | Crypt | Unit | single attack |
+| C'thon, Lord of Flies | Melee | Desert | Hero | single attack |
+| Calatoris | Melee Lightning | Wasteland | Hero | single attack |
+| Centaur | Melee | Forest | Unit | single attack |
+| Changeling | Melee | Abyss | Unit | single attack |
+| Chaos Eater | Melee Poison | Desert | Unit | single attack |
+| Chromatic Dragon | Ranged Multi | Island | Unit | attacks vertical line |
+| Crypt Lord | Melee | Crypt | Unit | single attack |
+| Dhon, Greywood Guard | Melee | Forest | Hero | single attack |
+| Djinn | Melee Fire | Desert | Unit | single attack |
+| Dlaurung, Howling Star | Melee Lightning | Island | Hero | single attack |
+| Dobi Streetrat | Melee | Wasteland | Hero | single attack |
+| Doppelganger | Melee | Swamp | Unit | single attack |
+| Dvilag, Spider Queen | Melee Poison | Forest | Hero | single attack |
+| Eldrich Stormbringer | Melee Lightning | Mountain | Hero | single attack |
+| Electromachine | Ranged Lightning | Wasteland | Unit | single attack |
+| Erwin Insanus | Ranged Multi | Swamp | Hero | single attack |
+| Funginor, Elder Fungus | Ranged Poison | Forest | Hero | single attack |
+| Gabil Fastfingers | Melee Fire | Swamp | Hero | single attack |
+| Goblin Bomber | Ranged Fire | Mountain | Unit | attacks vertical and horizontal line |
+| Goblin Chieftain | Melee | Mountain | Unit | random attack |
+| Goblin Exterminator | Melee | Mountain | Unit | 4 random attacks |
+| Golden Dragon | Ranged | Island | Unit | attacks vertical line |
+| Headless Horseman | Melee | Crypt | Unit | random attack |
+| Heavy Demon Rodd | Melee | Abyss | Hero | single attack |
+| Hexmage | Ranged | Swamp | Unit | single attack |
+| Holzan Wildhorde | Melee | Desert | Hero | single attack |
+| Hou Wang, Monkey King | Melee Multi | Temple | Hero | single attack |
+| Jester | Melee | City | Unit | single attack |
+| K'noot the Godeater | Melee | Abyss | Hero | single attack |
+| Kaleidoscope Elemental | Ranged | Temple | Unit | random attack |
+| Kenshi Haya | Melee | Island | Hero | random attack |
+| Lich Abaldur | Ranged | Crypt | Hero | single attack |
+| Lord of Domination | Melee | Abyss | Unit | 3 random attacks |
+| Mama Yaga | Ranged | Swamp | Unit | single attack |
+| Manticore | Ranged Poison | Forest | Unit | random attack |
+| Minotaur Warrior | Melee | Forest | Unit | attacks vertical line |
+| Monk | Melee | Temple | Unit | single attack |
+| Mycobomber | Ranged Poison | Forest | Unit | single attack |
+| Nini, Little Witch | Ranged | City | Hero | single attack |
+| Ogre | Melee | Mountain | Unit | attacks horizontal line |
+| Patrick Dovelight | Ranged | Temple | Hero | single attack |
+| Pegasus | Melee | Temple | Unit | random attack |
+| Phoenix | Melee Fire | Desert | Unit | random attack |
+| Portal Mage | Ranged | City | Unit | single attack |
+| Pyromancer | Ranged Fire | City | Unit | random attack |
+| Rat King | Melee | Wasteland | Unit | single attack |
+| Raziel, Hero of The Void | Melee Fire | Temple | Hero | attacks vertical and horizontal line |
+| Siren | Ranged | Island | Unit | single attack |
+| Skeleton Knight | Melee | Crypt | Unit | random attack |
+| Snowman | Ranged Frost | Mountain | Unit | single attack |
+| Stone Gargoyle | Melee | City | Unit | single attack |
+| Storm Rod | Ranged Lightning | Wasteland | Unit | single attack |
+| Suri, Avatar of Thaa | Melee | Temple | Hero | single attack |
+| Temple Bear | Melee Frost | Temple | Unit | single attack |
+| Toren Threecoins | Melee Fire | Island | Hero | single attack |
+| Tulip Sweetsong | Melee | Desert | Hero | single attack |
+| Unicorn | Melee | Temple | Unit | attacks vertical line |
+| Watcher | Ranged Multi | Abyss | Unit | 3 random attacks |
+| Will O'The Wisp | Ranged Lightning | Swamp | Unit | single attack |
 
 ### Skills
 | Name          | Description       | Effect Lvl | 
@@ -389,3 +459,20 @@ Freeze uses the ice graphic. It prevents the frozen creature from performing any
 | Decompose | Buffs all other Swamp allies by 20% of this card's max Strength the first 3 times it kills another unit. | Lvl 1: Buff 20% - Lvl 8: Buff 50% |
 | Inspire Ranged | Buffs another random Ranged ally by 10% of this card's max Strength the first 3 times it attacks. | Lvl 1: Buff 10% - Lvl 10: 5 targets |
 | Power of the Dead | Buffs all other allies with a Resurrection effect or with a Frost elemental type by 20% of this card's max Strength. | Lvl 1: Buff 20% - Lvl 8: Buff 50% |
+
+
+## Ludus
+the game is made of 5*4 blocks (5 lines, 4 rows for each player), so some skills are based on the playgound position which may not work with our game
+### Creatures
+| Name          | Skill       | Effect Lvl |
+|---|----|---|
+|Kitsune|Surrounds herself with a large Energy Draining field for 4s. The field deals 133.1K +139K  dmg per second to enemies inside it, silences their energy regeneration, drains 200 energy per second, and Shocks all targets, reducing outgoing dmg by 40% and slowing them down.||
+
+### Perks
+| Name          | Description       | Effect Lvl | Mile stones| Type |
+|---|----|---|--|--|
+|LIGHTNING REFLEXES|Increases the hero's attack speed by 108% +1%.|+1|20 Lul Increases movement speed by 15%.• 40 Lul Battle Prowess requirements arelowered to 15• 60 Lul Increases movement speed by 30%.• 80 Lul Battle Prowess requirements are lowered to 10 • 100 Lul Grants immunity to control effects. | parallelogram |
+|SHADOW STEP|At the start of each round, the hero teleports to a square across the enemy lines symmetrical to their own and gains 100 +2 energy|+2|• 20 Lul After teleporting, takes 10% less dmg during the first 5 s.• 40 Lul Battle Prowess requirements are lowered to 15 •60 LUl Incoming dmg reduction increased to 30% •80 Lvl Battle Prowess requirements are lowered to 10• 100 Lul Teleporting switches places with the enemy hero at the target square and Stuns them for 3 s. | parallelogram |
+|UNDERCOVER|Once per 15s, upon taking damage surrounds the hero with a small Smoke Screen for 10s. Allies within it have a 30% +0.5% chance to dodge attacks.|+0.5%|•20 Lul Smoke Screen applies Weakness to enemies, increasing their incoming dmg by 25%. •60 Lvl Dmg to Weakened enemies increased to 50%.• 100 Lul Smoke Screen can be triggered once per 10 s. | rhombus|
+|SEDUCTION|At the start of each round, places a Heart Bomb at the square across the enemy lines symmetrical to their own. The Bomb explodes, Charming 2 nearby enemies for 3s, making them switch sides. Each Charmed enemy restores the hero 50+1 energy per s.|+1 energy|• 20 Lul Increases Charm duration to 4 s.• 60 Lul Increases Charm duration to 6 s.• 100 Lvl Number of targets increased to 3.| Circle |
+|FORCE FIELD|Once per 6s, deals 6.9% +01% of hero's max HP as dmg to a random nearby enemy.|+01% |• 20 Lul Deals dmg to all nearby enemies.• 60 Lul Triggers once per 3 s.• 100 Lul Has a 100% chance to also apply Stun for 2s.| Universal |
