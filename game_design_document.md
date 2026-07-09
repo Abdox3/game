@@ -9,10 +9,10 @@
 
 **FORGE** is a 2D **round-based** auto-battle card game where players collect, upgrade, and strategically deploy warrior cards onto a 5-slot battlefield. Cards represent armored soldiers, magical constructs, elemental beings, and mythical creatures — all designed without visible human faces (helmets, masks, silhouettes, plants, golems, spirits, etc.) to respect Islamic guidelines.
 
-The core loop: **collect cards → build a deck → fight PvP/PvE → earn rewards → get stronger → build a better deck**. Matches last 2–4 minutes. Strategy happens before the match (deck building), and during it (card placement timing, merge decisions, spell usage, and lane reading).
+The core loop: **collect cards → build a deck → fight PvP/PvE → earn rewards → get stronger → build a better deck**. Matches last 2–4 minutes. Strategy happens before the match (deck building), and during it (card placement timing, spell usage, and lane reading).
 
 **Inspired by:**
-- **Ludus (Merge Arena)** → merge mechanic + auto-battle placement
+- **Ludus (Arena)** → auto-battle placement
 - **Black Deck** → turn-based card attack order + faction system
 - **Deck Heroes** → lane-based creature deployment + hero anchor card
 - **Battle for the Throne (BFTT)** → kingdom upgrades + resource-based progression
@@ -26,7 +26,7 @@ The core loop: **collect cards → build a deck → fight PvP/PvE → earn rewar
 | Goal | What It Means in Practice |
 |---|---|
 | Easy to learn | First 3 battles completable without reading any tutorial text |
-| Hard to master | Deck synergies, counter-decks, merge timing, spell usage create deep meta |
+| Hard to master | Deck synergies, counter-decks, spell usage create deep meta |
 | No faces (Halal design) | All card art uses helmets, masks, golems, plants, spirits, animals |
 | Islamic compliance | No gambling mechanics, no haram imagery, no trivialization of religious elements |
 | Fair F2P | Skill + strategy wins over raw card level, especially in lower arenas |
@@ -66,7 +66,7 @@ FORGE uses a **warm minimalist UI** — think Duolingo or Headspace in aesthetic
 
 ### 3.4 Animation Style
 - **Fluid & Tactile:** Sprites use modern skeletal bone animations (via Spine or Rive) for smooth, subtle breathing, attack swings, and drift animations.
-- **Card Merging:** The cards dissolve into pure geometric energy particles that feed into the higher-tier card.
+- **Milestone Breakthrough:** When a card breaks through, it dissolves into pure geometric energy particles that feed into the upgraded card.
 - **Minimalist 3D Effects:** Use parallax background scrolling and 2.5D rotating card fronts in the menu to create depth while maintaining a lightweight 2D engine.
 
 ---
@@ -83,7 +83,7 @@ The playground consists of 5 slot columns per player, aligned vertically, and a 
 [ Player Hero (HP Bar)   ]
 ```
 - Each slot on the playground can contain exactly one creature card.
-- **There are no merges during battle.** Star-tier evolution (merging duplicate cards) is a collection-screen action performed outside of matches. Any ability text referencing "merge" refers to this pre-battle collection action, not an in-battle mechanic.
+- **No in-battle evolution.** Star-tier evolution (Milestone Breakthrough) is performed on the collection screen, not during matches.
 
 ### 4.2 Playing from Hand
 - Cards in a player's hand are ready to deploy immediately — there is **no deployment delay or spawn cost**.
@@ -226,10 +226,10 @@ Each Forge Commander has a **Surge** ability — a powerful once-per-match activ
 ### 5.1 Card Types
 FORGE has two card types:
 
-| Type | Description | Lane Slot | Mergeable |
-|---|---|---|---|
-| **Creature Card** | Units that deploy to a lane and auto-battle | Yes (occupies 1 slot) | Yes |
-| **Forge Spell** | Instant effect, played from hand | No (instant use) | No |
+| Type | Description | Lane Slot |
+|---|---|---|
+| **Creature Card** | Units that deploy to a lane and auto-battle | Yes (occupies 1 slot) |
+| **Forge Spell** | Instant effect, played from hand | No (instant use) |
 
 ### 5.2 Card Anatomy (Creature Cards)
 Each creature card has:
@@ -335,6 +335,40 @@ Breakthroughs require sacrificing **3 duplicate cards** of the exact same type (
 | **Active** | Triggers under a specific combat condition (e.g., On Deploy, On Attack, or On Death). |
 | **Ultimate** | A high-impact signature move representing faction mastery, triggering once or on a cool down. |
 
+#### Skill Upgrades and Scaling
+To keep the fixed-identity aspect of Skills distinct from the flexible customization of Perks, Skills upgrade through two separate tracks depending on their type:
+
+##### 1. Passive Skills (Auto-Scaling)
+Passive skills are background modifiers that scale automatically as the card's Star Tier increases, requiring no separate currency or player decision.
+- **Formula:** $\text{Magnitude} = \text{Base Magnitude} \times 1.15^{(\text{Current Star Tier} - \text{Base Star Tier})}$
+- This mirrors the $+15\%/\text{star}$ scaling curve of the card's base stats (HP/ATK).
+- **Legendary Exception:** Because Legendary cards only have a single star rank of growth ($5\star \to 6\star$), their Passive and bespoke Ultimate skills receive exactly one $+15\%$ bump at the $6\star$ Breakthrough. This design makes the final breakthrough a major power spike for Legendaries.
+- **Unlocks:** When a skill is unlocked at a higher milestone (e.g., Skill 2 at $3\star$), its magnitude is calculated from the card's current Star Tier, ensuring it scales alongside stats and other skills.
+
+##### 2. Active & Ultimate Skills (Independent Leveling Track)
+Active and Ultimate skills feature an independent Level 1–10 track that is separate from Star Tier. Players upgrade these skills manually using **Gold** and **Shards of that exact card**.
+- **Formula:** $\text{Magnitude} = \text{Rarity Base} \times [1 + (\text{Level} - 1) \times 0.2]$
+- **No Point Rationing:** There is no point cap or resource rationing between skills; every Active and Ultimate skill can eventually be fully maxed.
+- **Post-Acquisition Sink:** This serves as the primary utility for duplicate Shards once a card is owned, ensuring duplicate pulls remain highly valuable.
+
+###### Active & Ultimate Skill Upgrade Costs
+| Skill Level | Shards Required | Gold Cost | Magnitude Multiplier |
+|---|---|---|---|
+| 1 (base) | — | — | ×1.0 |
+| 2 | 10 | 500 | ×1.2 |
+| 3 | 20 | 1,000 | ×1.4 |
+| 4 | 35 | 1,800 | ×1.6 |
+| 5 | 55 | 2,800 | ×1.8 |
+| 6 | 80 | 4,000 | ×2.0 |
+| 7 | 110 | 5,500 | ×2.2 |
+| 8 | 145 | 7,200 | ×2.4 |
+| 9 | 185 | 9,200 | ×2.6 |
+| 10 (max) | 230 | 11,500 | ×2.8 |
+
+*Total to max a single skill: 870 Shards and 43,500 Gold.*
+
+> **Why this split matters:** Passive skills auto-scaling reinforces the card's inherent identity, while Active/Ultimate leveling costs Shards to ensure duplicate cards act as a persistent long-term progression sink. Shared point-rations (where players choose between skills) are deliberately avoided to keep progression clean and prevent players from permanently gimping their card's build.
+
 #### Design Philosophy
 > **Skills vs. Perks:** Skills answer the question: *"What is this creature?"* They are fixed, printed on the card, and define its core identity. Perks (Section 7.6) answer: *"How am I playing this creature in this build?"* — flexible, slot-in modifiers for Legendary-rarity cards only. This two-layer strategy system gives high depth without overloading UI complexity.
 
@@ -426,10 +460,23 @@ Sacrifice any unwanted card as EXP fodder for a target card:
 
 This fills the gap that pure participation EXP leaves: a new pull or an off-meta card that rarely sees playtime would crawl to max level on battle EXP alone. Fodder feeding lets players redirect collection surplus into targeted leveling without grinding hundreds of matches.
 
+**Star Essence (Shard Recycling):**
+To ensure that duplicates of cards a player has no interest in investing in are never wasted, players can convert unwanted Shards of any card into a generic resource called **Star Essence** at a conversion rate of **10 unwanted Shards → 1 Star Essence**.
+- **Usage:** Star Essence is used exclusively to feed the normal Level 1–100 card leveling system to provide generic EXP.
+- **Restriction:** Star Essence **cannot** be used to bypass or fulfill the exact-duplicate requirement for Milestone Breakthroughs.
+
 #### Milestone Breakthroughs (Level 30 / 60 / 100)
 At Milestones, the card advances by **+1 Star Tier** and unlocks the next Skill (see §5.6). To pass a Milestone, the player must sacrifice **3 duplicate cards** of the exact same type. Alternatively, spend a **Milestone Breakthrough Skip** (Gem sink — §13.4) to bypass the duplicate requirement.
 
 - Level cap is **arena-gated**: a card cannot break through milestone levels beyond the current arena's Max Star Tier cap (§7.4).
+
+### 7.1b Shards as a Post-Acquisition Progression Sink
+
+Once a player has acquired a card (using 100 Shards), subsequent duplicate Shards gained for that card serve a permanent dual purpose:
+1. **Milestone Breakthroughs:** Spent to upgrade the card's Star Tier (see §7.1 / §5.6).
+2. **Active & Ultimate Skill Levels:** Used alongside Gold to upgrade individual Active and Ultimate skills from Level 1 to 10 (see [§5.6](#56-card-skill-unlock-system-fixed-identity)).
+
+This ensures that duplicate Shard farming (such as from Faction Towers) remains a critical long-term progression loop for maxing out a player's core deck, rather than becoming a dead-end currency after acquisition.
 
 ### 7.2 Forge Core Upgrades (Base Progression)
 Players upgrade their **Forge** (base HQ) which unlocks:
@@ -452,14 +499,14 @@ Equip **Runes** to your Forge Commander to add passive bonuses:
 > - **Star Tier** (1★–6★): How far a card has been evolved via duplicate sacrifice. Determines which skills are unlocked.
 > - **Power Level** (1–100): The card's XP-based stat multiplier (ATK, HP). Increases incrementally via fodder cards.
 
-| Arena | Name | Cup Range | Max Star Tier Allowed | Skills Available |
-|---|---|---|---|---|
-| 1 | Copper Forge | 0–400 | 2★ max | Skill 1 (Passive) only |
-| 2 | Iron Forge | 400–900 | 3★ max | Skill 1 + Skill 2 |
-| 3 | Steel Forge | 900–1600 | 4★ max | All skills |
-| 4 | Crystal Forge | 1600–2500 | 5★ max | All skills |
-| 5 | Shadow Forge | 2500–4000 | 6★ (Rare/Epic/Legendary) | All skills |
-| 6 | Grand Forge | 4000+ | Uncapped, tournament tier | All skills |
+| Arena | Name | Cup Range | Max Star Tier Allowed | Skills Available | Max Skill Level |
+|---|---|---|---|---|---|
+| 1 | Copper Forge | 0–400 | 2★ max | Skill 1 (Passive) only | Level 2 max |
+| 2 | Iron Forge | 400–900 | 3★ max | Skill 1 + Skill 2 | Level 4 max |
+| 3 | Steel Forge | 900–1600 | 4★ max | All skills | Level 6 max |
+| 4 | Crystal Forge | 1600–2500 | 5★ max | All skills | Level 8 max |
+| 5 | Shadow Forge | 2500–4000 | 6★ (Rare/Epic/Legendary) | All skills | Level 10 max |
+| 6 | Grand Forge | 4000+ | Uncapped, tournament tier | All skills | Uncapped |
 
 Win PvP → earn **Cups** → rise in arena. Lose → lose cups. This creates fair bracket play — you always face players at your same strength tier.
 
@@ -497,14 +544,14 @@ Every Perk levels from 1 to 6. Each level increases the Perk's stat magnitude by
 
 > **Example — Heal Perk lifecycle:**
 
-| Perk Level | Perk EXP Needed | Magnitude | Extra Unlocked at Milestone |
-|---|---|---|---|
-| 1 (base) | — | Heal 1 HP | — |
-| 2 — Milestone 1 | 20 | Heal 2 HP | + Cleanses 1 debuff from the healed ally |
-| 3 | 50 | Heal 3 HP | — |
-| 4 — Milestone 2 | 90 | Heal 4 HP | + Healed ally gains +5% Shield for 3s |
-| 5 | 150 | Heal 5 HP | — |
-| 6 — Milestone 3 (max) | 240 | Heal 6 HP | + If healed ally was at full HP, gain +10% ATK for 5s instead |
+| Level | Perk EXP Cost | Gold Cost | Magnitude | Extra Unlocked at Milestone |
+|---|---|---|---|---|
+| 1 (base) | — | — | Heal 1 HP | — |
+| 2 | 20 | 200 | Heal 2 HP | + Cleanses 1 debuff from the healed ally |
+| 3 | 50 | 500 | Heal 3 HP | — |
+| 4 | 90 | 900 | Heal 4 HP | + Healed ally gains +5% Shield for 3s |
+| 5 | 150 | 1,500 | Heal 5 HP | — |
+| 6 (max) | 240 | 2,400 | Heal 6 HP | + If healed ally was at full HP, gain +10% ATK for 5s instead |
 
 > Milestone clauses should be playtested on 2–3 sample perks across different roles (heal, shield, damage) before writing all of them — a clause balanced for a heal perk may be broken on a damage perk.
 
@@ -512,7 +559,7 @@ Every Perk levels from 1 to 6. Each level increases the Perk's stat magnitude by
 - **Boss drop duplicates:** A duplicate Perk dropped by a Forest or Tower boss auto-converts to Perk EXP for that specific Perk.
   - Universal duplicate → 10 Perk EXP
   - Faction-specific duplicate → 20 Perk EXP (rarer, since only one faction's tower/pool produces it)
-- **Universal Perk Shards:** A scarce top-up currency earned from Forge Depths runs and Clan Raids — spend on any specific Perk the player wants to prioritize. Boss-drop EXP is the primary, free-flowing source; Perk Shards are the targeted supplement.
+- **Universal Perk Shards:** A scarce top-up currency earned from Forge Depths runs and Clan Raids — spend on any specific Perk the player wants to prioritize. 1 Universal Perk Shard converts to 5 Perk EXP. Boss-drop EXP is the primary, free-flowing source; Perk Shards are the targeted supplement.
 
 #### Perk Drop Sources
 Perks only drop on **boss floors** — Forest chapter bosses and Tower boss floors (every 10th floor). The two PvE modes give Perks distinct identities:
@@ -687,6 +734,58 @@ All human-facing strings in this system are managed through an **admin CMS** —
   - Optional seasonal/contextual tag (e.g., `ramadan`, `friday`, `general`)
 - Admins control the entire message pool — no messages are hardcoded in the client.
 - The client fetches the appropriate message from the server at the moment of depletion, ensuring real-time updates without app releases.
+
+---
+
+### 8.6 Promo Code System ✨ NEW
+
+To support community engagement, marketing campaigns, and seasonal live-ops events (e.g., Ramadan, Eid, or launch anniversary), the game features a highly flexible Promo Code System managed on the Laravel backend.
+
+#### 8.6.1 Features and Capabilities
+
+*   **Multi-Resource Bundles:** A single promo code can reward players with a combination of different resources simultaneously:
+    *   **Core Currencies:** Gold, Gems, Crystals.
+    *   **Utility/Energy:** Energy Cells, Battle Tickets.
+    *   **Collection Assets:** Specific card Shards, random packages, or Wildcard Tickets.
+*   **Event-Specific Resources:** Codes can distribute temporary or event-exclusive resources (e.g., *Ramadan Lantern Tokens*, *Eid Celebration Shards*) that are only valid or visible during designated event timelines.
+*   **Dynamic Targeting:** Ability to restrict promo codes to specific player cohorts (e.g., new players registered within the last 48 hours, or players in specific regional brackets like Saudi Arabia).
+
+#### 8.6.2 Redemption Rules and Constraints
+
+To maintain economy balance and prevent abuse, each promo code supports the following backend configurations:
+
+| Constraint | Description | Example |
+|---|---|---|
+| **Active Window** | Start and End timestamps (Server UTC) defining when the code can be redeemed. | Active from Ramadan Day 1 to Eid Day 3. |
+| **Max Global Redemptions** | A hard limit on the total number of times a code can be claimed across the entire player base (first-come, first-served). | Limit to the first 5,000 players. |
+| **Max Redemptions Per Account** | The maximum number of times a single player account can redeem the code (typically capped at 1). | 1 redemption per account. |
+| **Eligibility Filters** | Minimum Forge Level or account creation date window. | Requires Forge Level 2+. |
+
+#### 8.6.3 Server-Authoritative Flow (Anti-Cheat & Validation)
+
+To prevent code generation exploits and time-tampering, all validations are strictly performed on the Laravel backend:
+1. **Redemption Request:** The Unity client sends the typed string to the Laravel `POST /api/v1/promo-code/redeem` endpoint.
+2. **Backend Validation:**
+    *   Sanitizes and checks if the code exists in PostgreSQL (case-insensitive lookup).
+    *   Validates the current server UTC time against the code's active window.
+    *   Verifies if the global limit has been reached.
+    *   Queries the `promo_code_redemptions` join table to ensure the current player has not exceeded their individual limit.
+    *   Validates custom player eligibility (e.g., level gate).
+3. **Transaction Execution:** The backend processes the rewards inside a database transaction (adding resources to player records, inserting a redemption log), ensuring atomicity.
+4. **Response:** Returns a success response containing the exact reward payload to render a celebratory reward popup, or a localized error message.
+
+#### 8.6.4 Error Code & UI Messages (Localized)
+
+All redemption responses contain standardized, localized error codes:
+
+| Error Key | English Message | Arabic Message |
+|---|---|---|
+| `CODE_NOT_FOUND` | "Invalid promo code. Please try again." | "رمز ترويجي غير صالح. يرجى المحاولة مرة أخرى." |
+| `CODE_EXPIRED` | "This promo code has expired." | "لقد انتهت صلاحية هذا الرمز الترويجي." |
+| `CODE_NOT_ACTIVE` | "This promo code is not active yet." | "هذا الرمز الترويجي ليس نشطًا بعد." |
+| `GLOBAL_LIMIT_REACHED` | "This code has reached its maximum redemption limit." | "لقد وصل هذا الرمز إلى الحد الأقصى للاستخدام." |
+| `USER_LIMIT_REACHED` | "You have already redeemed this promo code." | "لقد قمت باسترداد هذا الرمز الترويجي بالفعل." |
+| `INSUFFICIENT_LEVEL` | "You do not meet the level requirement to redeem this code." | "مستوى حسابك لا يفي بالمتطلبات لاسترداد هذا الرمز." |
 
 ---
 
@@ -935,6 +1034,7 @@ Packages are the primary way to discover new cards. They are funded exclusively 
 - Shards also drop from dungeons, event completions, and the Shard Shop.
 - Collect **100 Shards** of any specific creature or hero → claim that card directly, no draw required.
 - The Shard Shop lets players spend Shards on specific cards at known, fixed costs.
+- **Shard Recycling:** Excess or unwanted Shards may also be converted to **Star Essence** to feed the normal Level 1–100 card leveling system (see [§7.1](#71-card-leveling-exp--milestone-breakthroughs)).
 
 **Path C — Direct Shop & Events (Crystal-Funded, Fully Transparent)**
 - **Rotating Daily Shop:** Buy specific, pre-revealed cards/heroes with Crystals or Gold.
@@ -1126,7 +1226,7 @@ This section defines a dedicated **5th faction** — or an integrated cross-fact
 - Light particle effects — cards glow with warm golden light when abilities activate
 
 **Faction Synergy Bonus (3+ Al-Noor cards):**
-> **Deploy Light** — Every time you deploy an Al-Noor card onto the battlefield, it releases a burst of warm golden light that heals your Hero for 5 HP. Rewards Al-Noor-heavy decks with sustained Hero durability. *(Note: this is a deploy trigger, not a merge trigger — in FORGE, all star-tier evolution happens outside of battle on the collection screen.)*
+> **Deploy Light** — Every time you deploy an Al-Noor card onto the battlefield, it releases a burst of warm golden light that heals your Hero for 5 HP. Rewards Al-Noor-heavy decks with sustained Hero durability. *(Note: this is a deploy trigger — in FORGE, all star-tier evolution happens on the collection screen.)*
 
 ---
 
@@ -1155,7 +1255,7 @@ This section defines a dedicated **5th faction** — or an integrated cross-fact
 #### Legendary Cards
 | Card Name | Arabic Name | Visual | Keywords | Ability |
 |---|---|---|---|---|
-| **The Golden Architect** | المعمار الذهبي | A massive construct built from living Islamic architecture — arches form its body, muqarnas form its shoulders, no face, just a glowing geometric core | Shield, Heal | **Bayt Al-Hikmah** *(House of Wisdom)* — while on the field, all your merges produce 3★ effect regardless of star level. Once per match. |
+| **The Golden Architect** | المعمار الذهبي | A massive construct built from living Islamic architecture — arches form its body, muqarnas form its shoulders, no face, just a glowing geometric core | Shield, Heal | **Bayt Al-Hikmah** *(House of Wisdom)* — while on the field, all deployed friendly cards are treated as if they are 3★ regardless of their actual star rank. |
 | **Keeper of the Citadel** | حارس القلعة | A towering fortified giant, body resembling a Crusader-era Islamic citadel (like Saladin's Cairo Citadel) with battlements as shoulders | Taunt | **Unbreachable** — cannot be targeted by abilities, only direct attacks. Gains +5 HP every 5 seconds while alive. |
 
 ---
@@ -1235,9 +1335,9 @@ Match 2: "Deploy cards to counter"
          → Enemy has 1 weak card in each lane
          → Player learns: lane choice matters, placement is strategy
          
-Match 3: "Merge two cards!"
-         → Given 2 identical cards, forced merge scenario
-         → Player learns: merge = power spike, 1★ + 1★ = 2★
+Match 3: "Faction Synergies!"
+         → Deploy 3 cards of the same faction
+         → Player learns: deploying same-faction cards activates powerful passive bonuses
          
 Match 4: "Cast your first spell!"
          → Hand contains 1 creature + 1 Vine Snare spell
@@ -1256,7 +1356,7 @@ Match 6: "Here's your reward chest!"
 - **NO text popups** — use visual highlights (glowing arrows, dimmed-out areas, pulsing buttons)
 - **NO forced pauses** — player is always in control, always playing
 - Total onboarding: 6 matches in ~3 minutes
-- After Match 6, player has: 8 cards, a basic deck, and understanding of deploy/merge/spell/win
+- After Match 6, player has: 8 cards, a basic deck, and understanding of deploy/synergy/spell/win
 - The game transitions seamlessly into **Campaign Level 1** — no menu confusion
 - Players can replay the tutorial from Settings if needed
 
@@ -1273,7 +1373,7 @@ Let friends challenge each other with **no cup loss/gain**. This is the #1 reque
 ### 16.2 Spectate Mode
 Watch live clan members' PvP matches in real-time.
 - Delayed by 15 seconds to prevent coaching abuse in competitive
-- Viewer can send predefined emotes ("Nice merge!", "Wow!", "Come on!")
+- Viewer can send predefined emotes ("Nice play!", "Wow!", "Come on!")
 - Builds community, creates content creators, gives new players a way to learn strategies
 
 ### 16.3 Clan Raids (Weekly Co-op PvE Boss — Every Thursday)
@@ -1372,7 +1472,7 @@ Clan score = sum across all roster members' attacks.
 ### Clan Chat — Deliberately Scoped Down
 Full free-text chat carries a real moderation and localization burden (profanity filtering across English and Arabic, abuse reports, live moderation tooling) disproportionate for a 2-person team.
 
-- **Phase 3:** Chat is limited to the **preset phrase/emote pool** already built for Spectate Mode (§16.2 — "Nice merge!", "Wow!", "Come on!") plus a small set of clan-specific presets ("Nice win!", "Help needed!", "Raid starting!"). No free-text.
+- **Phase 3:** Chat is limited to the **preset phrase/emote pool** already built for Spectate Mode (§16.2 — "Nice play!", "Wow!", "Come on!") plus a small set of clan-specific presets ("Nice win!", "Help needed!", "Raid starting!"). No free-text.
 - **Phase 4+:** Free-text Clan Chat added once the team can realistically staff moderation for Arabic + English. Flagged as a stretch goal, not a launch blocker.
 
 This keeps the social feature shippable without opening a support burden the team can't cover at launch.
@@ -1424,7 +1524,7 @@ Here's why — and what the alternatives look like:
 | **Learning curve** | Medium | Low if you know Flutter | Low-Medium |
 | **2D animation** | Excellent | Good | Very good |
 | **Particle effects** | Excellent (VFX Graph) | Limited | Good |
-| **Card flip/merge animations** | Native, smooth | Possible but manual | Possible |
+| **Card flip animations** | Native, smooth | Possible but manual | Possible |
 | **AI tools available** | Huge ecosystem (Cursor + Unity) | Growing | Growing |
 | **Multiplayer/Firebase** | Unity Gaming Services (UGS) | Firebase + custom | Custom only |
 | **Asset store** | Massive — card templates, UI kits exist | None | Small |
@@ -1442,7 +1542,7 @@ Here's why — and what the alternatives look like:
 
 ### 18.3 Why Not Flutter + Flame?
 Flutter + Flame is a valid choice **if you already have Flutter developers** (which you do). The tradeoff:
-- Flame is excellent for simple 2D but card merge animations, particle effects, and smooth battle sequences require significantly more custom work compared to Unity
+- Flame is excellent for simple 2D but card breakthrough animations, particle effects, and smooth battle sequences require significantly more custom work compared to Unity
 - Unity's Asset Store has ready-made card game frameworks (some for $20–50) that save months of work
 - If your 2 employees are Flutter devs with zero Unity exposure, Flutter + Flame is viable — you'd ship MVP faster but hit animation and particle limits earlier
 
@@ -1472,7 +1572,7 @@ Flutter + Flame is a valid choice **if you already have Flutter developers** (wh
 #### Backend Architecture Notes
 - **Auth flow:** Unity client → Laravel Sanctum token → all API calls authenticated via Bearer token
 - **PvP matchmaking:** Player joins queue → Laravel pushes to Redis → Reverb notifies matched players → real-time battle relay runs through Reverb WebSocket channel
-- **Battle state:** Each card deploy/merge action is sent as a WebSocket event; Laravel validates and broadcasts to opponent — works well since card games are low-frequency (1 action every 2–5 seconds, not FPS-level)
+- **Battle state:** Each card deploy/spell action is sent as a WebSocket event; Laravel validates and broadcasts to opponent — works well since card games are low-frequency (1 action every 2–5 seconds, not FPS-level)
 - **Chest timers:** Laravel Horizon job scheduled on dispatch; no polling needed from client
 - **Fallback for PvP lag:** If Reverb latency becomes an issue at scale, swap only the in-match relay to **Photon Fusion free tier** (100 CCU) while keeping Laravel for everything else (auth, cards, economy, matchmaking queue)
 
@@ -1481,7 +1581,7 @@ Flutter + Flame is a valid choice **if you already have Flutter developers** (wh
 To prevent cheating, game exploits, database tampering, and Remote Code Execution (RCE) vulnerabilities, the system enforces a strict defense-in-depth security model across the Laravel backend and Unity client.
 
 #### 1. Server-Authoritative Gameplay (No Client Trust)
-- **State Validation:** The game client is strictly a visual renderer. All gameplay actions (card deployments, merges, spell casts, mana consumption, card attacks) must be sent as events to the Laravel/Redis backend. The backend validates every event against game rules (e.g., verifying the player actually owns the card, has sufficient mana, and that cooldowns have expired) before updating the master game state and broadcasting to players.
+- **State Validation:** The game client is strictly a visual renderer. All gameplay actions (card deployments, spell casts, mana consumption, card attacks) must be sent as events to the Laravel/Redis backend. The backend validates every event against game rules (e.g., verifying the player actually owns the card, has sufficient mana, and that cooldowns have expired) before updating the master game state and broadcasting to players.
 - **Victory Resolution:** Match outcomes (win/loss/draw) are determined exclusively by the server. The client cannot send a "match_won" event to claim victory.
 
 #### 2. Economy & Currency Integrity
@@ -1513,7 +1613,6 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 - [ ] 3-lane battlefield with basic auto-battle
 - [ ] 20 creature cards (5 per original 4 factions, Common + Rare only)
 - [ ] 6 Forge Spells (1 per faction + 1 neutral) ✨
-- [ ] Merge mechanic (1★→2★ only in MVP)
 - [ ] Battlefield Environments — 4 modifiers for launch ✨
 - [ ] Card Keyword system implemented ✨
 - [ ] Card Skill unlocks at Level 2 and 3 (Skill 1 only) ✨
@@ -1527,6 +1626,7 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 - [ ] Arena ladder (3 arenas in MVP)
 - [ ] Battle chests system
 - [ ] Daily free chest
+- [ ] Promo Code redemption system (multi-resource & event rewards) ✨
 - [ ] 40 cards total (add Epic tier + more spells)
 - [ ] Forge Commander cards (5 commanders — one per faction including Al-Noor)
 - [ ] Commander Surge abilities ✨
@@ -1541,7 +1641,6 @@ With 2 testers/helpers and AI-assisted development, build this in **4–6 months
 - [ ] Clan system (donate cards, member list, clan chat)
 - [ ] Dungeon Crawl mode
 - [ ] Full 60-card set (creatures + spells)
-- [ ] Full 3★ merge system
 - [ ] Rune system
 - [ ] Last Stand keyword on select cards ✨
 - [ ] Card Skill unlocks at Level 5 (Skill 2+ and Skill 3 for Epic/Legendary) ✨
@@ -1585,7 +1684,7 @@ Why would players choose FORGE over Ludus, Black Deck, BFTT, or Deck Heroes?
 | Stale, no updates (Deck Heroes) | Biweekly card + event drops in roadmap |
 | Identical visual style (all use fantasy faces) | Unique helmets/constructs/plants — stands out in app store |
 | P2W levels ruin PvP fairness | Arena-gated level caps ensure fair matchmaking |
-| No real skill expression in battle | Real-time merge decisions + spell timing + lane reading = high skill ceiling |
+| No real skill expression in battle | Real-time spell timing + lane reading = high skill ceiling |
 | Same battlefield every match (all competitors) | Dynamic Battlefield Environments make every match feel different ✨ |
 | No comeback chance when losing (Ludus, Black Deck) | Desperate Forge + Commander Surge + Last Stand = every match has a climax ✨ |
 | Cards feel like stat sticks (Deck Heroes) | Card Skill Unlock system makes every level-up feel meaningful ✨ |
@@ -1624,4 +1723,4 @@ Why would players choose FORGE over Ludus, Black Deck, BFTT, or Deck Heroes?
 
 *Document version 2.3 — Shifted to Modern Neo-Islamic Futurism Aesthetic*  
 *Changes from v2.2: Redesigned the visual theme in Section 3 from rustic ancient fantasy to a clean, bright "Neo-Islamic Futurist / Tech-Magic" art direction. Shifted factions to cybernetic, bio-luminescent, plasma, and celestial light constructs. Standardized a modern glassmorphism UI style with skeletal bone animations.*  
-*Next step recommended: Build a paper prototype of 2-player battle to validate lane + merge + spell timing feel before writing any code.*
+*Next step recommended: Build a paper prototype of 2-player battle to validate lane + spell timing feel before writing any code.*

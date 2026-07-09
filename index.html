@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORGE — Card Game Demo</title>
+    <meta name="description" content="Interactive card game demo for FORGE — a deck-building strategy card game with 5 factions and 40 creatures.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0D0F14;
+            --bg-secondary: #13161D;
+            --bg-card: #1A1D26;
+            --bg-glass: rgba(26, 29, 38, 0.85);
+            --text-primary: #F0EDE6;
+            --text-secondary: #9A978F;
+            --text-muted: #5C5A54;
+            --gold: #D4A843;
+            --gold-glow: rgba(212, 168, 67, 0.3);
+            --ironclad: #5BA3C9;
+            --ironclad-dark: rgba(91, 163, 201, 0.15);
+            --verdant: #5DBF6D;
+            --verdant-dark: rgba(93, 191, 109, 0.15);
+            --ember: #E87C4A;
+            --ember-dark: rgba(232, 124, 74, 0.15);
+            --phantom: #9B6DC6;
+            --phantom-dark: rgba(155, 109, 198, 0.15);
+            --alnoor: #D4A843;
+            --alnoor-dark: rgba(212, 168, 67, 0.15);
+            --rarity-common: #8A8A8A;
+            --rarity-uncommon: #4DB8A4;
+            --rarity-rare: #4A9FE5;
+            --rarity-epic: #9B6DC6;
+            --rarity-legendary: #D4A843;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== AMBIENT BACKGROUND ===== */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .ambient-bg .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: float 20s ease-in-out infinite;
+        }
+        .ambient-bg .orb:nth-child(1) { width: 600px; height: 600px; background: var(--ironclad); top: -200px; left: -100px; animation-delay: 0s; }
+        .ambient-bg .orb:nth-child(2) { width: 500px; height: 500px; background: var(--ember); top: 50%; right: -150px; animation-delay: -7s; }
+        .ambient-bg .orb:nth-child(3) { width: 400px; height: 400px; background: var(--alnoor); bottom: -100px; left: 30%; animation-delay: -14s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px 30px;
+        }
+        header h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            background: linear-gradient(135deg, var(--gold), #F5D98A, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px var(--gold-glow);
+            margin-bottom: 8px;
+        }
+        header p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.08em;
+        }
+
+        /* ===== NAV TABS ===== */
+        .nav-tabs {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.03em;
+        }
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+        .nav-tab.active {
+            background: var(--gold);
+            color: var(--bg-primary);
+            border-color: var(--gold);
+            font-weight: 600;
+            box-shadow: 0 4px 20px var(--gold-glow);
+        }
+
+        /* ===== FACTION FILTERS ===== */
+        .faction-filters {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 20px 30px;
+            flex-wrap: wrap;
+        }
+        .faction-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .faction-btn:hover { transform: translateY(-2px); }
+        .faction-btn.active { font-weight: 600; }
+        .faction-btn[data-faction="all"].active { background: rgba(255,255,255,0.1); color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+        .faction-btn[data-faction="ironclad"].active { background: var(--ironclad-dark); color: var(--ironclad); border-color: var(--ironclad); }
+        .faction-btn[data-faction="verdant"].active { background: var(--verdant-dark); color: var(--verdant); border-color: var(--verdant); }
+        .faction-btn[data-faction="ember"].active { background: var(--ember-dark); color: var(--ember); border-color: var(--ember); }
+        .faction-btn[data-faction="phantom"].active { background: var(--phantom-dark); color: var(--phantom); border-color: var(--phantom); }
+        .faction-btn[data-faction="alnoor"].active { background: var(--alnoor-dark); color: var(--alnoor); border-color: var(--alnoor); }
+
+        /* ===== SECTIONS ===== */
+        .section { display: none; position: relative; z-index: 10; padding: 0 20px 60px; }
+        .section.active { display: block; }
+
+        /* ===== CARD GRID ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== GAME CARD ===== */
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+        }
+        .game-card[data-faction="ironclad"]::before { background: linear-gradient(90deg, var(--ironclad), transparent); }
+        .game-card[data-faction="verdant"]::before { background: linear-gradient(90deg, var(--verdant), transparent); }
+        .game-card[data-faction="ember"]::before { background: linear-gradient(90deg, var(--ember), transparent); }
+        .game-card[data-faction="phantom"]::before { background: linear-gradient(90deg, var(--phantom), transparent); }
+        .game-card[data-faction="alnoor"]::before { background: linear-gradient(90deg, var(--alnoor), transparent); }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow);
+            border-color: rgba(255,255,255,0.12);
+        }
+        .game-card.hidden {
+            display: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .game-card[data-faction="ironclad"] .card-icon { background: var(--ironclad-dark); }
+        .game-card[data-faction="verdant"] .card-icon { background: var(--verdant-dark); }
+        .game-card[data-faction="ember"] .card-icon { background: var(--ember-dark); }
+        .game-card[data-faction="phantom"] .card-icon { background: var(--phantom-dark); }
+        .game-card[data-faction="alnoor"] .card-icon { background: var(--alnoor-dark); }
+
+        .card-rarity {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .rarity-common { background: rgba(138,138,138,0.15); color: var(--rarity-common); }
+        .rarity-uncommon { background: rgba(77,184,164,0.15); color: var(--rarity-uncommon); }
+        .rarity-rare { background: rgba(74,159,229,0.15); color: var(--rarity-rare); }
+        .rarity-epic { background: rgba(155,109,198,0.15); color: var(--rarity-epic); }
+        .rarity-legendary { background: rgba(212,168,67,0.15); color: var(--rarity-legendary); }
+
+        .card-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .card-arabic {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            direction: rtl;
+            margin-bottom: 10px;
+        }
+        .card-faction-tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .game-card[data-faction="ironclad"] .card-faction-tag { color: var(--ironclad); }
+        .game-card[data-faction="verdant"] .card-faction-tag { color: var(--verdant); }
+        .game-card[data-faction="ember"] .card-faction-tag { color: var(--ember); }
+        .game-card[data-faction="phantom"] .card-faction-tag { color: var(--phantom); }
+        .game-card[data-faction="alnoor"] .card-faction-tag { color: var(--alnoor); }
+
+        .card-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .stat-icon { font-size: 0.75rem; }
+        .stat-atk { color: #E87C4A; }
+        .stat-hp { color: #5DBF6D; }
+        .stat-spd { color: #5BA3C9; }
+
+        .card-skills {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.04);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .skill-type {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+        }
+
+        /* ===== CARD DETAIL MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: rgba(255,255,255,0.06);
+            border: none;
+            color: var(--text-secondary);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+        .modal-card-icon {
+            width: 72px; height: 72px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+        }
+        .modal-card-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .modal-card-arabic {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            direction: rtl;
+            margin-bottom: 6px;
+        }
+        .modal-card-english-meaning {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+        .modal-card-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .modal-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .modal-stat {
+            background: rgba(255,255,255,0.04);
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: center;
+            flex: 1;
+        }
+        .modal-stat-val { font-size: 1.4rem; font-weight: 700; }
+        .modal-stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+        .modal-skills-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+        .modal-skill {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .modal-skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .modal-skill-name { font-weight: 600; font-size: 0.95rem; }
+        .modal-skill-arabic { font-size: 0.8rem; color: var(--text-muted); direction: rtl; }
+        .modal-skill-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* ===== BATTLE SECTION ===== */
+        .battle-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .battle-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .battle-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--ember), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .battle-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .battlefield {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .player-area {
+            margin-bottom: 12px;
+        }
+        .player-area:last-child { margin-bottom: 0; }
+
+        .player-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .player-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+        .hero-hp-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .hp-bar-bg {
+            width: 200px;
+            height: 8px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .hp-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .hp-bar-fill.player-hp { background: linear-gradient(90deg, var(--verdant), #8AE89A); }
+        .hp-bar-fill.enemy-hp { background: linear-gradient(90deg, var(--ember), #F5A77A); }
+        .hp-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 48px;
+        }
+
+        .battlefield-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+        }
+        .divider-text {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .slots {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .slot {
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed rgba(255,255,255,0.08);
+            border-radius: 12px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .slot.occupied {
+            border-style: solid;
+            border-color: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+        }
+        .slot-empty-text {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .slot-card {
+            text-align: center;
+            width: 100%;
+        }
+        .slot-card-icon { font-size: 1.5rem; margin-bottom: 4px; }
+        .slot-card-name { font-size: 0.7rem; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .slot-card-stats { display: flex; justify-content: center; gap: 8px; font-size: 0.65rem; font-weight: 600; }
+        .slot-hp-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .slot-hp-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            background: var(--verdant);
+        }
+
+        .slot.attacking {
+            animation: attackPulse 0.4s ease;
+        }
+        @keyframes attackPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); box-shadow: 0 0 20px rgba(232, 124, 74, 0.3); }
+            100% { transform: scale(1); }
+        }
+        .slot.hit {
+            animation: hitShake 0.3s ease;
+        }
+        @keyframes hitShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .slot.dying {
+            animation: dieOut 0.5s ease forwards;
+        }
+        @keyframes dieOut {
+            to { opacity: 0; transform: scale(0.8); }
+        }
+
+        /* Status effect badges on battle cards */
+        .slot-statuses {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+        .status-badge {
+            font-size: 0.55rem;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+        }
+        .status-burn { background: rgba(232, 124, 74, 0.25); color: #E87C4A; }
+        .status-freeze { background: rgba(91, 163, 201, 0.25); color: #5BA3C9; }
+        .status-stealth { background: rgba(155, 109, 198, 0.25); color: #9B6DC6; }
+        .status-shield { background: rgba(91, 163, 201, 0.2); color: #7EC8E3; }
+        .status-poison { background: rgba(93, 191, 109, 0.2); color: #5DBF6D; }
+        .status-branded { background: rgba(232, 74, 74, 0.25); color: #E84A4A; }
+        .status-atkbuff { background: rgba(212, 168, 67, 0.2); color: #D4A843; }
+        .status-regen { background: rgba(93, 191, 109, 0.15); color: #8AE89A; }
+
+        .log-entry .skill { color: #9B6DC6; font-weight: 600; }
+        .log-entry .status { color: #5BA3C9; font-weight: 600; font-style: italic; }
+
+        .slot .slot-skill-name {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .damage-popup {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ember);
+            pointer-events: none;
+            animation: popUp 0.8s ease forwards;
+            z-index: 100;
+        }
+        .damage-popup.heal-popup { color: var(--verdant); }
+        .damage-popup.skill-popup { color: var(--phantom); }
+        @keyframes popUp {
+            0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+        }
+
+        /* Battle Controls */
+        .battle-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .battle-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.03em;
+        }
+        .battle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .battle-btn.primary {
+            background: linear-gradient(135deg, var(--gold), #C49530);
+            color: var(--bg-primary);
+            border-color: var(--gold);
+        }
+        .battle-btn.primary:hover {
+            box-shadow: 0 4px 20px var(--gold-glow);
+        }
+
+        /* Battle Log */
+        .battle-log {
+            max-width: 1100px;
+            margin: 20px auto 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .battle-log-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .log-entry {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            animation: fadeIn 0.3s ease;
+        }
+        .log-entry:last-child { border-bottom: none; }
+        .log-entry .dmg { color: var(--ember); font-weight: 600; }
+        .log-entry .heal { color: var(--verdant); font-weight: 600; }
+        .log-entry .card-ref { color: var(--gold); font-weight: 600; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+        .round-counter {
+            text-align: center;
+            margin: 16px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+        }
+
+        /* ===== HOW TO PLAY ===== */
+        .how-to-play {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .how-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .how-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .how-section p, .how-section li {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        .how-section ul {
+            list-style: none;
+            margin-top: 8px;
+        }
+        .how-section li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .how-section li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+        }
+
+        .faction-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .faction-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .faction-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .faction-item-name { font-weight: 600; font-size: 0.9rem; }
+        .faction-item-role { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.5rem; }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+            .slots { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+            .slot { min-height: 90px; padding: 6px; }
+            .slot-card-name { font-size: 0.6rem; }
+            .modal-content { padding: 24px; }
+            .battle-controls { gap: 8px; }
+            .battle-btn { padding: 10px 18px; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 2rem; }
+            .slots { grid-template-columns: repeat(5, 1fr); gap: 3px; }
+            .slot { min-height: 70px; padding: 4px; }
+            .slot-card-icon { font-size: 1rem; }
+            .slot-card-name { font-size: 0.55rem; }
+            .slot-card-stats { font-size: 0.55rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <header>
+        <h1>FORGE</h1>
+        <p>A Deck-Building Strategy Card Game</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="creatures" id="tab-creatures">🃏 Creatures</button>
+        <button class="nav-tab" data-tab="heroes" id="tab-heroes">👑 Heroes</button>
+        <button class="nav-tab" data-tab="battle" id="tab-battle">⚔️ Battle Demo</button>
+        <button class="nav-tab" data-tab="howto" id="tab-howto">📖 How to Play</button>
+    </div>
+
+    <div class="faction-filters" id="faction-filters">
+        <button class="faction-btn active" data-faction="all" id="filter-all">All</button>
+        <button class="faction-btn" data-faction="ironclad" id="filter-ironclad">🔩 Ironclad</button>
+        <button class="faction-btn" data-faction="verdant" id="filter-verdant">🌿 Verdant</button>
+        <button class="faction-btn" data-faction="ember" id="filter-ember">🔥 Ember</button>
+        <button class="faction-btn" data-faction="phantom" id="filter-phantom">👻 Phantom</button>
+        <button class="faction-btn" data-faction="alnoor" id="filter-alnoor">✨ Al-Noor</button>
+    </div>
+
+    <!-- CREATURES SECTION -->
+    <div class="section active" id="section-creatures">
+        <div class="card-grid" id="creature-grid"></div>
+    </div>
+
+    <!-- HEROES SECTION -->
+    <div class="section" id="section-heroes">
+        <div class="card-grid" id="hero-grid"></div>
+    </div>
+
+    <!-- BATTLE SECTION -->
+    <div class="section" id="section-battle">
+        <div class="battle-container">
+            <div class="battle-header">
+                <h2>⚔️ Battle Simulator</h2>
+                <p>Watch two randomly-assembled decks auto-battle across 5 lanes</p>
+            </div>
+            <div class="battlefield" id="battlefield">
+                <div class="player-area">
+                    <div class="player-label">
+                        <span class="player-name">👑 Enemy Hero</span>
+                        <div class="hero-hp-bar">
+                            <div class="hp-bar-bg"><div class="hp-bar-fill enemy-hp" id="enemy-hp-bar" style="width:100%"></div></div>
+                            <span class="hp-text" id="enemy-hp-text">100 HP</span>
+                        </div>
+                    </div>
+                    <div class="slots" id="enemy-slots"></div>
+                </div>
+                <div class="battlefield-divider">
+                    <div class="divider-line"></div>
+                    <span class="divider-text">⚔ Battlefield ⚔</span>
+                    <div class="divider-line"></div>
+                </div>
+                <div class="round-counter" id="round-counter">Round 0</div>
+                <div class="player-area">
+                    <div class="slots" id="player-slots"></div>
+                    <div class="player-label" style="margin-top: 10px;">
+                        <span class="player-name">👑 Your Hero</span>
+                        <div class="hero-hp-bar">
+                            <div class="hp-bar-bg"><div class="hp-bar-fill player-hp" id="player-hp-bar" style="width:100%"></div></div>
+                            <span class="hp-text" id="player-hp-text">100 HP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="battle-controls">
+                <button class="battle-btn primary" id="btn-start-battle">▶ Start Battle</button>
+                <button class="battle-btn" id="btn-new-decks">🔀 New Decks</button>
+                <button class="battle-btn" id="btn-reset-battle">↺ Reset</button>
+            </div>
+            <div class="battle-log" id="battle-log">
+                <div class="battle-log-title">Battle Log</div>
+                <div id="log-entries">
+                    <div class="log-entry">Press <span class="card-ref">Start Battle</span> to begin...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW TO PLAY SECTION -->
+    <div class="section" id="section-howto">
+        <div class="how-to-play">
+            <div class="how-section">
+                <h3>🎯 Objective</h3>
+                <p>Reduce your opponent's <strong>Hero HP to 0</strong>. Each Hero starts with <strong>100 HP</strong>. Deploy creature cards to your 5 lanes, defend your Hero, and break through the enemy's line to deal direct damage.</p>
+            </div>
+            <div class="how-section">
+                <h3>🃏 Deck Building</h3>
+                <ul>
+                    <li>Build a deck of <strong>12 cards</strong>: 8–10 creatures + 2–4 spells</li>
+                    <li>Max 2 copies of any single card</li>
+                    <li>Must include exactly <strong>1 Forge Commander</strong> (Hero card)</li>
+                    <li>Running 3+ cards of the same faction activates a <strong>Faction Synergy Bonus</strong></li>
+                </ul>
+            </div>
+            <div class="how-section">
+                <h3>⚔️ Combat Rules</h3>
+                <ul>
+                    <li>Each round lasts <strong>2 seconds</strong> (wall clock)</li>
+                    <li>Creatures attack the opposing card in the <strong>same lane (slot)</strong></li>
+                    <li>If the opposing slot is empty, attacks redirect to the <strong>nearest occupied slot</strong></li>
+                    <li>If the entire opposing board is empty, creatures attack the <strong>enemy Hero directly</strong></li>
+                    <li>The Hero is protected as long as at least one creature is on the field</li>
+                </ul>
+            </div>
+            <div class="how-section">
+                <h3>🏰 The Five Factions</h3>
+                <div class="faction-legend">
+                    <div class="faction-item">
+                        <div class="faction-dot" style="background: var(--ironclad)"></div>
+                        <div>
+                            <div class="faction-item-name">🔩 Ironclad</div>
+                            <div class="faction-item-role">Tank / Control — Walls & armor</div>
+                        </div>
+                    </div>
+                    <div class="faction-item">
+                        <div class="faction-dot" style="background: var(--verdant)"></div>
+                        <div>
+                            <div class="faction-item-name">🌿 Verdant</div>
+                            <div class="faction-item-role">Sustain / Heal — Outlast aggro</div>
+                        </div>
+                    </div>
+                    <div class="faction-item">
+                        <div class="faction-dot" style="background: var(--ember)"></div>
+                        <div>
+                            <div class="faction-item-name">🔥 Ember</div>
+                            <div class="faction-item-role">Aggro / Burst — Fast burn damage</div>
+                        </div>
+                    </div>
+                    <div class="faction-item">
+                        <div class="faction-dot" style="background: var(--phantom)"></div>
+                        <div>
+                            <div class="faction-item-name">👻 Phantom</div>
+                            <div class="faction-item-role">Disruption / Stealth — Tempo swings</div>
+                        </div>
+                    </div>
+                    <div class="faction-item">
+                        <div class="faction-dot" style="background: var(--alnoor)"></div>
+                        <div>
+                            <div class="faction-item-name">✨ Al-Noor</div>
+                            <div class="faction-item-role">Synergy / Support — Amplify allies</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="how-section">
+                <h3>⭐ Card Rarities</h3>
+                <ul>
+                    <li><span style="color: var(--rarity-common)">■ Common</span> — 1 skill, low stats, starter constructs</li>
+                    <li><span style="color: var(--rarity-uncommon)">■ Uncommon</span> — 2 skills, utility units</li>
+                    <li><span style="color: var(--rarity-rare)">■ Rare</span> — 2 skills, high potential core units</li>
+                    <li><span style="color: var(--rarity-epic)">■ Epic</span> — 3 skills, game-changing impact</li>
+                    <li><span style="color: var(--rarity-legendary)">■ Legendary</span> — 3 skills, faction-defining powerhouses</li>
+                </ul>
+            </div>
+            <div class="how-section">
+                <h3>🌀 Counter Triangle</h3>
+                <ul>
+                    <li><strong>Ember Burn</strong> → countered by <strong>Ironclad shields + Verdant regen</strong></li>
+                    <li><strong>Ironclad Walls</strong> → countered by <strong>Phantom displacement + Al-Noor pierce</strong></li>
+                    <li><strong>Verdant Sustain</strong> → countered by <strong>Ember anti-heal burn</strong></li>
+                    <li><strong>Phantom Stealth</strong> → countered by <strong>Al-Noor reveal + AoE</strong></li>
+                    <li><strong>Al-Noor Synergy</strong> → countered by <strong>Ember burst before setup</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="card-modal">
+        <div class="modal-content" id="modal-body"></div>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const creatures = [
+        // IRONCLAD
+        { id: 1, name: "Shield", arabic: "الدرع", transliterated: "Dara'a", meaning: "The Shield", faction: "ironclad", rarity: "common", icon: "🛡️", hp: 100, atk: 12, speed: "Normal", desc: "A small clockwork sentinel with a massive tower shield.", skills: [
+            { name: "Fortification", arabic: "تحصين", transliterated: "Tahseen", type: "Passive", desc: "Reduces all incoming damage by 10%. Increases to 15% if deployed in Slot 1 or Slot 5 (flanks)." }
+        ]},
+        { id: 2, name: "Rivet", arabic: "مسمار", transliterated: "Mismaar", meaning: "Nail / Rivet", faction: "ironclad", rarity: "common", icon: "⚙️", hp: 100, atk: 12, speed: "Normal", desc: "A squat, riveted golem bristling with gear-teeth.", skills: [
+            { name: "Anchoring", arabic: "تثبيت", transliterated: "Tathbeet", type: "Passive", desc: "Cannot be displaced or swapped by enemy abilities. Gains +5% ATK for each adjacent friendly card." }
+        ]},
+        { id: 3, name: "Tower", arabic: "برج", transliterated: "Burj", meaning: "Tower", faction: "ironclad", rarity: "uncommon", icon: "🏗️", hp: 145, atk: 16, speed: "Slow", desc: "A walking watchtower construct of steel and brass.", skills: [
+            { name: "Guarding", arabic: "حراسة", transliterated: "Hiraasa", type: "Passive", desc: "While deployed, adjacent friendly cards take 15% less damage from all sources." },
+            { name: "Impact", arabic: "صدمة", transliterated: "Sadma", type: "Active: On Attack", desc: "If Tower attacks a card with higher ATK, reduces that card's ATK by 20% for 4 seconds." }
+        ]},
+        { id: 4, name: "Anvil", arabic: "سندان", transliterated: "Sindaan", meaning: "Anvil", faction: "ironclad", rarity: "uncommon", icon: "🔨", hp: 145, atk: 16, speed: "Slow", desc: "A massive flat-topped golem that absorbs punishment.", skills: [
+            { name: "Endurance", arabic: "صبر", transliterated: "Sabar", type: "Passive", desc: "Gains +2% max HP every 4 seconds while in play (caps at +30% max HP)." },
+            { name: "Retaliation", arabic: "رد", transliterated: "Radd", type: "Active: On Damaged", desc: "When hit, deals 20% of damage taken back to attacker as direct damage." }
+        ]},
+        { id: 5, name: "Fortress", arabic: "قلعة", transliterated: "Qal'a", meaning: "Fortress", faction: "ironclad", rarity: "rare", icon: "🏰", hp: 210, atk: 22, speed: "Slow", desc: "A walking citadel construct with battlements for shoulders.", skills: [
+            { name: "Siege Wall", arabic: "حصار", transliterated: "Hisar", type: "Passive", desc: "Has Taunt. Enemies in the same lane cannot redirect attacks to other lanes while Fortress is alive." },
+            { name: "Demolition", arabic: "تدمير", transliterated: "Tadmir", type: "Active: Every 6s", desc: "Deals damage equal to 8% of Fortress's current HP to the opposing card." }
+        ]},
+        { id: 6, name: "Grasshopper", arabic: "جندب", transliterated: "Jundub", meaning: "Grasshopper (light warrior)", faction: "ironclad", rarity: "rare", icon: "🦗", hp: 210, atk: 22, speed: "Fast", desc: "A sleek, fast-striking mechanical knight with teal energy cores.", skills: [
+            { name: "Resistance", arabic: "مقاومة", transliterated: "Muqawama", type: "Passive", desc: "Immune to Freeze and slow effects." },
+            { name: "Double Strike", arabic: "ضربة مزدوجة", transliterated: "Darba Muzdawaja", type: "Active: On Deploy", desc: "Attacks twice on the round it's deployed." }
+        ]},
+        { id: 7, name: "Wall Breacher", arabic: "صيّاد السور", transliterated: "Sayyaad Al-Suwar", meaning: "Wall Breacher", faction: "ironclad", rarity: "epic", icon: "🪖", hp: 290, atk: 30, speed: "Slow", desc: "An enormous siege automaton with a battering ram forehead.", skills: [
+            { name: "Animated Armor", arabic: "دروع محرّك", transliterated: "Duru' Muharrak", type: "Passive", desc: "Takes 25% less damage from the first hit each round." },
+            { name: "Breach", arabic: "اختراق", transliterated: "Ikhtiraaq", type: "Active: On Attack", desc: "Ignores 40% of the target's Shield keyword. If the target has no Shield, deals 15% bonus damage." },
+            { name: "Earthquake", arabic: "زلزلة", transliterated: "Zalzala", type: "Ultimate: Once", desc: "Deals 30 damage to ALL cards on BOTH sides. Ironclad cards take half damage." }
+        ]},
+        { id: 8, name: "Iron Dragon", arabic: "تنّين الحديد", transliterated: "Tanneen Al-Hadid", meaning: "Dragon of Iron", faction: "ironclad", rarity: "legendary", icon: "🐉", hp: 390, atk: 40, speed: "Normal", desc: "A colossal dragon-shaped automaton of interlocking gears and molten steel.", skills: [
+            { name: "Steel Hide", arabic: "جلد الفولاذ", transliterated: "Jild Al-Fulath", type: "Passive", desc: "Damage from any single hit is capped at 15% of max HP. Counters burst." },
+            { name: "Fire Breath", arabic: "نفخة النار", transliterated: "Nafkhat Al-Nar", type: "Active: Every 6s", desc: "Deals 25 damage to opposing card and 10 damage to adjacent enemy slots." },
+            { name: "Heart of Machine", arabic: "قلب الماكينة", transliterated: "Qalb Al-Masina", type: "Ultimate: Once", desc: "For 8s, all Ironclad cards become immune. Non-Ironclad allies gain 15% Shield instead." }
+        ]},
+
+        // VERDANT
+        { id: 9, name: "Root", arabic: "جذر", transliterated: "Jidr", meaning: "Root", faction: "verdant", rarity: "common", icon: "🌱", hp: 100, atk: 12, speed: "Normal", desc: "A small humanoid root-golem with bark armor.", skills: [
+            { name: "Growth", arabic: "نمو", transliterated: "Numuw", type: "Passive", desc: "Regenerates 2% of max HP every 2 seconds." }
+        ]},
+        { id: 10, name: "Thorn", arabic: "شوكة", transliterated: "Shawka", meaning: "Thorn", faction: "verdant", rarity: "common", icon: "🌵", hp: 100, atk: 12, speed: "Normal", desc: "A spiny cactus-like construct bristling with needles.", skills: [
+            { name: "Thorn Return", arabic: "رد الشوك", transliterated: "Radd Al-Shawk", type: "Passive", desc: "Reflects 10% of all incoming damage back to the attacker." }
+        ]},
+        { id: 11, name: "Branch", arabic: "غصن", transliterated: "Ghusn", meaning: "Branch", faction: "verdant", rarity: "uncommon", icon: "🌿", hp: 145, atk: 16, speed: "Normal", desc: "A tall, slender tree-spirit with bioluminescent bark.", skills: [
+            { name: "Tree's Shade", arabic: "ظل الشجرة", transliterated: "Zill Al-Shajara", type: "Passive", desc: "Adjacent friendly cards heal 3 HP per round." },
+            { name: "Entangle", arabic: "تلجيم", transliterated: "Taljeem", type: "Active: On Deploy", desc: "Freezes the opposing card for 3 seconds." }
+        ]},
+        { id: 12, name: "Rose", arabic: "ورد", transliterated: "Ward", meaning: "Rose", faction: "verdant", rarity: "uncommon", icon: "🌹", hp: 145, atk: 16, speed: "Normal", desc: "A blooming floral golem that pulses with green light.", skills: [
+            { name: "Elixir", arabic: "إكسير", transliterated: "Ikseer", type: "Passive", desc: "When Rose is healed, 30% of the healing overflows to the adjacent ally with lowest HP." },
+            { name: "Blossom Burst", arabic: "تفجير الزهر", transliterated: "Tafjeer Al-Zahr", type: "Active: On Death", desc: "On death, heals all friendly cards for 15 HP." }
+        ]},
+        { id: 13, name: "Fig Tree", arabic: "تينة", transliterated: "Tineen", meaning: "Fig Tree (symbol of resilience)", faction: "verdant", rarity: "rare", icon: "🌳", hp: 210, atk: 22, speed: "Slow", desc: "A massive fig-tree golem with winding roots for legs.", skills: [
+            { name: "Deep Roots", arabic: "جذور عميقة", transliterated: "Judoor Ameeka", type: "Passive", desc: "Cannot be displaced. Regenerates 3% of max HP per round. Regen increases to 5% if HP below 40%." },
+            { name: "Fruit Burst", arabic: "انفجار الثمر", transliterated: "Infijaar Al-Thamr", type: "Active: On Death", desc: "When destroyed, spawns a 1★ Root in the same slot with 50% of base HP." }
+        ]},
+        { id: 14, name: "Fern", arabic: "سرخسة", transliterated: "Sarkhasa", meaning: "Fern", faction: "verdant", rarity: "rare", icon: "🍀", hp: 210, atk: 22, speed: "Normal", desc: "A fast-growing fern construct that spreads across lanes.", skills: [
+            { name: "Spread", arabic: "انتشار", transliterated: "Intishaar", type: "Passive", desc: "If both adjacent slots are empty, gains +20% ATK and +20% HP." },
+            { name: "Toxic Forest", arabic: "غابة سم", transliterated: "Ghabat Samm", type: "Active: Every 8s", desc: "Poisons the opposing card, dealing 5 damage/s for 4 seconds." }
+        ]},
+        { id: 15, name: "Wooden Dragon", arabic: "تنّين الخشب", transliterated: "Tanneen Al-Khashab", meaning: "Dragon of Wood", faction: "verdant", rarity: "epic", icon: "🐲", hp: 290, atk: 30, speed: "Normal", desc: "A dragon-shaped treant construct, vines coiling like scales.", skills: [
+            { name: "Living Bark", arabic: "قشرة حيّة", transliterated: "Qishra Hayya", type: "Passive", desc: "Gains a shield equal to 10% of max HP at the start of each round. Shield refreshes." },
+            { name: "Branch Crush", arabic: "سحق الأغصان", transliterated: "Sahq Al-Aghsaan", type: "Active: On Attack", desc: "Deals damage to the opposing card AND one random adjacent enemy for 40% ATK." },
+            { name: "Eternal Forest", arabic: "غابة خالدة", transliterated: "Ghaba Khaalida", type: "Ultimate: Once", desc: "For 10s, all Verdant cards regen 5% max HP/s. Non-Verdant allies regen 2%." }
+        ]},
+        { id: 16, name: "Oasis Guardian", arabic: "حارس الواحة", transliterated: "Haaris Al-Waha", meaning: "Guardian of the Oasis", faction: "verdant", rarity: "legendary", icon: "🌴", hp: 390, atk: 40, speed: "Slow", desc: "A titanic tree-spirit infused with spring water, crystalline roots glowing emerald.", skills: [
+            { name: "Oasis", arabic: "واحة", transliterated: "Waaha", type: "Passive", desc: "All friendly cards heal 2 HP per second while Oasis Guardian is alive." },
+            { name: "Water of Life", arabic: "ماء الحياة", transliterated: "Ma' Al-Hayat", type: "Active: Every 10s", desc: "Fully heals the friendly card with lowest HP %. If above 80%, heals Hero for 10 HP." },
+            { name: "Spring Resurrection", arabic: "بعث الربيع", transliterated: "Ba'th Al-Rabee'", type: "Ultimate: Once", desc: "Revives last destroyed Verdant card with 60% HP and +20% ATK for 8s." }
+        ]},
+
+        // EMBER
+        { id: 17, name: "Spark", arabic: "شرارة", transliterated: "Shara", meaning: "Spark", faction: "ember", rarity: "common", icon: "⚡", hp: 100, atk: 12, speed: "Fast", desc: "A small fire elemental — a dancing flame with ember eyes.", skills: [
+            { name: "Ignition", arabic: "التهاب", transliterated: "Iltihab", type: "Passive", desc: "Attacks apply Burn: 3 damage/s for 4s. Does not stack — refreshes duration." }
+        ]},
+        { id: 18, name: "Ash", arabic: "رماد", transliterated: "Ramad", meaning: "Ash", faction: "ember", rarity: "common", icon: "💨", hp: 100, atk: 12, speed: "Normal", desc: "A drifting ash-cloud golem that smolders.", skills: [
+            { name: "Fire Dust", arabic: "غبار النار", transliterated: "Ghubar Al-Nar", type: "Passive", desc: "On death, deals 10 damage to all enemy cards in adjacent lanes." }
+        ]},
+        { id: 19, name: "Flame", arabic: "لهب", transliterated: "Lahab", meaning: "Flame", faction: "ember", rarity: "uncommon", icon: "🔥", hp: 145, atk: 16, speed: "Fast", desc: "A humanoid flame construct with a molten glass core.", skills: [
+            { name: "Heat", arabic: "حرارة", transliterated: "Harara", type: "Passive", desc: "Gains +5% ATK every 4s (caps at +25%). Resets if frozen or stunned." },
+            { name: "Brand", arabic: "وسم", transliterated: "Wasm", type: "Active: On Attack", desc: "Target is Branded for 6s. Branded targets cannot be healed by any source." }
+        ]},
+        { id: 20, name: "Ember Coal", arabic: "جمرة", transliterated: "Jamra", meaning: "Ember / Coal", faction: "ember", rarity: "uncommon", icon: "🪨", hp: 145, atk: 16, speed: "Normal", desc: "A glowing coal construct that pulses with heat.", skills: [
+            { name: "Pressure", arabic: "ضغط", transliterated: "Daght", type: "Passive", desc: "Deals 2 damage/s to ALL cards in the same lane (enemies AND self)." },
+            { name: "Explosion", arabic: "انفجار", transliterated: "Infijaar", type: "Active: On Death", desc: "When destroyed, deals 25 damage to the opposing card." }
+        ]},
+        { id: 21, name: "Furnace", arabic: "موقد", transliterated: "Mawqid", meaning: "Furnace", faction: "ember", rarity: "rare", icon: "🏭", hp: 210, atk: 22, speed: "Normal", desc: "A walking furnace construct with bellows for lungs.", skills: [
+            { name: "Fire Drain", arabic: "تنشيف النار", transliterated: "Tansheef Al-Nar", type: "Passive", desc: "All enemy cards in the same lane lose 1 HP/s (passive burn aura)." },
+            { name: "Awakening", arabic: "صحوة", transliterated: "Sahwa", type: "Active: <30% HP", desc: "When HP drops below 30%, ATK doubles for 6 seconds. (Last Stand variant.)" }
+        ]},
+        { id: 22, name: "Flame Sword", arabic: "سيف اللهب", transliterated: "Sayf Al-Lahab", meaning: "Sword of Flame", faction: "ember", rarity: "rare", icon: "⚔️", hp: 210, atk: 22, speed: "Fast", desc: "A blazing sword-spirit — a sentient weapon of fire.", skills: [
+            { name: "Sharpness", arabic: "حدّة", transliterated: "Huddah", type: "Passive", desc: "Ignores 15% of target's Shield damage reduction." },
+            { name: "Fire Slash", arabic: "قطع ناري", transliterated: "Qat' Naar", type: "Active: Every 6s", desc: "Deals 20 damage to opposing card. If target is Burned, deals 35 instead." }
+        ]},
+        { id: 23, name: "Stone Ifrit", arabic: "عفريت الحجر", transliterated: "Ifrit Al-Hajar", meaning: "Ifrit of Stone", faction: "ember", rarity: "epic", icon: "🧞", hp: 290, atk: 30, speed: "Normal", desc: "A massive lava-stone djinn-construct, magma veins glowing through obsidian armor.", skills: [
+            { name: "Lava Skin", arabic: "جلد الحمم", transliterated: "Jild Al-Hamm", type: "Passive", desc: "Attackers take 10 damage when hitting Ifrit. Burned attackers take 20." },
+            { name: "Hellfire Breath", arabic: "نفس الجحيم", transliterated: "Nafas Al-Jahannam", type: "Active: Every 8s", desc: "Applies Burn (5 dmg/s 6s) to ALL enemies. Also applies Brand to highest HP enemy for 4s." },
+            { name: "Great Eruption", arabic: "ثورة كبرى", transliterated: "Thawratan Kubra", type: "Ultimate: Once", desc: "Deals 40 damage to all enemies. Burned enemies take 60. Removes Burns from your own cards." }
+        ]},
+        { id: 24, name: "Night Conqueror", arabic: "قاهر الليل", transliterated: "Qaahir Al-Layl", meaning: "Conqueror of the Night", faction: "ember", rarity: "legendary", icon: "☄️", hp: 390, atk: 40, speed: "Fast", desc: "A towering plasma drake wreathed in white-hot flame, wings of molten glass.", skills: [
+            { name: "Burning Aura", arabic: "هالة الاحتراق", transliterated: "Aura Al-Ihtiraaq", type: "Passive", desc: "All enemy cards take 2 damage per second while Night Conqueror is alive." },
+            { name: "Piercing Strike", arabic: "ضربة خارقة", transliterated: "Darba Khaariqa", type: "Active: On Attack", desc: "Basic attacks ignore 30% of the target's damage reduction and Shield." },
+            { name: "Sun of Destruction", arabic: "شمس الفناء", transliterated: "Shams Al-Fana'", type: "Ultimate: Once", desc: "For 6s, attacks hit ALL enemies for 50% damage (cleave). No enemy can be healed." }
+        ]},
+
+        // PHANTOM
+        { id: 25, name: "Shadow", arabic: "خيال", transliterated: "Khayal", meaning: "Shadow / Phantom", faction: "phantom", rarity: "common", icon: "👤", hp: 100, atk: 12, speed: "Fast", desc: "A wispy shadow-construct with glowing void eyes.", skills: [
+            { name: "Concealment", arabic: "تخفّي", transliterated: "Takhaffi", type: "Passive", desc: "Gains Stealth for 4s after deployment. While Stealthed, cannot be targeted." }
+        ]},
+        { id: 26, name: "Whisper", arabic: "وسواس", transliterated: "Wiswaas", meaning: "Whisper", faction: "phantom", rarity: "common", icon: "🌫️", hp: 100, atk: 12, speed: "Normal", desc: "A barely-visible mist entity that drifts between lanes.", skills: [
+            { name: "Interference", arabic: "تشويش", transliterated: "Tashweesh", type: "Passive", desc: "The opposing card's ATK is reduced by 10% while Whisper is alive." }
+        ]},
+        { id: 27, name: "Mirage", arabic: "سراب", transliterated: "Saraaab", meaning: "Mirage", faction: "phantom", rarity: "uncommon", icon: "🏜️", hp: 145, atk: 16, speed: "Fast", desc: "A shimmering, illusory desert spirit that flickers in and out.", skills: [
+            { name: "Deception", arabic: "خداع", transliterated: "Khida'", type: "Passive", desc: "25% chance to dodge any incoming attack." },
+            { name: "Exchange", arabic: "تبادل", transliterated: "Tabaadul", type: "Active: On Deploy", desc: "Swaps the positions of two enemy cards on their side." }
+        ]},
+        { id: 28, name: "Shadows", arabic: "ظلال", transliterated: "Zilaal", meaning: "Shadows (plural)", faction: "phantom", rarity: "uncommon", icon: "🌑", hp: 145, atk: 16, speed: "Normal", desc: "A cluster of dark, shifting silhouettes that move as one.", skills: [
+            { name: "Reflection", arabic: "انعكاس", transliterated: "In'ikaas", type: "Passive", desc: "On deploy, creates a Mirror Image in a random empty slot with 30% HP/ATK (dies after 6s)." },
+            { name: "Evaporation", arabic: "تبخير", transliterated: "Tabkheer", type: "Active: On Death", desc: "When destroyed, reduces killer's ATK by 25% for 6s." }
+        ]},
+        { id: 29, name: "Counterpart", arabic: "قرين", transliterated: "Qareen", meaning: "Counterpart / Shadow-Self", faction: "phantom", rarity: "rare", icon: "🪞", hp: 210, atk: 22, speed: "Normal", desc: "A dark mirror entity that mimics the opponent's cards.", skills: [
+            { name: "Mimicry", arabic: "محاكاة", transliterated: "Muhaakaah", type: "Passive", desc: "Copies the Passive skill of the opposing card. If slot is empty, gains +15% ATK." },
+            { name: "Power Theft", arabic: "سلب القوى", transliterated: "Salb Al-Quwa", type: "Active: On Attack", desc: "Steals 10% of opposing card's ATK and adds to own ATK for 6s." }
+        ]},
+        { id: 30, name: "Watcher", arabic: "رصد", transliterated: "Rasd", meaning: "Watcher / Observer", faction: "phantom", rarity: "rare", icon: "👁️", hp: 210, atk: 22, speed: "Normal", desc: "A tall, hooded phantom with a single glowing eye-orb.", skills: [
+            { name: "Insight", arabic: "بصيرة", transliterated: "Basira", type: "Passive", desc: "Reveals one random card from the opponent's hand every 10 seconds." },
+            { name: "Watcher's Curse", arabic: "لعنة الرصد", transliterated: "Lanat Al-Rasd", type: "Active: On Attack", desc: "Target cannot use Active skills for 4s (Silence)." }
+        ]},
+        { id: 31, name: "Dark Ifrit", arabic: "عفريت الظلام", transliterated: "Ifrit Al-Zalam", meaning: "Ifrit of Darkness", faction: "phantom", rarity: "epic", icon: "😈", hp: 290, atk: 30, speed: "Normal", desc: "A massive djinn-construct of swirling void energy and fractured geometric shards.", skills: [
+            { name: "Veil of Existence", arabic: "حاجب الوجود", transliterated: "Hajib Al-Wujuud", type: "Passive", desc: "Gains Stealth for 3s after each kill. While Stealthed, regenerates 5% max HP/s." },
+            { name: "Banishment", arabic: "نفي", transliterated: "Nafy", type: "Active: Every 12s", desc: "Removes opposing enemy card from field for 4s. Card returns to same slot afterwards." },
+            { name: "Gate of Oblivion", arabic: "باب الفناء", transliterated: "Bab Al-Fana'", type: "Ultimate: Once", desc: "Swaps ALL enemy card positions randomly. For 6s, all enemies have -20% ATK." }
+        ]},
+        { id: 32, name: "Sultan of Shadows", arabic: "سلطان الظلال", transliterated: "Sultaan Al-Zilaal", meaning: "Sultan of the Shadows", faction: "phantom", rarity: "legendary", icon: "👑", hp: 390, atk: 40, speed: "Normal", desc: "A regal phantom king of impossible geometry, his form a void in the shape of a throne.", skills: [
+            { name: "Decree of Invisibility", arabic: "حكم الخفاء", transliterated: "Hukm Al-Khafaa'", type: "Passive", desc: "All friendly Phantom cards gain Stealth for 2s after any friendly card is destroyed." },
+            { name: "Substitution", arabic: "استبدال", transliterated: "Istibdaal", type: "Active: Every 10s", desc: "Swaps Sultan with any friendly card on the field. Both retain current HP." },
+            { name: "Eternal Night", arabic: "ليل أبدي", transliterated: "Layl Abadi", type: "Ultimate: Once", desc: "For 8s, enemies can only attack the card directly opposite. All Phantom cards gain +25% ATK." }
+        ]},
+
+        // AL-NOOR
+        { id: 33, name: "Lamp", arabic: "سراج", transliterated: "Siraj", meaning: "Lamp", faction: "alnoor", rarity: "common", icon: "🪔", hp: 100, atk: 12, speed: "Normal", desc: "A floating lamp-construct radiating warm golden light.", skills: [
+            { name: "Illumination", arabic: "تنوير", transliterated: "Tanweer", type: "Passive", desc: "Adjacent friendly cards gain +8% ATK. If both adjacent slots have allies, bonus is +12%." }
+        ]},
+        { id: 34, name: "Point", arabic: "نقطة", transliterated: "Nuqta", meaning: "Point / Dot", faction: "alnoor", rarity: "common", icon: "✦", hp: 100, atk: 12, speed: "Normal", desc: "A tiny geometric light construct — a single glowing point of sacred geometry.", skills: [
+            { name: "Bond", arabic: "رابطة", transliterated: "Rabita", type: "Passive", desc: "When deployed, heals the Hero for 5 HP." }
+        ]},
+        { id: 35, name: "Lantern", arabic: "مصباح", transliterated: "Misbaah", meaning: "Lantern", faction: "alnoor", rarity: "uncommon", icon: "🏮", hp: 145, atk: 16, speed: "Normal", desc: "A large floating brass lantern with geometric cutouts casting light patterns.", skills: [
+            { name: "Guide", arabic: "دليل", transliterated: "Daleel", type: "Passive", desc: "The first card you deploy each round gains Haste (instant attack)." },
+            { name: "Revelation", arabic: "كشف", transliterated: "Kashf", type: "Active: On Deploy", desc: "Reveals the opponent's entire hand for 6 seconds." }
+        ]},
+        { id: 36, name: "Crescent", arabic: "هلال", transliterated: "Hilaal", meaning: "Crescent", faction: "alnoor", rarity: "uncommon", icon: "🌙", hp: 145, atk: 16, speed: "Normal", desc: "A crescent-shaped light construct that orbits the battlefield.", skills: [
+            { name: "Blessing", arabic: "بركة", transliterated: "Baraka", type: "Passive", desc: "All friendly cards gain +5% HP. If 3+ Al-Noor cards on field, bonus is +10%." },
+            { name: "Healing", arabic: "شفاء", transliterated: "Shifa'", type: "Active: Every 8s", desc: "Heals the friendly card with the lowest HP for 15 HP." }
+        ]},
+        { id: 37, name: "Astrologer", arabic: "منجّم", transliterated: "Munajjim", meaning: "Astrologer", faction: "alnoor", rarity: "rare", icon: "🔭", hp: 210, atk: 22, speed: "Normal", desc: "A hooded scholar-construct holding a brass astrolabe, face in deep shadow.", skills: [
+            { name: "Prediction", arabic: "توقيع", transliterated: "Tawqee'", type: "Passive", desc: "At round start, reveals the next card the opponent will draw." },
+            { name: "Decree", arabic: "قدر", transliterated: "Qadar", type: "Active: Every 12s", desc: "Choose one friendly card: gains +20% ATK and +20% HP for 6s." }
+        ]},
+        { id: 38, name: "Engineer", arabic: "مهندس", transliterated: "Muhandis", meaning: "Engineer", faction: "alnoor", rarity: "rare", icon: "📐", hp: 210, atk: 22, speed: "Normal", desc: "An armored figure with geometric blueprints floating around it.", skills: [
+            { name: "Planning", arabic: "تخطيط", transliterated: "Takhteet", type: "Passive", desc: "When deployed, draw 1 extra card from your deck." },
+            { name: "Construction", arabic: "بناء", transliterated: "Bina'", type: "Active: On Deploy", desc: "Creates a Bastion ward in an adjacent empty slot. 50 HP, Taunt, lasts 8s." }
+        ]},
+        { id: 39, name: "Judge of Stars", arabic: "قاضي النجوم", transliterated: "Qadi Al-Nujoom", meaning: "Judge of the Stars", faction: "alnoor", rarity: "epic", icon: "⚖️", hp: 290, atk: 30, speed: "Normal", desc: "A celestial construct of floating star-polygon shards connected by light threads.", skills: [
+            { name: "Balance", arabic: "ميزان", transliterated: "Miizaan", type: "Passive", desc: "If enemy has more cards, your cards gain +10% ATK. If you have more, gain +10% HP." },
+            { name: "Judgment", arabic: "حُكم", transliterated: "Hukm", type: "Active: Every 10s", desc: "Deals damage to enemy with highest ATK equal to 15% of that card's ATK." },
+            { name: "Light of Truth", arabic: "نور الحق", transliterated: "Noor Al-Haqq", type: "Ultimate: Once", desc: "For 10s, all allies gain +15% ATK/HP. Removes enemy Stealth. Reveals all enemy cards." }
+        ]},
+        { id: 40, name: "Ascent of Lights", arabic: "معراج الأنوار", transliterated: "Mi'raj Al-Anwaar", meaning: "Ascent of Lights", faction: "alnoor", rarity: "legendary", icon: "🌟", hp: 390, atk: 40, speed: "Normal", desc: "A towering construct of pure sacred geometry — interlocking star polygons forming a humanoid shape of pure light.", skills: [
+            { name: "Unity", arabic: "وحدة", transliterated: "Wahda", type: "Passive", desc: "Each friendly card of a different faction gives +8% to all stats. Max +40% with all 5 factions." },
+            { name: "Radiance", arabic: "إشراقة", transliterated: "Ishraaqa", type: "Active: Every 8s", desc: "Heals ALL friendly cards for 8 HP and deals 8 damage to ALL enemy cards." },
+            { name: "Path of Light", arabic: "صراط النور", transliterated: "Siraat Al-Noor", type: "Ultimate: Once", desc: "For 10s, each friendly attack heals the Hero for 3 HP. All allies gain +20% ATK." }
+        ]}
+    ];
+
+    const heroes = [
+        { id: 101, name: "Master Blacksmith", arabic: "معلّم الحدادة", transliterated: "Mu'allim Al-Hadaada", meaning: "Master of Blacksmithing", faction: "ironclad", icon: "🔨", rarity: "legendary", desc: "The Ironclad Forge Commander — provides armor and invulnerability.", passiveAura: { name: "Tempering", arabic: "تقسية", transliterated: "Taqsiya", desc: "All Ironclad cards gain +8 flat damage reduction for 10s after deployment. Non-Ironclad allies gain +4." }, surge: { name: "Iron Curtain", arabic: "ستر الحديد", transliterated: "Sitr Al-Hadid", desc: "All friendly cards become invulnerable for 4 seconds." }},
+        { id: 102, name: "Mistress of Gardens", arabic: "شيخة الرياض", transliterated: "Shaykhah Al-Riyaad", meaning: "Mistress of the Gardens", faction: "verdant", icon: "🌸", rarity: "legendary", desc: "The Verdant Forge Commander — provides regeneration and full healing.", passiveAura: { name: "Breeze", arabic: "نسيم", transliterated: "Naseem", desc: "All Verdant cards regen 1 HP/s passively. Non-Verdant allies regen 0.5 HP/s." }, surge: { name: "Full Bloom", arabic: "إزدهار كامل", transliterated: "Izdihar Kaamil", desc: "Heals all friendly cards to full HP." }},
+        { id: 103, name: "Prince of Flame", arabic: "أمير اللهب", transliterated: "Amir Al-Lahab", meaning: "Prince of Flame", faction: "ember", icon: "👑", rarity: "legendary", desc: "The Ember Forge Commander — periodic AoE damage and hellfire.", passiveAura: { name: "Heatwave", arabic: "موجة حارّة", transliterated: "Mawja Haarrah", desc: "Every 30 seconds, deals 10 damage to all enemy cards." }, surge: { name: "Hellfire", arabic: "نار القيامة", transliterated: "Naar Al-Qiyaama", desc: "Deals 30 damage to all enemy cards." }},
+        { id: 104, name: "Master of Specters", arabic: "مدير الأشباح", transliterated: "Mudir Al-Ashbah", meaning: "Director of Specters", faction: "phantom", icon: "👻", rarity: "legendary", desc: "The Phantom Forge Commander — slows enemies and banishes the strongest.", passiveAura: { name: "Deceleration", arabic: "إبطاء", transliterated: "Ibta'", desc: "Reduces all enemy attack speed by 10% passively." }, surge: { name: "Void Collapse", arabic: "انهيار الفراغ", transliterated: "Inhiyaar Al-Firaagh", desc: "Removes the strongest enemy card from the field for 6 seconds." }},
+        { id: 105, name: "The Wise", arabic: "الحكيم", transliterated: "Al-Hakeem", meaning: "The Wise One", faction: "alnoor", icon: "📖", rarity: "legendary", desc: "The Al-Noor Forge Commander — reveals intel and doubles attacks.", passiveAura: { name: "Knowledge", arabic: "علم", transliterated: "Ilm", desc: "Every 45s, reveals the 3 rarest cards in the opponent's deck." }, surge: { name: "Grand Illumination", arabic: "إشراقة كبرى", transliterated: "Ishraaqa Kubraa", desc: "All friendly cards attack twice for the next 8 seconds." }}
+    ];
+
+    const factionColors = { ironclad: '#5BA3C9', verdant: '#5DBF6D', ember: '#E87C4A', phantom: '#9B6DC6', alnoor: '#D4A843' };
+    const factionIcons = { ironclad: '🔩', verdant: '🌿', ember: '🔥', phantom: '👻', alnoor: '✨' };
+
+    // ===== RENDER CREATURE CARDS =====
+    function renderCreatures() {
+        const grid = document.getElementById('creature-grid');
+        grid.innerHTML = creatures.map(c => `
+            <div class="game-card" data-faction="${c.faction}" data-id="${c.id}" onclick="showModal(${c.id})">
+                <div class="card-header">
+                    <div class="card-icon">${c.icon}</div>
+                    <span class="card-rarity rarity-${c.rarity}">${c.rarity}</span>
+                </div>
+                <div class="card-name">${c.name}</div>
+                <div class="card-arabic">${c.arabic} — ${c.transliterated}</div>
+                <div class="card-faction-tag">${factionIcons[c.faction]} ${c.faction.charAt(0).toUpperCase() + c.faction.slice(1).replace('alnoor','Al-Noor')}</div>
+                <div class="card-stats">
+                    <span class="stat stat-atk"><span class="stat-icon">⚔</span> ${c.atk}</span>
+                    <span class="stat stat-hp"><span class="stat-icon">❤</span> ${c.hp}</span>
+                    <span class="stat stat-spd"><span class="stat-icon">⚡</span> ${c.speed}</span>
+                </div>
+                <div class="card-skills">
+                    ${c.skills.map(s => `<span class="skill-tag"><span class="skill-type">${s.type.split(':')[0]}</span> ${s.name}</span>`).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== RENDER HERO CARDS =====
+    function renderHeroes() {
+        const grid = document.getElementById('hero-grid');
+        grid.innerHTML = heroes.map(h => `
+            <div class="game-card" data-faction="${h.faction}" data-id="${h.id}" onclick="showHeroModal(${h.id})">
+                <div class="card-header">
+                    <div class="card-icon">${h.icon}</div>
+                    <span class="card-rarity rarity-${h.rarity}">${h.rarity}</span>
+                </div>
+                <div class="card-name">${h.name}</div>
+                <div class="card-arabic">${h.arabic} — ${h.transliterated}</div>
+                <div class="card-faction-tag">${factionIcons[h.faction]} ${h.faction.charAt(0).toUpperCase() + h.faction.slice(1).replace('alnoor','Al-Noor')} Hero</div>
+                <div class="card-skills">
+                    <span class="skill-tag"><span class="skill-type">Aura</span> ${h.passiveAura.name}</span>
+                    <span class="skill-tag"><span class="skill-type">Surge</span> ${h.surge.name}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== MODAL =====
+    function showModal(id) {
+        const c = creatures.find(x => x.id === id);
+        if (!c) return;
+        const color = factionColors[c.faction];
+        document.getElementById('modal-body').innerHTML = `
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-card-icon" style="background: ${color}22">${c.icon}</div>
+            <div class="modal-card-name" style="color: ${color}">${c.name}</div>
+            <div class="modal-card-arabic">${c.arabic} — ${c.transliterated}</div>
+            <div class="modal-card-english-meaning">"${c.meaning}"</div>
+            <div class="modal-card-desc">${c.desc}</div>
+            <div class="modal-stats">
+                <div class="modal-stat"><div class="modal-stat-val" style="color: #E87C4A">${c.atk}</div><div class="modal-stat-label">ATK</div></div>
+                <div class="modal-stat"><div class="modal-stat-val" style="color: #5DBF6D">${c.hp}</div><div class="modal-stat-label">HP</div></div>
+                <div class="modal-stat"><div class="modal-stat-val" style="color: #5BA3C9">${c.speed}</div><div class="modal-stat-label">Speed</div></div>
+            </div>
+            <div class="modal-skills-title">Skills</div>
+            ${c.skills.map(s => `
+                <div class="modal-skill">
+                    <div class="modal-skill-header">
+                        <span class="modal-skill-name">${s.name}</span>
+                        <span class="skill-type">${s.type}</span>
+                    </div>
+                    <div class="modal-skill-arabic">${s.arabic} — ${s.transliterated}</div>
+                    <div class="modal-skill-desc">${s.desc}</div>
+                </div>
+            `).join('')}
+        `;
+        document.getElementById('card-modal').classList.add('active');
+    }
+
+    function showHeroModal(id) {
+        const h = heroes.find(x => x.id === id);
+        if (!h) return;
+        const color = factionColors[h.faction];
+        document.getElementById('modal-body').innerHTML = `
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-card-icon" style="background: ${color}22">${h.icon}</div>
+            <div class="modal-card-name" style="color: ${color}">${h.name}</div>
+            <div class="modal-card-arabic">${h.arabic} — ${h.transliterated}</div>
+            <div class="modal-card-english-meaning">"${h.meaning}"</div>
+            <div class="modal-card-desc">${h.desc}</div>
+            <div class="modal-skills-title">Passive Aura</div>
+            <div class="modal-skill">
+                <div class="modal-skill-header">
+                    <span class="modal-skill-name">${h.passiveAura.name}</span>
+                    <span class="skill-type">Passive</span>
+                </div>
+                <div class="modal-skill-arabic">${h.passiveAura.arabic} — ${h.passiveAura.transliterated}</div>
+                <div class="modal-skill-desc">${h.passiveAura.desc}</div>
+            </div>
+            <div class="modal-skills-title">Surge Ability</div>
+            <div class="modal-skill">
+                <div class="modal-skill-header">
+                    <span class="modal-skill-name">${h.surge.name}</span>
+                    <span class="skill-type">Once per Match</span>
+                </div>
+                <div class="modal-skill-arabic">${h.surge.arabic} — ${h.surge.transliterated}</div>
+                <div class="modal-skill-desc">${h.surge.desc}</div>
+            </div>
+        `;
+        document.getElementById('card-modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('card-modal').classList.remove('active');
+    }
+
+    document.getElementById('card-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ===== TAB NAVIGATION =====
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('section-' + tab.dataset.tab).classList.add('active');
+            const filters = document.getElementById('faction-filters');
+            filters.style.display = (tab.dataset.tab === 'creatures' || tab.dataset.tab === 'heroes') ? 'flex' : 'none';
+        });
+    });
+
+    // ===== FACTION FILTERS =====
+    document.querySelectorAll('.faction-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.faction-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const faction = btn.dataset.faction;
+            document.querySelectorAll('.game-card').forEach(card => {
+                if (faction === 'all' || card.dataset.faction === faction) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // ===== BATTLE SIMULATOR WITH SKILLS =====
+    let battleState = null;
+    let battleInterval = null;
+
+    function randomPick(arr, n) {
+        const shuffled = [...arr].sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, n);
+    }
+
+    function makeBattleCard(c) {
+        return {
+            ...c,
+            currentHp: c.hp,
+            maxHp: c.hp,
+            currentAtk: c.atk,
+            baseAtk: c.atk,
+            // Status effects
+            burned: 0,        // rounds of burn remaining
+            burnDmg: 0,       // damage per burn tick
+            frozen: 0,        // rounds of freeze remaining
+            stealthed: 0,     // rounds of stealth remaining
+            shielded: 0,      // flat shield HP
+            poisoned: 0,      // rounds of poison remaining
+            poisonDmg: 0,     // damage per poison tick
+            branded: 0,       // rounds of anti-heal remaining
+            atkBuff: 0,       // temporary ATK buff amount
+            atkBuffRounds: 0, // rounds remaining for ATK buff
+            dmgReduction: 0,  // % damage reduction (passive)
+            thornsPct: 0,     // % damage reflected back
+            regenPct: 0,      // % max HP regen per round
+            lifeOnField: 0,   // rounds this card has been on the field
+            ultimateUsed: false,
+            doubleStrikeReady: false,
+            // Track skill IDs that were activated this round (for logging)
+            skillsActivated: [],
+        };
+    }
+
+    function initBattle() {
+        if (battleInterval) { clearInterval(battleInterval); battleInterval = null; }
+        const playerCards = randomPick(creatures, 5).map(c => makeBattleCard(c));
+        const enemyCards = randomPick(creatures, 5).map(c => makeBattleCard(c));
+
+        // Apply deploy-time passives
+        playerCards.forEach((c, i) => applyDeployPassives(c, i, playerCards));
+        enemyCards.forEach((c, i) => applyDeployPassives(c, i, enemyCards));
+
+        battleState = {
+            round: 0,
+            playerHp: 100,
+            enemyHp: 100,
+            playerSlots: playerCards,
+            enemySlots: enemyCards,
+            running: false,
+            finished: false
+        };
+        renderBattlefield();
+        clearLog();
+        addLog(`Decks assembled! Press <span class="card-ref">Start Battle</span> to begin.`);
+        // Show the deck compositions
+        addLog(`<span class="status">— Enemy Deck —</span> ${enemyCards.map(c => `<span class="card-ref">${c.icon} ${c.name}</span>`).join(', ')}`);
+        addLog(`<span class="status">— Your Deck —</span> ${playerCards.map(c => `<span class="card-ref">${c.icon} ${c.name}</span>`).join(', ')}`);
+    }
+
+    // Apply static passives that activate when the card is deployed
+    function applyDeployPassives(card, slotIdx, allies) {
+        const skillNames = card.skills.map(s => s.name);
+        // Shield/Dara'a: Fortification — 10% dmg reduction, 15% on flanks
+        if (skillNames.includes('Fortification')) {
+            card.dmgReduction = (slotIdx === 0 || slotIdx === 4) ? 0.15 : 0.10;
+        }
+        // Rivet/Mismaar: Anchoring — +5% ATK per adjacent ally
+        if (skillNames.includes('Anchoring')) {
+            let adjCount = 0;
+            if (slotIdx > 0 && allies[slotIdx-1]) adjCount++;
+            if (slotIdx < 4 && allies[slotIdx+1]) adjCount++;
+            card.currentAtk = Math.round(card.baseAtk * (1 + 0.05 * adjCount));
+        }
+        // Root/Jidr: Growth — 2% HP regen per round
+        if (skillNames.includes('Growth')) { card.regenPct = 0.02; }
+        // Thorn/Shawka: Thorn Return — 10% reflect
+        if (skillNames.includes('Thorn Return')) { card.thornsPct = 0.10; }
+        // Branch/Ghusn: Entangle — freeze opposing on deploy (handled in round 1)
+        if (skillNames.includes('Entangle')) { card.deployFreeze = true; }
+        // Rose/Ward: Elixir — passive heal overflow (tracked in heal logic)
+        // Spark/Shara: Ignition — attacks apply burn
+        if (skillNames.includes('Ignition')) { card.attackBurn = true; }
+        // Ash/Ramad: Fire Dust — on death deals 10 to adjacent
+        if (skillNames.includes('Fire Dust')) { card.onDeathAoE = 10; }
+        // Flame/Lahab: Heat — gains ATK over time
+        if (skillNames.includes('Heat')) { card.heatPassive = true; }
+        // Flame/Lahab: Brand — attacks apply anti-heal
+        if (skillNames.includes('Brand')) { card.attackBrand = true; }
+        // Ember Coal/Jamra: Pressure — deals 2 dmg/round to self and opposite
+        if (skillNames.includes('Pressure')) { card.pressurePassive = true; }
+        // Ember Coal/Jamra: Explosion — on death 25 dmg to opposing
+        if (skillNames.includes('Explosion')) { card.onDeathDirect = 25; }
+        // Shadow/Khayal: Concealment — stealth for 2 rounds
+        if (skillNames.includes('Concealment')) { card.stealthed = 2; }
+        // Whisper/Wiswaas: Interference — opposing loses 10% ATK
+        if (skillNames.includes('Interference')) { card.interferencePassive = true; }
+        // Mirage/Saraaab: Deception — 25% dodge
+        if (skillNames.includes('Deception')) { card.dodgeChance = 0.25; }
+        // Lamp/Siraj: Illumination — adjacent allies +8/12% ATK
+        if (skillNames.includes('Illumination')) {
+            let adjAlly = 0;
+            if (slotIdx > 0 && allies[slotIdx-1]) adjAlly++;
+            if (slotIdx < 4 && allies[slotIdx+1]) adjAlly++;
+            const bonus = adjAlly === 2 ? 0.12 : 0.08;
+            if (slotIdx > 0 && allies[slotIdx-1]) allies[slotIdx-1].currentAtk = Math.round(allies[slotIdx-1].baseAtk * (1 + bonus));
+            if (slotIdx < 4 && allies[slotIdx+1]) allies[slotIdx+1].currentAtk = Math.round(allies[slotIdx+1].baseAtk * (1 + bonus));
+        }
+        // Point/Nuqta: Bond — heals hero 5 HP on deploy
+        if (skillNames.includes('Bond')) { card.deployHealHero = 5; }
+        // Tower/Burj: Guarding — adjacent allies take 15% less dmg
+        if (skillNames.includes('Guarding')) {
+            if (slotIdx > 0 && allies[slotIdx-1]) allies[slotIdx-1].dmgReduction = Math.max(allies[slotIdx-1].dmgReduction, 0.15);
+            if (slotIdx < 4 && allies[slotIdx+1]) allies[slotIdx+1].dmgReduction = Math.max(allies[slotIdx+1].dmgReduction, 0.15);
+        }
+        // Anvil/Sindaan: Endurance — gains HP over time
+        if (skillNames.includes('Endurance')) { card.endurancePassive = true; }
+        // Anvil/Sindaan: Retaliation — reflect 20% dmg taken
+        if (skillNames.includes('Retaliation')) { card.thornsPct = Math.max(card.thornsPct, 0.20); }
+        // Fortress/Qal'a: Siege Wall — Taunt (no redirect in this lane)
+        if (skillNames.includes('Siege Wall')) { card.hasTaunt = true; }
+        // Grasshopper/Jundub: Resistance — immune to freeze
+        if (skillNames.includes('Resistance')) { card.freezeImmune = true; }
+        // Grasshopper/Jundub: Double Strike — attacks twice on deploy
+        if (skillNames.includes('Double Strike')) { card.doubleStrikeReady = true; }
+        // Fig Tree/Tineen: Deep Roots — 3% regen, 5% if < 40% HP
+        if (skillNames.includes('Deep Roots')) { card.deepRoots = true; card.regenPct = 0.03; }
+        // Fern/Sarkhasa: Spread — +20% if adjacent slots empty
+        if (skillNames.includes('Spread')) {
+            const leftEmpty = slotIdx === 0 || !allies[slotIdx-1];
+            const rightEmpty = slotIdx === 4 || !allies[slotIdx+1];
+            if (leftEmpty && rightEmpty) {
+                card.currentAtk = Math.round(card.baseAtk * 1.2);
+                card.maxHp = Math.round(card.hp * 1.2);
+                card.currentHp = card.maxHp;
+            }
+        }
+        // Furnace/Mawqid: Fire Drain — passive burn aura
+        if (skillNames.includes('Fire Drain')) { card.burnAura = true; }
+        // Furnace/Mawqid: Awakening — Last Stand ATK double
+        if (skillNames.includes('Awakening')) { card.lastStandATK = true; }
+        // Flame Sword: Sharpness — ignores 15% shield
+        if (skillNames.includes('Sharpness')) { card.piercePct = 0.15; }
+        // Flame Sword: Fire Slash — bonus damage every few rounds to burned
+        if (skillNames.includes('Fire Slash')) { card.fireSlash = true; }
+        // Counterpart/Qareen: Power Theft — steals ATK on attack
+        if (skillNames.includes('Power Theft')) { card.powerTheft = true; }
+        // Watcher/Rasd: Watcher's Curse — silence on attack
+        if (skillNames.includes("Watcher's Curse")) { card.silenceOnAttack = true; }
+        // Branch/Ghusn: Tree's Shade — adjacent allies heal 3 HP/round
+        if (skillNames.includes("Tree's Shade")) {
+            if (slotIdx > 0 && allies[slotIdx-1]) allies[slotIdx-1].regenPct = Math.max(allies[slotIdx-1].regenPct || 0, 0.03);
+            if (slotIdx < 4 && allies[slotIdx+1]) allies[slotIdx+1].regenPct = Math.max(allies[slotIdx+1].regenPct || 0, 0.03);
+        }
+        // Fern/Sarkhasa: Toxic Forest — poison opposing every few rounds
+        if (skillNames.includes('Toxic Forest')) { card.toxicForest = true; }
+        // Living Bark — shield regen
+        if (skillNames.includes('Living Bark')) { card.livingBark = true; }
+        // Oasis — all allies heal 2 HP/s
+        if (skillNames.includes('Oasis')) { card.oasisAura = true; }
+        // Burning Aura — all enemies take 2 dmg/round
+        if (skillNames.includes('Burning Aura')) { card.burningAura = true; }
+        // Piercing Strike — ignore 30% dmg reduction
+        if (skillNames.includes('Piercing Strike')) { card.piercePct = Math.max(card.piercePct || 0, 0.30); }
+        // Crescent/Hilaal: Blessing — all allies +5% HP
+        if (skillNames.includes('Blessing')) {
+            allies.forEach(a => {
+                if (a && a !== card) {
+                    a.maxHp = Math.round(a.maxHp * 1.05);
+                    a.currentHp = Math.round(a.currentHp * 1.05);
+                }
+            });
+        }
+        // Crescent/Hilaal: Healing — heals lowest HP ally
+        if (skillNames.includes('Healing')) { card.healLowest = true; }
+        // Lava Skin — attackers take 10 dmg
+        if (skillNames.includes('Lava Skin')) { card.lavaSkin = true; }
+        // Veil of Existence — stealth after kills
+        if (skillNames.includes('Veil of Existence')) { card.stealthOnKill = true; }
+        // Decree of Invisibility — allies get stealth when ally dies
+        if (skillNames.includes('Decree of Invisibility')) { card.decreeInvis = true; }
+        // Balance — adaptive buff
+        if (skillNames.includes('Balance')) { card.balancePassive = true; }
+        // Animated Armor — 25% less from first hit per round
+        if (skillNames.includes('Animated Armor')) { card.animatedArmor = true; card.armorUsedThisRound = false; }
+        // Steel Hide — cap dmg at 15% max HP
+        if (skillNames.includes('Steel Hide')) { card.steelHide = true; }
+        // Blossom Burst — on death heals all allies 15
+        if (skillNames.includes('Blossom Burst')) { card.onDeathHealAll = 15; }
+        // Reflection — mirror image on deploy
+        if (skillNames.includes('Reflection')) { card.mirrorOnDeploy = true; }
+        // Evaporation — on death reduce killer ATK
+        if (skillNames.includes('Evaporation')) { card.onDeathDebuffKiller = true; }
+        // Unity — +8% per different faction
+        if (skillNames.includes('Unity')) {
+            const factions = new Set(allies.filter(a => a).map(a => a.faction));
+            const bonus = Math.min(factions.size * 0.08, 0.40);
+            card.currentAtk = Math.round(card.baseAtk * (1 + bonus));
+            card.maxHp = Math.round(card.hp * (1 + bonus));
+            card.currentHp = card.maxHp;
+        }
+        // Radiance — periodic heal allies + dmg enemies
+        if (skillNames.includes('Radiance')) { card.radianceActive = true; }
+    }
+
+    function getStatusBadges(card) {
+        let badges = '';
+        if (card.burned > 0) badges += '<span class="status-badge status-burn">🔥 Burn</span>';
+        if (card.frozen > 0) badges += '<span class="status-badge status-freeze">❄️ Frozen</span>';
+        if (card.stealthed > 0) badges += '<span class="status-badge status-stealth">👻 Stealth</span>';
+        if (card.shielded > 0) badges += '<span class="status-badge status-shield">🛡️ ' + Math.round(card.shielded) + '</span>';
+        if (card.poisoned > 0) badges += '<span class="status-badge status-poison">☠️ Poison</span>';
+        if (card.branded > 0) badges += '<span class="status-badge status-branded">🚫 Branded</span>';
+        if (card.atkBuffRounds > 0) badges += '<span class="status-badge status-atkbuff">⚔️+' + card.atkBuff + '</span>';
+        if (card.regenPct > 0) badges += '<span class="status-badge status-regen">💚 Regen</span>';
+        if (card.dmgReduction > 0) badges += '<span class="status-badge status-shield">🛡' + Math.round(card.dmgReduction*100) + '%</span>';
+        if (card.thornsPct > 0) badges += '<span class="status-badge status-poison">🌵 Thorns</span>';
+        return badges;
+    }
+
+    function renderBattlefield() {
+        const s = battleState;
+        document.getElementById('round-counter').textContent = `Round ${s.round}`;
+        document.getElementById('player-hp-bar').style.width = Math.max(0, s.playerHp) + '%';
+        document.getElementById('player-hp-text').textContent = Math.max(0, Math.round(s.playerHp)) + ' HP';
+        document.getElementById('enemy-hp-bar').style.width = Math.max(0, s.enemyHp) + '%';
+        document.getElementById('enemy-hp-text').textContent = Math.max(0, Math.round(s.enemyHp)) + ' HP';
+
+        const renderSlots = (slots, containerId, isEnemy) => {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const card = slots[i];
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'slot' + (card && card.currentHp > 0 ? ' occupied' : '');
+                slotDiv.id = (isEnemy ? 'enemy' : 'player') + '-slot-' + i;
+                if (card && card.currentHp > 0) {
+                    const color = factionColors[card.faction];
+                    const hpPct = Math.max(0, (card.currentHp / card.maxHp) * 100);
+                    const statusHtml = getStatusBadges(card);
+                    // Show the first skill name on the card
+                    const skillLabel = card.skills.length > 0 ? card.skills[0].name : '';
+                    slotDiv.innerHTML = `
+                        <div class="slot-card">
+                            <div class="slot-card-icon">${card.icon}</div>
+                            <div class="slot-card-name" style="color:${color}">${card.name}</div>
+                            <div class="slot-card-stats">
+                                <span class="stat-atk">⚔${card.currentAtk}</span>
+                                <span class="stat-hp">❤${Math.round(card.currentHp)}</span>
+                            </div>
+                            <div class="slot-hp-bar"><div class="slot-hp-fill" style="width:${hpPct}%; background:${hpPct < 30 ? 'var(--ember)' : 'var(--verdant)'}"></div></div>
+                            <div class="slot-skill-name">${skillLabel}</div>
+                            <div class="slot-statuses">${statusHtml}</div>
+                        </div>
+                    `;
+                } else {
+                    slotDiv.innerHTML = `<span class="slot-empty-text">Empty</span>`;
+                }
+                container.appendChild(slotDiv);
+            }
+        };
+
+        renderSlots(s.playerSlots, 'player-slots', false);
+        renderSlots(s.enemySlots, 'enemy-slots', true);
+    }
+
+    function showDamagePopup(slotId, amount, type) {
+        const slot = document.getElementById(slotId);
+        if (!slot) return;
+        const popup = document.createElement('div');
+        popup.className = 'damage-popup' + (type === 'heal' ? ' heal-popup' : type === 'skill' ? ' skill-popup' : '');
+        popup.textContent = (type === 'heal' ? '+' : '-') + amount;
+        slot.appendChild(popup);
+        setTimeout(() => popup.remove(), 800);
+    }
+
+    function animateSlot(slotId, className) {
+        const slot = document.getElementById(slotId);
+        if (!slot) return;
+        slot.classList.add(className);
+        setTimeout(() => slot.classList.remove(className), 400);
+    }
+
+    function addLog(html) {
+        const entries = document.getElementById('log-entries');
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = html;
+        entries.prepend(entry);
+        if (entries.children.length > 80) entries.lastChild.remove();
+    }
+
+    function clearLog() {
+        document.getElementById('log-entries').innerHTML = '';
+    }
+
+    function findTarget(attackerIdx, enemySlots) {
+        if (enemySlots[attackerIdx] && enemySlots[attackerIdx].currentHp > 0) return attackerIdx;
+        for (let d = 1; d < 5; d++) {
+            if (attackerIdx - d >= 0 && enemySlots[attackerIdx-d] && enemySlots[attackerIdx-d].currentHp > 0) return attackerIdx - d;
+            if (attackerIdx + d < 5 && enemySlots[attackerIdx+d] && enemySlots[attackerIdx+d].currentHp > 0) return attackerIdx + d;
+        }
+        return -1;
+    }
+
+    function dealDamage(target, rawDmg, attacker, targetSlotId) {
+        let dmg = rawDmg;
+        // Steel Hide — cap at 15% max HP
+        if (target.steelHide) dmg = Math.min(dmg, Math.round(target.maxHp * 0.15));
+        // Animated Armor — first hit per round reduced 25%
+        if (target.animatedArmor && !target.armorUsedThisRound) {
+            dmg = Math.round(dmg * 0.75);
+            target.armorUsedThisRound = true;
+        }
+        // Damage reduction
+        if (target.dmgReduction > 0) {
+            let reduction = target.dmgReduction;
+            if (attacker && attacker.piercePct) reduction = Math.max(0, reduction - attacker.piercePct);
+            dmg = Math.round(dmg * (1 - reduction));
+        }
+        // Shield absorb
+        if (target.shielded > 0) {
+            const absorbed = Math.min(target.shielded, dmg);
+            target.shielded -= absorbed;
+            dmg -= absorbed;
+        }
+        // Dodge check
+        if (target.dodgeChance && Math.random() < target.dodgeChance) {
+            addLog(`✨ <span class="card-ref">${target.name}</span> <span class="skill">dodges</span> the attack!`);
+            return 0;
+        }
+        dmg = Math.max(0, dmg);
+        target.currentHp -= dmg;
+        if (targetSlotId) showDamagePopup(targetSlotId, dmg);
+        return dmg;
+    }
+
+    function processDeathTriggers(deadCard, deadSlotIdx, killerCard, isDeadOnPlayerSide, s) {
+        const allies = isDeadOnPlayerSide ? s.playerSlots : s.enemySlots;
+        const enemies = isDeadOnPlayerSide ? s.enemySlots : s.playerSlots;
+        const sidePrefix = isDeadOnPlayerSide ? 'player' : 'enemy';
+        const enemyPrefix = isDeadOnPlayerSide ? 'enemy' : 'player';
+
+        // Fire Dust — 10 dmg to adjacent enemy lanes
+        if (deadCard.onDeathAoE) {
+            for (let d = -1; d <= 1; d += 2) {
+                const idx = deadSlotIdx + d;
+                if (idx >= 0 && idx < 5 && enemies[idx] && enemies[idx].currentHp > 0) {
+                    enemies[idx].currentHp -= deadCard.onDeathAoE;
+                    addLog(`💥 <span class="card-ref">${deadCard.name}</span>'s <span class="skill">Fire Dust</span> deals <span class="dmg">${deadCard.onDeathAoE}</span> to <span class="card-ref">${enemies[idx].name}</span>`);
+                    if (enemies[idx].currentHp <= 0) {
+                        enemies[idx].currentHp = 0;
+                        addLog(`💀 <span class="card-ref">${enemies[idx].name}</span> destroyed by Fire Dust!`);
+                    }
+                }
+            }
+        }
+        // Explosion — 25 dmg to opposing card
+        if (deadCard.onDeathDirect) {
+            if (enemies[deadSlotIdx] && enemies[deadSlotIdx].currentHp > 0) {
+                enemies[deadSlotIdx].currentHp -= deadCard.onDeathDirect;
+                addLog(`💥 <span class="card-ref">${deadCard.name}</span>'s <span class="skill">Explosion</span> deals <span class="dmg">${deadCard.onDeathDirect}</span> to <span class="card-ref">${enemies[deadSlotIdx].name}</span>`);
+                if (enemies[deadSlotIdx].currentHp <= 0) {
+                    enemies[deadSlotIdx].currentHp = 0;
+                    addLog(`💀 <span class="card-ref">${enemies[deadSlotIdx].name}</span> destroyed by Explosion!`);
+                }
+            }
+        }
+        // Blossom Burst — heals all allies 15 HP
+        if (deadCard.onDeathHealAll) {
+            allies.forEach((a, i) => {
+                if (a && a.currentHp > 0 && !a.branded) {
+                    const heal = Math.min(deadCard.onDeathHealAll, a.maxHp - a.currentHp);
+                    if (heal > 0) {
+                        a.currentHp += heal;
+                        addLog(`🌸 <span class="card-ref">${deadCard.name}</span>'s <span class="skill">Blossom Burst</span> heals <span class="card-ref">${a.name}</span> for <span class="heal">${heal} HP</span>`);
+                    }
+                }
+            });
+        }
+        // Evaporation — reduce killer ATK by 25%
+        if (deadCard.onDeathDebuffKiller && killerCard && killerCard.currentHp > 0) {
+            const debuff = Math.round(killerCard.currentAtk * 0.25);
+            killerCard.currentAtk = Math.max(1, killerCard.currentAtk - debuff);
+            addLog(`💨 <span class="card-ref">${deadCard.name}</span>'s <span class="skill">Evaporation</span> reduces <span class="card-ref">${killerCard.name}</span>'s ATK by <span class="dmg">${debuff}</span>`);
+        }
+        // Decree of Invisibility — ally phantom cards get stealth
+        allies.forEach(a => {
+            if (a && a.decreeInvis && a.currentHp > 0) {
+                allies.forEach(ally => {
+                    if (ally && ally.currentHp > 0 && ally.faction === 'phantom') {
+                        ally.stealthed = Math.max(ally.stealthed, 1);
+                    }
+                });
+                addLog(`👻 <span class="card-ref">${a.name}</span>'s <span class="skill">Decree of Invisibility</span> grants Stealth to Phantom allies`);
+            }
+        });
+        // Stealth on kill
+        if (killerCard && killerCard.stealthOnKill && killerCard.currentHp > 0) {
+            killerCard.stealthed = 2;
+            addLog(`👻 <span class="card-ref">${killerCard.name}</span> enters <span class="skill">Stealth</span> after the kill`);
+        }
+    }
+
+    function resolveCombat() {
+        const s = battleState;
+        if (s.finished) return;
+        s.round++;
+        addLog(`<span class="status">━━━ Round ${s.round} ━━━</span>`);
+
+        // ====== PHASE 1: START-OF-ROUND EFFECTS ======
+        const processRoundStart = (slots, enemies, sideLabel, isPlayer) => {
+            for (let i = 0; i < 5; i++) {
+                const c = slots[i];
+                if (!c || c.currentHp <= 0) continue;
+                c.lifeOnField++;
+                if (c.animatedArmor) c.armorUsedThisRound = false;
+
+                // Regen
+                if (c.regenPct > 0 && !c.branded && c.currentHp < c.maxHp) {
+                    let pct = c.regenPct;
+                    // Deep Roots: boost if < 40%
+                    if (c.deepRoots && c.currentHp < c.maxHp * 0.4) pct = 0.05;
+                    const heal = Math.min(Math.round(c.maxHp * pct), c.maxHp - c.currentHp);
+                    if (heal > 0) {
+                        c.currentHp += heal;
+                        addLog(`💚 <span class="card-ref">${c.name}</span>'s <span class="skill">${c.deepRoots ? 'Deep Roots' : 'Growth'}</span> regenerates <span class="heal">${heal} HP</span>`);
+                    }
+                }
+                // Endurance — gain 2% max HP (capped at +30%)
+                if (c.endurancePassive) {
+                    const maxBonus = Math.round(c.hp * 0.30);
+                    const gained = c.maxHp - c.hp;
+                    if (gained < maxBonus) {
+                        const boost = Math.min(Math.round(c.hp * 0.02), maxBonus - gained);
+                        c.maxHp += boost;
+                        c.currentHp += boost;
+                        if (c.lifeOnField % 3 === 0) addLog(`💪 <span class="card-ref">${c.name}</span>'s <span class="skill">Endurance</span> grows — max HP now <span class="heal">${c.maxHp}</span>`);
+                    }
+                }
+                // Heat passive — +5% ATK each round (cap +25%)
+                if (c.heatPassive && !c.frozen) {
+                    const maxBoost = Math.round(c.baseAtk * 0.25);
+                    const currentBoost = c.currentAtk - c.baseAtk;
+                    if (currentBoost < maxBoost) {
+                        const gain = Math.min(Math.round(c.baseAtk * 0.05), maxBoost - currentBoost);
+                        c.currentAtk += gain;
+                        addLog(`🔥 <span class="card-ref">${c.name}</span>'s <span class="skill">Heat</span> grows — ATK now <span class="dmg">${c.currentAtk}</span>`);
+                    }
+                }
+                // Living Bark — shield refresh
+                if (c.livingBark) {
+                    c.shielded = Math.round(c.maxHp * 0.10);
+                    if (s.round % 3 === 0) addLog(`🛡️ <span class="card-ref">${c.name}</span>'s <span class="skill">Living Bark</span> refreshes shield to <span class="heal">${c.shielded}</span>`);
+                }
+                // Oasis Aura — all allies heal 2
+                if (c.oasisAura) {
+                    slots.forEach((a, j) => {
+                        if (a && a.currentHp > 0 && !a.branded && a.currentHp < a.maxHp) {
+                            const heal = Math.min(2, a.maxHp - a.currentHp);
+                            a.currentHp += heal;
+                        }
+                    });
+                    if (s.round % 3 === 0) addLog(`🌴 <span class="card-ref">${c.name}</span>'s <span class="skill">Oasis</span> heals all allies for <span class="heal">2 HP</span>`);
+                }
+                // Burning Aura — all enemies take 2
+                if (c.burningAura) {
+                    enemies.forEach((e, j) => {
+                        if (e && e.currentHp > 0) {
+                            e.currentHp -= 2;
+                            if (e.currentHp <= 0) {
+                                e.currentHp = 0;
+                                addLog(`💀 <span class="card-ref">${e.name}</span> destroyed by Burning Aura!`);
+                            }
+                        }
+                    });
+                    if (s.round % 2 === 0) addLog(`☄️ <span class="card-ref">${c.name}</span>'s <span class="skill">Burning Aura</span> scorches all enemies for <span class="dmg">2 dmg</span>`);
+                }
+                // Burn Aura (Furnace) — opposite loses 1 HP
+                if (c.burnAura && enemies[i] && enemies[i].currentHp > 0) {
+                    enemies[i].currentHp -= 1;
+                    if (s.round % 3 === 0) addLog(`🔥 <span class="card-ref">${c.name}</span>'s <span class="skill">Fire Drain</span> burns <span class="card-ref">${enemies[i].name}</span> for <span class="dmg">1</span>`);
+                }
+                // Pressure (Ember Coal) — 2 dmg to self and opposite
+                if (c.pressurePassive) {
+                    c.currentHp -= 2;
+                    if (enemies[i] && enemies[i].currentHp > 0) {
+                        enemies[i].currentHp -= 2;
+                    }
+                    if (s.round % 2 === 0) addLog(`💥 <span class="card-ref">${c.name}</span>'s <span class="skill">Pressure</span> deals <span class="dmg">2 dmg</span> to self and opposing lane`);
+                }
+                // Interference — reduce opposite ATK
+                if (c.interferencePassive && enemies[i] && enemies[i].currentHp > 0) {
+                    enemies[i].currentAtk = Math.max(1, Math.round(enemies[i].baseAtk * 0.90));
+                }
+                // Balance — adaptive buff
+                if (c.balancePassive) {
+                    const allyCount = slots.filter(a => a && a.currentHp > 0).length;
+                    const enemyCount = enemies.filter(e => e && e.currentHp > 0).length;
+                    if (enemyCount > allyCount) {
+                        c.currentAtk = Math.round(c.baseAtk * 1.10);
+                    } else {
+                        c.maxHp = Math.round(c.hp * 1.10);
+                    }
+                }
+                // Heal Lowest (Crescent) — every 3 rounds
+                if (c.healLowest && s.round % 3 === 0) {
+                    let lowest = null;
+                    slots.forEach(a => {
+                        if (a && a.currentHp > 0 && !a.branded && a.currentHp < a.maxHp) {
+                            if (!lowest || a.currentHp < lowest.currentHp) lowest = a;
+                        }
+                    });
+                    if (lowest) {
+                        const heal = Math.min(15, lowest.maxHp - lowest.currentHp);
+                        lowest.currentHp += heal;
+                        addLog(`🌙 <span class="card-ref">${c.name}</span>'s <span class="skill">Healing</span> restores <span class="card-ref">${lowest.name}</span> for <span class="heal">${heal} HP</span>`);
+                    }
+                }
+                // Radiance — every 3 rounds heal all + dmg all enemies
+                if (c.radianceActive && s.round % 3 === 0) {
+                    slots.forEach(a => {
+                        if (a && a.currentHp > 0 && !a.branded) {
+                            const h = Math.min(8, a.maxHp - a.currentHp);
+                            a.currentHp += h;
+                        }
+                    });
+                    enemies.forEach(e => {
+                        if (e && e.currentHp > 0) e.currentHp -= 8;
+                    });
+                    addLog(`🌟 <span class="card-ref">${c.name}</span>'s <span class="skill">Radiance</span> heals allies for <span class="heal">8</span> and damages enemies for <span class="dmg">8</span>`);
+                }
+                // Toxic Forest — poison opposing every 3 rounds
+                if (c.toxicForest && s.round % 3 === 0 && enemies[i] && enemies[i].currentHp > 0) {
+                    enemies[i].poisoned = 2;
+                    enemies[i].poisonDmg = 5;
+                    addLog(`☠️ <span class="card-ref">${c.name}</span>'s <span class="skill">Toxic Forest</span> poisons <span class="card-ref">${enemies[i].name}</span>`);
+                }
+                // Last Stand ATK (Furnace)
+                if (c.lastStandATK && c.currentHp < c.maxHp * 0.30 && c.currentAtk === c.baseAtk) {
+                    c.currentAtk = c.baseAtk * 2;
+                    addLog(`🔥 <span class="card-ref">${c.name}</span>'s <span class="skill">Awakening</span> triggers! ATK <span class="dmg">doubled to ${c.currentAtk}</span>!`);
+                }
+
+                // Process status effect ticks
+                // Burn tick
+                if (c.burned > 0) {
+                    c.currentHp -= c.burnDmg;
+                    c.burned--;
+                    addLog(`🔥 <span class="card-ref">${c.name}</span> takes <span class="dmg">${c.burnDmg} burn damage</span> (${c.burned} rounds left)`);
+                    if (c.currentHp <= 0) { c.currentHp = 0; addLog(`💀 <span class="card-ref">${c.name}</span> burned to death!`); }
+                }
+                // Poison tick
+                if (c.poisoned > 0) {
+                    c.currentHp -= c.poisonDmg;
+                    c.poisoned--;
+                    addLog(`☠️ <span class="card-ref">${c.name}</span> takes <span class="dmg">${c.poisonDmg} poison damage</span>`);
+                    if (c.currentHp <= 0) { c.currentHp = 0; addLog(`💀 <span class="card-ref">${c.name}</span> dies from poison!`); }
+                }
+                // Decrement timed statuses
+                if (c.frozen > 0) c.frozen--;
+                if (c.stealthed > 0) c.stealthed--;
+                if (c.branded > 0) c.branded--;
+                if (c.atkBuffRounds > 0) {
+                    c.atkBuffRounds--;
+                    if (c.atkBuffRounds === 0) {
+                        c.currentAtk = Math.max(1, c.currentAtk - c.atkBuff);
+                        c.atkBuff = 0;
+                    }
+                }
+            }
+        };
+
+        processRoundStart(s.playerSlots, s.enemySlots, 'Your', true);
+        processRoundStart(s.enemySlots, s.playerSlots, 'Enemy', false);
+
+        // Deploy freeze on round 1 (Entangle)
+        if (s.round === 1) {
+            s.playerSlots.forEach((c, i) => {
+                if (c && c.deployFreeze && s.enemySlots[i] && s.enemySlots[i].currentHp > 0 && !s.enemySlots[i].freezeImmune) {
+                    s.enemySlots[i].frozen = 2;
+                    addLog(`❄️ <span class="card-ref">${c.name}</span>'s <span class="skill">Entangle</span> freezes <span class="card-ref">${s.enemySlots[i].name}</span>!`);
+                }
+            });
+            s.enemySlots.forEach((c, i) => {
+                if (c && c.deployFreeze && s.playerSlots[i] && s.playerSlots[i].currentHp > 0 && !s.playerSlots[i].freezeImmune) {
+                    s.playerSlots[i].frozen = 2;
+                    addLog(`❄️ <span class="card-ref">${c.name}</span>'s <span class="skill">Entangle</span> freezes <span class="card-ref">${s.playerSlots[i].name}</span>!`);
+                }
+            });
+            // Bond — heal hero on deploy
+            s.playerSlots.forEach(c => {
+                if (c && c.deployHealHero) {
+                    s.playerHp = Math.min(100, s.playerHp + c.deployHealHero);
+                    addLog(`💛 <span class="card-ref">${c.name}</span>'s <span class="skill">Bond</span> heals your Hero for <span class="heal">${c.deployHealHero} HP</span>`);
+                }
+            });
+            s.enemySlots.forEach(c => {
+                if (c && c.deployHealHero) {
+                    s.enemyHp = Math.min(100, s.enemyHp + c.deployHealHero);
+                    addLog(`💛 <span class="card-ref">${c.name}</span>'s <span class="skill">Bond</span> heals enemy Hero for <span class="heal">${c.deployHealHero} HP</span>`);
+                }
+            });
+        }
+
+        // ====== PHASE 2: COMBAT ======
+        const performAttacks = (attackerSlots, defenderSlots, heroHpKey, attackerPrefix, defenderPrefix) => {
+            for (let i = 0; i < 5; i++) {
+                const attacker = attackerSlots[i];
+                if (!attacker || attacker.currentHp <= 0) continue;
+                // Frozen cards can't attack
+                if (attacker.frozen > 0) {
+                    addLog(`❄️ <span class="card-ref">${attacker.name}</span> is <span class="status">Frozen</span> and cannot attack`);
+                    continue;
+                }
+
+                const targetIdx = findTarget(i, defenderSlots);
+
+                const doOneAttack = () => {
+                    if (targetIdx >= 0) {
+                        const target = defenderSlots[targetIdx];
+                        if (target.currentHp <= 0) return;
+                        // Stealth check — stealthed cards can't be targeted
+                        if (target.stealthed > 0) {
+                            addLog(`👻 <span class="card-ref">${target.name}</span> is <span class="status">Stealthed</span> — attack misses`);
+                            return;
+                        }
+                        const rawDmg = Math.round(attacker.currentAtk * (0.85 + Math.random() * 0.3));
+                        const actualDmg = dealDamage(target, rawDmg, attacker, defenderPrefix + '-slot-' + targetIdx);
+                        if (actualDmg > 0) {
+                            animateSlot(attackerPrefix + '-slot-' + i, 'attacking');
+                            animateSlot(defenderPrefix + '-slot-' + targetIdx, 'hit');
+                            addLog(`<span class="card-ref">${attacker.name}</span> attacks <span class="card-ref">${target.name}</span> for <span class="dmg">${actualDmg} damage</span>`);
+                        }
+
+                        // Thorns reflect
+                        if (target.thornsPct > 0 && target.currentHp > 0 && actualDmg > 0) {
+                            const reflected = Math.round(actualDmg * target.thornsPct);
+                            attacker.currentHp -= reflected;
+                            addLog(`🌵 <span class="card-ref">${target.name}</span>'s <span class="skill">Thorns</span> reflects <span class="dmg">${reflected}</span> back!`);
+                        }
+                        // Lava Skin — attacker takes 10 dmg
+                        if (target.lavaSkin && target.currentHp > 0 && actualDmg > 0) {
+                            attacker.currentHp -= 10;
+                            addLog(`🌋 <span class="card-ref">${target.name}</span>'s <span class="skill">Lava Skin</span> burns attacker for <span class="dmg">10</span>`);
+                        }
+
+                        // Attack-triggered skills
+                        if (actualDmg > 0) {
+                            // Ignition — apply burn
+                            if (attacker.attackBurn && target.currentHp > 0) {
+                                target.burned = 2;
+                                target.burnDmg = 3;
+                                addLog(`🔥 <span class="card-ref">${attacker.name}</span>'s <span class="skill">Ignition</span> sets <span class="card-ref">${target.name}</span> on <span class="status">fire</span>`);
+                            }
+                            // Brand — apply anti-heal
+                            if (attacker.attackBrand && target.currentHp > 0) {
+                                target.branded = 3;
+                                addLog(`🚫 <span class="card-ref">${attacker.name}</span>'s <span class="skill">Brand</span> marks <span class="card-ref">${target.name}</span> — <span class="status">healing blocked</span>`);
+                            }
+                            // Power Theft — steal 10% ATK
+                            if (attacker.powerTheft && target.currentHp > 0) {
+                                const stolen = Math.round(target.currentAtk * 0.10);
+                                target.currentAtk = Math.max(1, target.currentAtk - stolen);
+                                attacker.atkBuff += stolen;
+                                attacker.atkBuffRounds = 3;
+                                attacker.currentAtk += stolen;
+                                addLog(`🪞 <span class="card-ref">${attacker.name}</span>'s <span class="skill">Power Theft</span> steals <span class="dmg">${stolen} ATK</span> from <span class="card-ref">${target.name}</span>`);
+                            }
+                            // Silence on attack
+                            if (attacker.silenceOnAttack && target.currentHp > 0) {
+                                addLog(`🔇 <span class="card-ref">${attacker.name}</span>'s <span class="skill">Watcher's Curse</span> silences <span class="card-ref">${target.name}</span>`);
+                            }
+                            // Fire Slash bonus
+                            if (attacker.fireSlash && target.burned > 0 && target.currentHp > 0) {
+                                const bonus = 15;
+                                target.currentHp -= bonus;
+                                addLog(`⚔️ <span class="card-ref">${attacker.name}</span>'s <span class="skill">Fire Slash</span> deals <span class="dmg">${bonus} bonus</span> to burning target`);
+                            }
+                        }
+
+                        // Check death
+                        if (target.currentHp <= 0) {
+                            target.currentHp = 0;
+                            animateSlot(defenderPrefix + '-slot-' + targetIdx, 'dying');
+                            addLog(`💀 <span class="card-ref">${target.name}</span> has been destroyed!`);
+                            processDeathTriggers(target, targetIdx, attacker, defenderPrefix === 'player', s);
+                        }
+                        // Check attacker death (from thorns/lava)
+                        if (attacker.currentHp <= 0) {
+                            attacker.currentHp = 0;
+                            addLog(`💀 <span class="card-ref">${attacker.name}</span> destroyed by reflected damage!`);
+                            processDeathTriggers(attacker, i, target, attackerPrefix === 'player', s);
+                        }
+                    } else {
+                        // Attack hero directly
+                        const dmg = Math.round(attacker.currentAtk * 0.3 * (0.85 + Math.random() * 0.3));
+                        s[heroHpKey] -= dmg;
+                        addLog(`👑 <span class="card-ref">${attacker.name}</span> hits the ${heroHpKey === 'enemyHp' ? 'enemy' : 'your'} Hero for <span class="dmg">${dmg} damage</span>!`);
+                    }
+                };
+
+                doOneAttack();
+                // Double Strike — attack again on round 1
+                if (attacker.doubleStrikeReady && s.round === 1 && attacker.currentHp > 0) {
+                    attacker.doubleStrikeReady = false;
+                    addLog(`⚡ <span class="card-ref">${attacker.name}</span>'s <span class="skill">Double Strike</span> fires a second attack!`);
+                    doOneAttack();
+                }
+            }
+        };
+
+        performAttacks(s.playerSlots, s.enemySlots, 'enemyHp', 'player', 'enemy');
+        performAttacks(s.enemySlots, s.playerSlots, 'playerHp', 'enemy', 'player');
+
+        // ====== PHASE 3: ULTIMATES (Epic/Legendary, once per match) ======
+        const checkUltimates = (slots, enemies, heroHpKey) => {
+            slots.forEach((c, i) => {
+                if (!c || c.currentHp <= 0 || c.ultimateUsed) return;
+                if (c.skills.length < 3) return; // Only epic+ have ultimates
+                // Trigger ultimate when HP drops below 40% or at round 8+
+                const shouldTrigger = (c.currentHp < c.maxHp * 0.40) || (s.round >= 8);
+                if (!shouldTrigger) return;
+                c.ultimateUsed = true;
+                const ultSkill = c.skills[2];
+
+                // Card-specific ultimates
+                switch(ultSkill.name) {
+                    case 'Earthquake': // Wall Breacher
+                        slots.forEach(a => { if (a && a.currentHp > 0) { const d = a.faction === 'ironclad' ? 15 : 30; a.currentHp -= d; } });
+                        enemies.forEach(e => { if (e && e.currentHp > 0) { const d = e.faction === 'ironclad' ? 15 : 30; e.currentHp -= d; } });
+                        addLog(`🌍 <span class="card-ref">${c.name}</span> unleashes <span class="skill">${ultSkill.name}</span>! 30 damage to all (Ironclad take half)!`);
+                        break;
+                    case 'Heart of Machine': // Iron Dragon
+                        slots.forEach(a => { if (a && a.currentHp > 0) { a.shielded += a.faction === 'ironclad' ? 999 : Math.round(a.maxHp * 0.15); } });
+                        addLog(`⚙️ <span class="card-ref">${c.name}</span> activates <span class="skill">${ultSkill.name}</span>! Ironclad allies shielded!`);
+                        break;
+                    case 'Eternal Forest': // Wooden Dragon
+                        slots.forEach(a => { if (a && a.currentHp > 0 && !a.branded) {
+                            const pct = a.faction === 'verdant' ? 0.15 : 0.08;
+                            const heal = Math.min(Math.round(a.maxHp * pct), a.maxHp - a.currentHp);
+                            a.currentHp += heal;
+                        }});
+                        addLog(`🌳 <span class="card-ref">${c.name}</span> invokes <span class="skill">${ultSkill.name}</span>! All allies regenerated!`);
+                        break;
+                    case 'Spring Resurrection': // Oasis Guardian
+                        addLog(`🌿 <span class="card-ref">${c.name}</span> channels <span class="skill">${ultSkill.name}</span>! (Revive not possible in demo)`);
+                        // Heal all allies instead
+                        slots.forEach(a => { if (a && a.currentHp > 0 && !a.branded) { a.currentHp = Math.min(a.maxHp, a.currentHp + Math.round(a.maxHp * 0.25)); } });
+                        break;
+                    case 'Great Eruption': // Stone Ifrit
+                        enemies.forEach(e => { if (e && e.currentHp > 0) { const d = e.burned > 0 ? 60 : 40; e.currentHp -= d; } });
+                        slots.forEach(a => { if (a && a.currentHp > 0) { a.burned = 0; a.burnDmg = 0; } }); // Clear own burns
+                        addLog(`🌋 <span class="card-ref">${c.name}</span> erupts with <span class="skill">${ultSkill.name}</span>! 40-60 damage to all enemies!`);
+                        break;
+                    case 'Sun of Destruction': // Night Conqueror
+                        enemies.forEach(e => { if (e && e.currentHp > 0) { e.currentHp -= Math.round(c.currentAtk * 0.5); e.branded = 3; } });
+                        addLog(`☀️ <span class="card-ref">${c.name}</span> unleashes <span class="skill">${ultSkill.name}</span>! AoE cleave + all enemies branded!`);
+                        break;
+                    case 'Gate of Oblivion': // Dark Ifrit
+                        // Shuffle enemy positions
+                        for (let j = enemies.length - 1; j > 0; j--) {
+                            const k = Math.floor(Math.random() * (j + 1));
+                            [enemies[j], enemies[k]] = [enemies[k], enemies[j]];
+                        }
+                        enemies.forEach(e => { if (e && e.currentHp > 0) e.currentAtk = Math.max(1, Math.round(e.currentAtk * 0.80)); });
+                        addLog(`🌀 <span class="card-ref">${c.name}</span> opens the <span class="skill">${ultSkill.name}</span>! Enemy positions scrambled, -20% ATK!`);
+                        break;
+                    case 'Eternal Night': // Sultan of Shadows
+                        slots.forEach(a => { if (a && a.currentHp > 0 && a.faction === 'phantom') a.currentAtk = Math.round(a.currentAtk * 1.25); });
+                        addLog(`🌑 <span class="card-ref">${c.name}</span> descends into <span class="skill">${ultSkill.name}</span>! Phantom allies gain +25% ATK!`);
+                        break;
+                    case 'Light of Truth': // Judge of Stars
+                        slots.forEach(a => { if (a && a.currentHp > 0) { a.currentAtk = Math.round(a.currentAtk * 1.15); a.maxHp = Math.round(a.maxHp * 1.15); a.currentHp = Math.min(a.maxHp, Math.round(a.currentHp * 1.15)); } });
+                        enemies.forEach(e => { if (e && e.currentHp > 0) e.stealthed = 0; });
+                        addLog(`✨ <span class="card-ref">${c.name}</span> reveals the <span class="skill">${ultSkill.name}</span>! Allies +15% stats, enemy stealth stripped!`);
+                        break;
+                    case 'Path of Light': // Ascent of Lights
+                        slots.forEach(a => { if (a && a.currentHp > 0) a.currentAtk = Math.round(a.currentAtk * 1.20); });
+                        addLog(`🌟 <span class="card-ref">${c.name}</span> illuminates the <span class="skill">${ultSkill.name}</span>! All allies gain +20% ATK!`);
+                        break;
+                    default:
+                        addLog(`⚡ <span class="card-ref">${c.name}</span> activates <span class="skill">${ultSkill.name}</span>!`);
+                }
+                // Clean up deaths from ultimates
+                enemies.forEach((e) => { if (e && e.currentHp <= 0) { e.currentHp = 0; } });
+                slots.forEach((a) => { if (a && a.currentHp <= 0) { a.currentHp = 0; } });
+            });
+        };
+
+        checkUltimates(s.playerSlots, s.enemySlots, 'enemyHp');
+        checkUltimates(s.enemySlots, s.playerSlots, 'playerHp');
+
+        renderBattlefield();
+
+        // ====== CHECK WIN CONDITIONS ======
+        if (s.enemyHp <= 0) {
+            s.finished = true;
+            clearInterval(battleInterval); battleInterval = null;
+            addLog(`🏆 <span class="heal">VICTORY!</span> You destroyed the enemy Hero!`);
+        } else if (s.playerHp <= 0) {
+            s.finished = true;
+            clearInterval(battleInterval); battleInterval = null;
+            addLog(`💔 <span class="dmg">DEFEAT!</span> Your Hero has fallen.`);
+        } else if (s.round >= 30) {
+            s.finished = true;
+            clearInterval(battleInterval); battleInterval = null;
+            const winner = s.playerHp > s.enemyHp ? 'You' : 'Enemy';
+            addLog(`⏰ Time's up! <span class="card-ref">${winner}</span> wins by HP advantage!`);
+        }
+    }
+
+    document.getElementById('btn-start-battle').addEventListener('click', () => {
+        if (!battleState || battleState.finished) initBattle();
+        if (battleState.running) return;
+        battleState.running = true;
+        addLog(`⚔️ <span class="card-ref">Battle started!</span>`);
+        battleInterval = setInterval(resolveCombat, 2000);
+    });
+
+    document.getElementById('btn-new-decks').addEventListener('click', () => {
+        initBattle();
+    });
+
+    document.getElementById('btn-reset-battle').addEventListener('click', () => {
+        if (battleInterval) { clearInterval(battleInterval); battleInterval = null; }
+        initBattle();
+    });
+
+    // ===== INIT =====
+    renderCreatures();
+    renderHeroes();
+    initBattle();
+    </script>
+</body>
+</html>
